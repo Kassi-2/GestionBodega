@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+    
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css"> 
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body>
+    
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th scope="col" class="table-hover">Código</th>
+                <th scope="col" class="table-hover">Nombre</th>
+                <th scope="col" class="table-hover">Stock</th>
+                <th scope="col" class="table-hover"></th>
+            </tr>
+        </thead>
+      
+      <tbody>
+        <ng-container *ngFor="let arreglo of herramienta">
+            <tr>
+              <th scope="row">{{arreglo.id}}</th>
+              <td>{{arreglo.nombre}}</td>
+              <td>{{arreglo.stock}}</td>
+              <td>
+                <a href="#" class="icon-btn"><i class="bi bi-caret-down"></i></a>
+                <a href="#" class="btn btn-primary"><i class="bi bi-pencil-square"></i></a>
+                <a class="btn btn-danger" (click)="deleteProduct(arreglo.id)"><i class="bi bi-trash3-fill"></i></a>
+              </td>
+            </tr>
+          </ng-container>
+
+        </tbody>
+      </table>
+    
+    <div class="col-12 btn-container mb-3">
+        <a href="#" class="btn btn-green"><i class="bi bi-patch-plus-fill"></i></a>
+    </div>
+    <ng-container *ngFor="let array of herramienta">
+      <div class="accordion accordion-flush">
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="flush-headingOne">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+              {{array.nombre}}
+            </button>
+          </h2>
+          <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
+            <div class="accordion-body">{{array.descripcion}}</div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+    
+
+</body>
+</html>
