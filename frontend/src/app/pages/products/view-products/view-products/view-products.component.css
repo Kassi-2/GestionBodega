@@ -1,0 +1,18 @@
+.accordion-button {
+  background-color: #f8f9fa; /* Color más suave */
+  padding: 15px;
+  border: none;
+}
+
+.accordion-button:hover {
+  background-color: #e2e6ea;
+}
+
+.accordion-body {
+  background-color: #ffffff;
+  border-top: 1px solid #ddd;
+}
+
+.badge {
+  font-size: 0.85rem;
+}

@@ -1,7 +1,9 @@
 import { Routes } from '@angular/router';
 
 export const routes: Routes = [
-  {path: '',
-    loadChildren: () => import()
+  {
+    path: '',
+    loadChildren: () => import('./pages/products/view-products/products.routing').then(m => m.routesProduct)
   }
 ];
+
