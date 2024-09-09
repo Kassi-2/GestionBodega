@@ -6,6 +6,6 @@ export class Product {
     public stock: number,
     public criticalStock: number,
     public status: string,
-    public aviability: string
+    public fungible: boolean
   ){}
 }

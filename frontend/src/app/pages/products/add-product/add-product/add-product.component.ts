@@ -20,7 +20,7 @@ import { Popover } from 'bootstrap';
 export class AddProductComponent implements OnInit {
 
   products: Product[] = [];
-  product: Product = new Product(0, '', '', 0, 0, 'Active', 'Available');
+  product: Product = new Product(0, '', '', 0, 0, 'Active', true);
 
   forma!: FormGroup;
 
@@ -83,7 +83,7 @@ export class AddProductComponent implements OnInit {
       this.product.stock,
       this.product.criticalStock,
       'Active',
-      status
+      this.product.isFungible
     );
 
 
