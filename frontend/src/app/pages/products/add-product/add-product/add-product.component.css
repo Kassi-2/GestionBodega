@@ -1,0 +1,25 @@
+.caja-numeros{
+  margin-left: 10px;
+}
+
+.myButton {
+  font-size: 13px;
+  font-weight: bold;
+  background: #eeeeee;
+  color: #333333;
+  border: 1px none #cccccc;
+  border-radius: 27px;
+  padding: 5px 10px;
+  letter-spacing: 0px;
+  margin-left: 10px;
+}
+
+.myButton:hover {
+  background: #e5e5e5;
+  color: #333333;
+}
+
+.modal-dialog{
+  margin-top: 120px;
+}
+
