@@ -1,14 +1,20 @@
-import { Controller, Get, Post, Body, Param, NotFoundException} from "@nestjs/common";
+import { Controller, Get, Post, Body, Param, NotFoundException, ValidationPipe, BadRequestException} from "@nestjs/common";
 import { ProductService } from "./product.service";
-import { Product } from "@prisma/client";
+import { product } from "@prisma/client";
+import { ProductCreateDTO } from "./dto/product-crate.dto";
 
 @Controller("products")
 export class ProductController{
     constructor(private readonly productService: ProductService){}
 
-        @Get()
-        async getAllProducts(){
-            return this.productService.getAllProducts()
+        @Get("/active")
+        async getActiveProducts(){
+            return this.productService.getActiveProducts()
+        }
+
+        @Get("/available")
+        async getAvailableProducts(){
+            return this.productService.getAvailableProducts()
         }
 
         @Get(":id")
@@ -18,8 +24,14 @@ export class ProductController{
             return productFound
         }
 
-        @Post("/products")
-        async createProduct(@Body() data: Product){
-            return this.productService.createProduct(data)
+        @Post()
+        async createProduct(@Body(ValidationPipe) request: ProductCreateDTO){
+            if (!request.name) {
+                throw new BadRequestException("Ingresa un nombre del producto");
+              }
+              if (request.stock<0){
+                throw new BadRequestException("El stock debe ser un número igual o mayor a 0");
+              }
+            return this.productService.createProduct(request)
         }
 }
