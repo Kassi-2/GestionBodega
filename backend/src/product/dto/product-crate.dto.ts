@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString, IsNumber, IsOptional} from 'class-validator';
+import { IsNotEmpty, IsString, IsNumber, IsOptional, IsBoolean} from 'class-validator';
 
 export class ProductCreateDTO {
 
@@ -17,5 +17,9 @@ export class ProductCreateDTO {
     @IsOptional()
     @IsNumber()
     criticalStock : number;
+
+    @IsOptional()
+    @IsBoolean()
+    fungible : boolean;
 
 }

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, NotFoundException, ValidationPipe, BadRequestException} from "@nestjs/common";
+import { Controller, Get, Post, Delete, Body, Param, NotFoundException, ValidationPipe, BadRequestException} from "@nestjs/common";
 import { ProductService } from "./product.service";
 import { product } from "@prisma/client";
 import { ProductCreateDTO } from "./dto/product-crate.dto";
@@ -33,5 +33,12 @@ export class ProductController{
                 throw new BadRequestException("El stock debe ser un número igual o mayor a 0");
               }
             return this.productService.createProduct(request)
+        }
+
+        @Delete(":id")
+        async deleteProduct(@Param('id') id: string){
+            const productFound= await this.productService.deleteProduct(Number(id))
+            if (!productFound) throw new NotFoundException('No se encontro ese producto')
+            return productFound
         }
 }

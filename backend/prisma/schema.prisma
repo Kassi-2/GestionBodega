@@ -13,6 +13,7 @@ model product {
   description String?
   stock     Int? @default(0)
   criticalStock Int?
-  state     String @default("activo")
+  state     Boolean @default(true)
+  fungible Boolean @default(false)
   @@unique([name])
 }
