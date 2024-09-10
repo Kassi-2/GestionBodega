@@ -5,7 +5,7 @@ export class Product {
     public description: string,
     public stock: number,
     public criticalStock: number,
-    public status: string,
+    public status: boolean,
     public fungible: boolean
   ){}
 }

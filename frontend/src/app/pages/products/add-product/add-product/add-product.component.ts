@@ -4,9 +4,9 @@ import { ProductService } from '../../../../core/services/product.service';
 import { FormBuilder, FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup, Validators } from '@angular/forms';
 import { PopoverModule } from '@coreui/angular';
-import { Popover } from 'bootstrap';
+import { Subscription } from 'rxjs';
 
 
 
@@ -20,16 +20,21 @@ import { Popover } from 'bootstrap';
 export class AddProductComponent implements OnInit {
 
   products: Product[] = [];
-  product: Product = new Product(0, '', '', 0, 0, 'Active', true);
+  product: Product = new Product(0, '', '', 0, 0, true, false);
+  private subscription: Subscription = new Subscription();
+
 
   forma!: FormGroup;
 
   exampleStock: number = 0;
+  isFungible: boolean = false;
+  lastId: number = 0
 
 
-
-  constructor(private fb: FormBuilder){
+  constructor(private fb: FormBuilder, private productService: ProductService){
     this.createForm();
+  }
+  ngOnInit(){
   }
 
   createForm() {
@@ -38,8 +43,8 @@ export class AddProductComponent implements OnInit {
       name: ['', [Validators.required]],
       description: [''],
       stock: ['', Validators.min(0)],
-      criticalStock: ['']
-
+      criticalStock: [''],
+      isFungible: [false]
     })
   }
 
@@ -49,13 +54,26 @@ export class AddProductComponent implements OnInit {
 
   }
 
+  get notValidCriticalStock(){
+
+    return this.forma.get('criticalStock')?.invalid && this.forma.get('criticalStock')?.touched;
+
+  }
+
   preventNegative(event: KeyboardEvent) {
     if (event.key === '-' || event.key === '+') {
       event.preventDefault();
     }
   }
 
+  closeModal(){
+    return Object.values(this.forma.controls).forEach(control => {
 
+      control.reset();
+      control.markAsUntouched();
+
+    });
+  }
 
   onSubmit() {
 
@@ -69,42 +87,43 @@ export class AddProductComponent implements OnInit {
 
     }
 
+    this.subscription.add(
+      this.productService.getIDLastProduct().subscribe(lastId => {
+        const newId = lastId + 1;
+        const formValues = this.forma.value;
 
-    const status = this.product.stock > this.product.criticalStock ? 'Available' : 'Unavailable';
+        const fungibleValue = this.forma.get('isFungible')?.value;
+        this.product.fungible = fungibleValue
 
-    const newId = this.products.length ? Math.max(...this.products.map(p => p.idProduct)) + 1 : 1;
+        const newProduct = new Product(
+          newId,
+          this.product.name,
+          this.product.description,
+          this.product.stock,
+          this.product.criticalStock,
+          true,
+          this.product.fungible
+        );
 
-    this.product.stock = this.exampleStock
+        this.products.push(newProduct);
 
-    const newProduct = new Product(
-      newId,
-      this.product.name,
-      this.product.description,
-      this.product.stock,
-      this.product.criticalStock,
-      'Active',
-      this.product.isFungible
-    );
+        console.log(newProduct)
+        console.log(this.forma)
 
 
-    this.products.push(newProduct);
+        return Object.values(this.forma.controls).forEach(control => {
 
-    console.log(newProduct)
-    console.log(this.forma)
-
-    this.product = new Product(0, '', '', 0, 0, 'Active', 'Available');
-
-    return Object.values(this.forma.controls).forEach(control => {
-
-      control.reset();
-
-    });
+          control.reset();
+          this.product = new Product(0, '', '', 0, 0, true, false);
+        });
+      }
+    )
+    )
+  }
 
   }
 
 
 
-  ngOnInit() {
-  }
 
-}
+

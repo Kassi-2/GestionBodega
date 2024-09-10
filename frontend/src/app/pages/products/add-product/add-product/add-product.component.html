@@ -16,7 +16,7 @@
           <div class="mb-3">
             <label for="productName" class="col-form-label">Nombre:</label>
             <input type="text" class="form-control" id="productName"  name="name" required formControlName="name" [class.is-invalid] = 'notValidName' [(ngModel)]="product.name" placeholder="Nombre del Producto">
-            <small *ngIf = "notValidName" class = "text-danger">Ingrese un nombre de producto</small>
+            <small *ngIf = "notValidName" class = "text-danger">Ingrese un nombre de producto.</small>
           </div>
 
 
@@ -36,7 +36,7 @@
           </div>
           <div class="mb-3">
             <label for="initialStock" class="col-form-label">Stock Inicial:</label>
-            <input type="number" class="form-control" id="initialStock"  name="stock" min="0"  formControlName="stock" [(ngModel)]="exampleStock" (keypress)="preventNegative($event)" placeholder="Stock inicial del producto">
+            <input type="number" value ="0" class="form-control" id="initialStock"  name="stock"  formControlName="stock" [(ngModel)]="product.stock" (keypress)="preventNegative($event)" placeholder="Stock inicial del producto">
 
           </div>
           <div class="mb-3">
@@ -48,7 +48,8 @@
                     cButton
                     class="m-1"
                     color="danger"
-                    size="lg" class = "myButton">
+                    size="lg" class = "myButton"
+                    type="button">
               ?
               <ng-template #popoverHtml>
                 <h3 class="popover-header">
@@ -60,15 +61,40 @@
               </ng-template>
             </button>
 
-            <input type="number" class="form-control" id="criticalStock"  name="criticalStock" min="0" formControlName="criticalStock" placeholder="Stock crítico del producto  " [(ngModel)]="product.criticalStock">
+            <input type="number" class="form-control" id="criticalStock"  name="criticalStock" formControlName="criticalStock" placeholder="Stock crítico del producto  " [(ngModel)]="product.criticalStock">
+            <small *ngIf = "notValidCriticalStock" class = "text-danger">Ingrese un stock crítico.</small>
+
           </div>
 
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="false" id="isFungible" formControlName="isFungible" [ngModel]="product.fungible">
+            <label class="form-check-label" for="flexCheckDefault">
+              ¿Es un producto fungible?
+            </label>
+            <button [cPopover]="popoverFungibleHtml"
+                    cPopoverPlacement="right"
+                    [cPopoverTrigger]="'click'"
+                    cButton
+                    color="danger"
+                    size="lg" class = "myButton"
+                    type="button">
+              ?
+              <ng-template #popoverFungibleHtml>
+                <h3 class="popover-header">
+                  Producto fungible
+                </h3>
+                <div class="popover-body">
+                  Los productos fungibles son aquellos que al prestarse no son devueltos. Esto quiere decir que al ingresar un producto fungible a un préstamo, éste se disminuirá el stock del producto en la cantidad prestada una vez finalizado el préstamo. <i cTextColor="info"></i>
+                </div>
+              </ng-template>
+            </button>
+          </div>
 
         </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-        <button type="submit" class="btn btn-primary" (click)="onSubmit()" >Confirmar</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="closeModal()">Cancelar</button>
+        <button type="submit" class="btn btn-primary" (click)="onSubmit()">Confirmar</button>
       </div>
     </div>
   </div>
