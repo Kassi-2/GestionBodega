@@ -20,13 +20,12 @@ import { Subscription } from 'rxjs';
 export class AddProductComponent implements OnInit {
 
   products: Product[] = [];
-  product: Product = new Product(0, '', '', 0, 0, true, false);
+  product: Product = new Product(0, '', '', null, null, true, false);
   private subscription: Subscription = new Subscription();
 
 
   forma!: FormGroup;
 
-  exampleStock: number = 0;
   isFungible: boolean = false;
   lastId: number = 0
 
@@ -43,7 +42,7 @@ export class AddProductComponent implements OnInit {
       name: ['', [Validators.required]],
       description: [''],
       stock: ['', Validators.min(0)],
-      criticalStock: [''],
+      criticalStock: ['', [Validators.required]],
       isFungible: [false]
     })
   }
@@ -89,11 +88,22 @@ export class AddProductComponent implements OnInit {
 
     this.subscription.add(
       this.productService.getIDLastProduct().subscribe(lastId => {
+
         const newId = lastId + 1;
         const formValues = this.forma.value;
 
         const fungibleValue = this.forma.get('isFungible')?.value;
-        this.product.fungible = fungibleValue
+
+        if (this.product.stock == null){
+          this.product.stock = 0
+        }
+
+
+        this.product.isFungible = fungibleValue
+
+        if (this.product.isFungible == null){
+          this.product.isFungible = false
+        }
 
         const newProduct = new Product(
           newId,
@@ -102,8 +112,10 @@ export class AddProductComponent implements OnInit {
           this.product.stock,
           this.product.criticalStock,
           true,
-          this.product.fungible
+          this.product.isFungible
         );
+
+        this.productService.addProduct(newProduct)
 
         this.products.push(newProduct);
 
@@ -114,7 +126,7 @@ export class AddProductComponent implements OnInit {
         return Object.values(this.forma.controls).forEach(control => {
 
           control.reset();
-          this.product = new Product(0, '', '', 0, 0, true, false);
+          this.product = new Product(0, '', '', null, null, true, false);
         });
       }
     )

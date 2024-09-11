@@ -61,13 +61,13 @@
               </ng-template>
             </button>
 
-            <input type="number" class="form-control" id="criticalStock"  name="criticalStock" formControlName="criticalStock" placeholder="Stock crítico del producto  " [(ngModel)]="product.criticalStock">
+            <input type="number" class="form-control" id="criticalStock"  name="criticalStock" required formControlName="criticalStock" [class.is-invalid] = 'notValidCriticalStock' placeholder="Stock crítico del producto" [(ngModel)]="product.criticalStock">
             <small *ngIf = "notValidCriticalStock" class = "text-danger">Ingrese un stock crítico.</small>
 
           </div>
 
           <div class="form-check">
-            <input class="form-check-input" type="checkbox" value="false" id="isFungible" formControlName="isFungible" [ngModel]="product.fungible">
+            <input class="form-check-input" type="checkbox" value="false" id="isFungible" formControlName="isFungible" [ngModel]="product.isFungible">
             <label class="form-check-label" for="flexCheckDefault">
               ¿Es un producto fungible?
             </label>

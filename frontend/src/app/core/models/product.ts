@@ -3,9 +3,10 @@ export class Product {
     public idProduct: number,
     public name: string,
     public description: string,
-    public stock: number,
-    public criticalStock: number,
+    public stock: number | null,
+    public criticalStock: number | null,
     public status: boolean,
-    public fungible: boolean
-  ){}
+    public isFungible: boolean
+  ) {}
 }
+
