@@ -1,7 +1,8 @@
-import { BadRequestException, Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
 import { product } from "@prisma/client";
 import { ProductCreateDTO } from "./dto/product-crate.dto";
+import { ProductUpdateDTO } from "./dto/product-update.dto";
 
 @Injectable()
 export class ProductService{
@@ -91,4 +92,49 @@ export class ProductService{
         })
     }
 
+    //Actualizar un producto, verifica que exista el producto con estado activo.
+    //Verifica si existe el nombre del producto que se quiere editar en la base de datos 
+    //con estado activo o inactivo, si está activo se le avisa que ya hay un producto con ese nombre
+    //si está inactivo se actualiza el nombre, pero el producto antiguo se le agrega "-{id}"
+    async updateProduct(id: number, data: ProductUpdateDTO): Promise<product> {
+        const product = await this.prisma.product.findUnique({
+            where: { id },
+        });
+        if (!product || product.state !== true) {
+            throw new NotFoundException("No se encontró el producto");
+        }
+        if (data.name && data.name !== product.name) {
+            const findProduct = await this.prisma.product.findFirst({
+                where: {
+                    name: data.name,
+                    id: {
+                        not: id, 
+                    }
+                }
+            });
+    
+            if (findProduct && findProduct.state === true) {
+                throw new BadRequestException('Ya existe un producto con ese nombre');
+            }
+
+            if (findProduct && findProduct.state === false) {
+                const updateName = `${findProduct.name}-${findProduct.id}`;
+                await this.prisma.product.update({
+                    where: { id: findProduct.id },
+                    data: {
+                        name: updateName,  
+                    },
+                });
+                return this.prisma.product.update({
+                    where: { id },
+                    data,
+                });
+            }
+        }
+        return this.prisma.product.update({
+            where: { id },
+            data,
+        });
+    }
+     
 }
