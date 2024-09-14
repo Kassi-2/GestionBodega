@@ -17,7 +17,17 @@
   </div>
 
   <div class="accordion" id="accordionExample">
-    <div class="accordion-item" *ngFor="let item of filteredList(); let i = index">
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Código</th>
+          <th scope="col">Nombre</th>
+          <th scope="col">Stock</th>
+          <th scope="col">Estado</th>
+        </tr>
+      </thead>
+    </table>
+    <div class="accordion-item" *ngFor="let product of filteredList(); let i = index">
 
       <!-- Modal for deletion -->
       <div class="modal fade" id="deleteModal{{i}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" [attr.aria-labelledby]="'deleteModalLabel{{i}}'" aria-hidden="true">
@@ -32,7 +42,7 @@
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
-              <button type="button" class="btn btn-success" (click)="deleteProduct(item.idProduct)" data-bs-dismiss="modal">Confirmar</button>
+              <button type="button" class="btn btn-success" (click)="deleteProduct(product.idProduct)" data-bs-dismiss="modal">Confirmar</button>
             </div>
           </div>
         </div>
@@ -46,9 +56,9 @@
           [attr.aria-controls]="'collapse' + i">
 
           <div class="text-start">
-            <strong>Producto:</strong> {{item.name}} <br>
-            <strong>ID:</strong> {{item.idProduct}} <br>
-            <strong>Stock:</strong> {{item.stock}}
+            <strong>Producto:</strong> {{product.name}}
+            <strong>ID:</strong> {{product.idProduct}}
+            <strong>Stock:</strong> {{product.stock}}
           </div>
           <div>
             <span class="badge bg-success">Disponible</span>
@@ -60,7 +70,7 @@
         [attr.aria-labelledby]="'heading' + i"
         data-bs-parent="#accordionExample">
         <div class="accordion-body">
-          <p><strong>Descripción:</strong> {{item.description}}</p>
+          <p><strong>Descripción:</strong> {{product.description}}</p>
 
           <a href="#" class="btn btn-primary" [attr.data-bs-toggle]="'modal'" [attr.data-bs-target]="'#exampleModal' + i" (click)="$event.stopPropagation()"><i class="bi bi-pencil-square"></i></a>
           <a href="#" class="btn btn-danger" [attr.data-bs-toggle]="'modal'" [attr.data-bs-target]="'#deleteModal' + i" (click)="$event.stopPropagation()"><i class="bi bi-trash3-fill"></i></a>
@@ -70,30 +80,25 @@
 
       <!-- Modal for editing -->
       <div class="modal fade" id="exampleModal{{i}}" tabindex="-1" [attr.aria-labelledby]="'exampleModalLabel{{i}}'" aria-hidden="true">
+
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
-              <h1 class="modal-title fs-5" id="exampleModalLabel">Agregar Producto</h1>
+              <h1 class="modal-title fs-5" id="exampleModalLabel{{i}}">Agregar Producto</h1>
               <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-              <form [formGroup]="forma" (ngSubmit)="onSubmit()" >
-
+              <form [formGroup]="userForm" (ngSubmit)="onSubmit()" >
 
                 <div class="mb-3">
                   <label for="productName" class="col-form-label">Nombre:</label>
-                  <input type="text" placeholder="{{item.idProduct}}" class="form-control" id="productName"  name="name" required formControlName="name" [class.is-invalid] = 'notValidName' [(ngModel)]="item.name">
-                  <small *ngIf = "notValidName" class = "text-danger">Ingrese un nombre de producto</small>
+                  <input value="{{product.name}}" type="text" class="form-control" id="productName"  name="name" required formControlName="name" [class.is-invalid] = 'notValidName' placeholder="Nombre del Producto">
+                  <small *ngIf = "notValidName" class = "text-danger">Ingrese un nombre de producto.</small>
                 </div>
-                <div class="mb-3">
-                  <label for="recipient-name{{i}}" class="form-label">Nombre del producto:</label>
-                  <input type="text" [placeholder]="item.name" class="form-control" id="recipient-name{{i}}">
-                </div>
-
 
                 <div class="mb-3">
                   <label for="productCategory" class="col-form-label">Categoría:</label>
-                  <select class="form-control" id="productCategory">
+                  <select class="form-control" id="productCategory" >
                     <option>Seleccione una categoría...</option>
                     <option>Insumos</option>
                     <option>Equipos</option>
@@ -103,11 +108,11 @@
 
                 <div class="mb-3">
                   <label for="productDescription" class="col-form-label">Descripción:</label>
-                  <textarea class="form-control" id="productDescription"  name="description"  formControlName="description" [(ngModel)]="products"></textarea>
+                  <textarea class="form-control" id="productDescription"  name="description"  formControlName="description"  placeholder="Descripción del producto"></textarea>
                 </div>
                 <div class="mb-3">
                   <label for="initialStock" class="col-form-label">Stock Inicial:</label>
-                  <input type="number" class="form-control" id="initialStock"  name="stock" min="0"  formControlName="stock" [(ngModel)]="exampleStock" (keypress)="preventNegative($event)" placeholder="0">
+                  <input type="number" value ="0" class="form-control" id="initialStock"  name="stock"  formControlName="stock" (keypress)="preventNegative($event)" placeholder="Stock inicial del producto">
 
                 </div>
                 <div class="mb-3">
@@ -119,108 +124,8 @@
                           cButton
                           class="m-1"
                           color="danger"
-                          size="lg" class = "myButton">
-                    ?
-                    <ng-template #popoverHtml>
-                      <h3 class="popover-header">
-                        Stock Crítico
-                      </h3>
-                      <div class="popover-body">
-                        Es el número de productos en el que el sistema mandará una alarma cuando el stock llegue a ese número. <i TextColor="info"></i>
-                      </div>
-                    </ng-template>
-                  </button>
-
-                  <input type="number" class="form-control" id="criticalStock"  name="criticalStock" min="0" formControlName="criticalStock" placeholder="0" [(ngModel)]="products">
-                </div>
-              </form>
-            </div>
-            <div class="modal-footer">
-              <button type="submit" class="btn btn-primary" (click)="onSubmit()" >Confirmar</button>
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            </div>
-          </div>
-        </div>
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel{{i}}">Editar producto</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-              <form class="row g-3 needs-validation" novalidate>
-                <div class="mb-3">
-                  <label for="recipient-name{{i}}" class="col-form-label">Código del producto:</label>
-                  <input type="text" placeholder="{{item.idProduct}}" class="form-control" id="recipient-name{{i}}" disabled>
-                </div>
-                <div class="mb-3">
-                  <label for="recipient-name{{i}}" class="form-label">Nombre del producto:</label>
-                  <input type="text" placeholder="{{item.name}}" class="form-control" id="recipient-name{{i}}">
-                </div>
-                <div class="mb-3">
-                  <label for="message-text{{i}}" class="form-label">Descripción:</label>
-                  <textarea class="form-control is-invalid" id="message-text{{i}}"
-                  placeholder="Required example textarea" required></textarea>
-                  <textarea class="form-control" id="message-text{{i}}"></textarea>
-                </div>
-              </form>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary">Send message</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- div for edit product -->
-      <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h1 class="modal-title fs-5" id="exampleModalLabel">Agregar Producto</h1>
-              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-              <form [formGroup]="forma" (ngSubmit)="onSubmit()" >
-
-
-                <div class="mb-3">
-                  <label for="productName" class="col-form-label">Nombre:</label>
-                  <input type="text" class="form-control" id="productName"  name="name" required formControlName="name" [class.is-invalid] = 'notValidName' [(ngModel)]="products">
-                  <small *ngIf = "notValidName" class = "text-danger">Ingrese un nombre de producto</small>
-                </div>
-
-
-                <div class="mb-3">
-                  <label for="productCategory" class="col-form-label">Categoría:</label>
-                  <select class="form-control" id="productCategory">
-                    <option>Seleccione una categoría...</option>
-                    <option>Insumos</option>
-                    <option>Equipos</option>
-                    <option>Herramientas</option>
-                  </select>
-                </div>
-
-                <div class="mb-3">
-                  <label for="productDescription" class="col-form-label">Descripción:</label>
-                  <textarea class="form-control" id="productDescription"  name="description"  formControlName="description" [(ngModel)]="products"></textarea>
-                </div>
-                <div class="mb-3">
-                  <label for="initialStock" class="col-form-label">Stock Inicial:</label>
-                  <input type="number" class="form-control" id="initialStock"  name="stock" min="0"  formControlName="stock" [(ngModel)]="exampleStock" (keypress)="preventNegative($event)" placeholder="0">
-
-                </div>
-                <div class="mb-3">
-                  <label for="criticalStock" class="col-form-label">Stock Crítico:</label>
-
-                  <button [cPopover]="popoverHtml"
-                          cPopoverPlacement="right"
-                          [cPopoverTrigger]="'click'"
-                          cButton
-                          class="m-1"
-                          color="danger"
-                          size="lg" class = "myButton">
+                          size="lg" class = "myButton"
+                          type="button">
                     ?
                     <ng-template #popoverHtml>
                       <h3 class="popover-header">
@@ -232,17 +137,48 @@
                     </ng-template>
                   </button>
 
-                  <input type="number" class="form-control" id="criticalStock"  name="criticalStock" min="0" formControlName="criticalStock" placeholder="0" [(ngModel)]="products">
+                  <input type="number" class="form-control" id="criticalStock"  name="criticalStock" required formControlName="criticalStock"  placeholder="Stock crítico del producto" >
+                  <small  class = "text-danger">Ingrese un stock crítico.</small>
+
                 </div>
+
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="isFungible" formControlName="isFungible">
+                  <label class="form-check-label" for="isFungible">
+                    ¿Es un producto fungible?
+                  </label>
+                  <button [cPopover]="popoverFungibleHtml"
+                          cPopoverPlacement="right"
+                          [cPopoverTrigger]="'click'"
+                          cButton
+                          color="danger"
+                          size="lg"
+                          class="myButton"
+                          type="button">
+                    ?
+                    <ng-template #popoverFungibleHtml>
+                      <h3 class="popover-header">
+                        Producto fungible
+                      </h3>
+                      <div class="popover-body">
+                        Los productos fungibles son aquellos que al prestarse no son devueltos. Esto quiere decir que al ingresar un producto fungible a un préstamo, éste se disminuirá el stock del producto en la cantidad prestada una vez finalizado el préstamo. <i cTextColor="info"></i>
+                      </div>
+                    </ng-template>
+                  </button>
+                </div>
+
               </form>
             </div>
             <div class="modal-footer">
-              <button type="submit" class="btn btn-primary" (click)="onSubmit()" >Confirmar</button>
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" >Cancelar</button>
+              <button type="submit" class="btn btn-primary" (click)="onSubmit()">Confirmar</button>
             </div>
           </div>
         </div>
       </div>
+
+      <!-- div for edit product -->
+
     </div>
   </div>
 

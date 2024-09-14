@@ -1,24 +1,71 @@
-import { Product } from './../models/product';
 import { Observable, of } from 'rxjs';
 import { Injectable } from '@angular/core';
+import { Product } from '../models/products.interface';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProductService {
-  public products = new Array<Product>
+
+  private products: Product[] = [
+    {
+      idProduct: 1,
+      name: 'Martillo',
+      description: 'Martillos de alta calidad',
+      stock: 10,
+      criticalStock: 1,
+      status: true,
+      isFungible: true
+    },
+    {
+      idProduct: 2,
+      name: 'Alicate',
+      description: 'Alicate multifuncional',
+      stock: 6,
+      criticalStock: 1,
+      status: true,
+      isFungible: true
+    },
+    {
+      idProduct: 3,
+      name: 'Tornillos',
+      description: 'Tornillos variados',
+      stock: 40,
+      criticalStock: 1,
+      status: true,
+      isFungible: true
+    },
+    {
+      idProduct: 4,
+      name: 'Confort',
+      description: 'Confort para mascotas',
+      stock: 10,
+      criticalStock: 1,
+      status: true,
+      isFungible: true
+    },
+    {
+      idProduct: 5,
+      name: 'Cloro',
+      description: 'Cloro de limpieza',
+      stock: 10,
+      criticalStock: 1,
+      status: true,
+      isFungible: true
+    }
+  ];
+
+
 
   constructor() { }
 
-  getProducts(): Observable<Product[]> {
-    const products: Product[] = [
-      new Product(1, 'Martillo', 'Martillos de alta calidad', 10, 1, 'active', 'available'),
-      new Product(2, 'Alicate', 'Alicate multifuncional', 6, 1, 'active', 'available'),
-      new Product(3, 'Tornillos', 'Tornillos variados', 40, 1, 'active', 'available'),
-      new Product(4, 'Confort', 'Confort para mascotas', 10, 1, 'active', 'available'),
-      new Product(5, 'Cloro', 'Cloro de limpieza', 10, 1, 'active', 'available')
-    ];
-    return of(products);
+  getProducts(): Product[]{
+    return this.products
+  }
+
+  deleteProduct(idProduct: number): void {
+    this.products = this.products.filter(product => product.idProduct !== idProduct);
   }
 
 }

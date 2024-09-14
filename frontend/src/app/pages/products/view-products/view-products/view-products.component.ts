@@ -1,13 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Form, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Product } from '../../../../core/models/product';
+import { Product } from '../../../../core/models/products.interface';
 import { ProductService } from '../../../../core/services/product.service';
 import { PopoverModule } from '@coreui/angular';
 import { Popover } from 'bootstrap';
-
-
-
 
 @Component({
   selector: 'app-view-products',
@@ -18,7 +15,10 @@ import { Popover } from 'bootstrap';
 })
 
 export class ViewProductsComponent implements OnInit {
-  public products = new Array<Product>
+
+  public userForm!: FormGroup;
+
+  products: Product[] = []
 
   forma!: FormGroup;
 
@@ -26,16 +26,6 @@ export class ViewProductsComponent implements OnInit {
 
   constructor(private productService: ProductService, private fb: FormBuilder) {
     this.createForm();
-
-
-    this.productService.getProducts().subscribe({
-      next: (products: Product[]) => {
-        this.products = products;
-      },
-      error: (err) => {
-        console.error('Error fetching products:', err);
-      }
-    });
   }
 
   createForm() {
@@ -73,9 +63,7 @@ export class ViewProductsComponent implements OnInit {
   onSubmit() {
 
     if (this.forma.invalid){
-
       return Object.values(this.forma.controls).forEach(control => {
-
         control.markAllAsTouched();
 
       });
@@ -97,13 +85,26 @@ export class ViewProductsComponent implements OnInit {
     );
   }
 
+
+
   deleteProduct(idProduct: number): void {
-    this.products = this.products.filter(item => item.idProduct !== idProduct);
+    this.productService.deleteProduct(idProduct);
+    this.getProducts();
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
+    this.getProducts();
+    this.userForm = new FormGroup({
+      idProduct: new FormControl(),
+      name: new FormControl('', [Validators.required]),
+      description: new FormControl(null),
+      stock: new FormControl('', [Validators.min(0)]),
+      criticalStock: new FormControl('', [Validators.required]),
+      isFungible: new FormControl(false)
+    });
+  }
 
-    };
-
-
+  getProducts(): void {
+    this.products = this.productService.getProducts();
+  }
 }
