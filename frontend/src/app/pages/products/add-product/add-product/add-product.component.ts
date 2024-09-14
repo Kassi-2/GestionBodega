@@ -1,14 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { Product } from '../../../../core/models/product';
 import { ProductService } from '../../../../core/services/product.service';
-import { FormBuilder, FormsModule } from '@angular/forms';
-import { ReactiveFormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import { FormGroup, Validators } from '@angular/forms';
-import { PopoverModule } from '@coreui/angular';
+import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
-
-
+import { Product } from '../../../../core/models/product.interface';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { PopoverModule } from '@coreui/angular';
 
 @Component({
   selector: 'app-add-product',
@@ -18,45 +15,33 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./add-product.component.css']
 })
 export class AddProductComponent implements OnInit {
-
-  products: Product[] = [];
-  product: Product = new Product(0, '', '', null, null, true, false);
+  public products: Product[] = [
+    { idProduct: 0, name: '', description: '', stock: 0, criticalStock: 0, status: true, isFungible: false },
+  ];
   private subscription: Subscription = new Subscription();
-
-
-  forma!: FormGroup;
-
+  public userForm!: FormGroup;
   isFungible: boolean = false;
-  lastId: number = 0
+  succesfulEntry: boolean = true;
 
+  constructor(private fb: FormBuilder, private productService: ProductService) {}
 
-  constructor(private fb: FormBuilder, private productService: ProductService){
-    this.createForm();
-  }
-  ngOnInit(){
-  }
-
-  createForm() {
-    this.forma = this.fb.group({
-
-      name: ['', [Validators.required]],
-      description: [''],
-      stock: ['', Validators.min(0)],
-      criticalStock: ['', [Validators.required]],
-      isFungible: [false]
-    })
+  ngOnInit() {
+    this.userForm = new FormGroup({
+      idProduct: new FormControl(),
+      name: new FormControl('', [Validators.required]),
+      description: new FormControl(null),
+      stock: new FormControl('', [Validators.min(0)]),
+      criticalStock: new FormControl('', [Validators.required]),
+      isFungible: new FormControl(false)
+    });
   }
 
-  get notValidName(){
-
-    return this.forma.get('name')?.invalid && this.forma.get('name')?.touched;
-
+  get notValidName() {
+    return this.userForm.get('name')?.invalid && this.userForm.get('name')?.touched;
   }
 
-  get notValidCriticalStock(){
-
-    return this.forma.get('criticalStock')?.invalid && this.forma.get('criticalStock')?.touched;
-
+  get notValidCriticalStock() {
+    return this.userForm.get('criticalStock')?.invalid && this.userForm.get('criticalStock')?.touched;
   }
 
   preventNegative(event: KeyboardEvent) {
@@ -65,77 +50,59 @@ export class AddProductComponent implements OnInit {
     }
   }
 
-  closeModal(){
-    return Object.values(this.forma.controls).forEach(control => {
-
-      control.reset();
-      control.markAsUntouched();
-
-    });
+  closeModal() {
+    this.userForm.reset();
   }
 
   onSubmit() {
-
-    if (this.forma.invalid){
-
-      return Object.values(this.forma.controls).forEach(control => {
-
-        control.markAllAsTouched();
-
+    if (this.userForm.invalid) {
+      Object.values(this.userForm.controls).forEach(control => {
+        control.markAsTouched();
       });
-
+      return;
     }
 
     this.subscription.add(
       this.productService.getIDLastProduct().subscribe(lastId => {
-
         const newId = lastId + 1;
-        const formValues = this.forma.value;
 
-        const fungibleValue = this.forma.get('isFungible')?.value;
-
-        if (this.product.stock == null){
-          this.product.stock = 0
-        }
+        const formValues = this.userForm.value;
+        const stockValue = (formValues.stock === null || formValues.stock === '')
+        ? 0
+        : Number(formValues.stock);
 
 
-        this.product.isFungible = fungibleValue
+        const newProduct: Product = {
+          idProduct: newId,
+          name: formValues.name,
+          description: formValues.description ?? null,
+          stock: stockValue,
+          criticalStock: formValues.criticalStock,
+          status: true,
+          isFungible: formValues.isFungible ?? false,
+        };
 
-        if (this.product.isFungible == null){
-          this.product.isFungible = false
-        }
+        this.subscription.add(
+          this.productService.checkProductExists(newProduct.name).subscribe(exists => {
+            if (exists) {
+              alert('El producto ya existe. Por favor, ingrese otro nombre.');
+            } else {
+              this.productService.addProduct(newProduct);
+              console.log('Producto agregado:', newProduct);
 
-        const newProduct = new Product(
-          newId,
-          this.product.name,
-          this.product.description,
-          this.product.stock,
-          this.product.criticalStock,
-          true,
-          this.product.isFungible
+              this.userForm.reset({
+                idProduct: null,
+                name: '',
+                description: null,
+                stock: null,
+                criticalStock: null,
+                isFungible: false
+              });
+            }
+          })
         );
 
-        this.productService.addProduct(newProduct)
-
-        this.products.push(newProduct);
-
-        console.log(newProduct)
-        console.log(this.forma)
-
-
-        return Object.values(this.forma.controls).forEach(control => {
-
-          control.reset();
-          this.product = new Product(0, '', '', null, null, true, false);
-        });
-      }
-    )
-    )
+      })
+    );
   }
-
-  }
-
-
-
-
-
+}

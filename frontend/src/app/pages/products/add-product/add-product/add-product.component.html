@@ -10,12 +10,12 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
       <div class="modal-body">
-        <form [formGroup]="forma" (ngSubmit)="onSubmit()" >
+        <form [formGroup]="userForm" (ngSubmit)="onSubmit()" >
 
 
           <div class="mb-3">
             <label for="productName" class="col-form-label">Nombre:</label>
-            <input type="text" class="form-control" id="productName"  name="name" required formControlName="name" [class.is-invalid] = 'notValidName' [(ngModel)]="product.name" placeholder="Nombre del Producto">
+            <input type="text" class="form-control" id="productName"  name="name" required formControlName="name" [class.is-invalid] = 'notValidName' placeholder="Nombre del Producto">
             <small *ngIf = "notValidName" class = "text-danger">Ingrese un nombre de producto.</small>
           </div>
 
@@ -32,11 +32,11 @@
 
           <div class="mb-3">
             <label for="productDescription" class="col-form-label">Descripción:</label>
-            <textarea class="form-control" id="productDescription"  name="description"  formControlName="description" [(ngModel)]="product.description" placeholder="Descripción del producto"></textarea>
+            <textarea class="form-control" id="productDescription"  name="description"  formControlName="description"  placeholder="Descripción del producto"></textarea>
           </div>
           <div class="mb-3">
             <label for="initialStock" class="col-form-label">Stock Inicial:</label>
-            <input type="number" value ="0" class="form-control" id="initialStock"  name="stock"  formControlName="stock" [(ngModel)]="product.stock" (keypress)="preventNegative($event)" placeholder="Stock inicial del producto">
+            <input type="number" value ="0" class="form-control" id="initialStock"  name="stock"  formControlName="stock" (keypress)="preventNegative($event)" placeholder="Stock inicial del producto">
 
           </div>
           <div class="mb-3">
@@ -61,14 +61,14 @@
               </ng-template>
             </button>
 
-            <input type="number" class="form-control" id="criticalStock"  name="criticalStock" required formControlName="criticalStock" [class.is-invalid] = 'notValidCriticalStock' placeholder="Stock crítico del producto" [(ngModel)]="product.criticalStock">
+            <input type="number" class="form-control" id="criticalStock"  name="criticalStock" required formControlName="criticalStock" [class.is-invalid] = 'notValidCriticalStock' placeholder="Stock crítico del producto" >
             <small *ngIf = "notValidCriticalStock" class = "text-danger">Ingrese un stock crítico.</small>
 
           </div>
 
           <div class="form-check">
-            <input class="form-check-input" type="checkbox" value="false" id="isFungible" formControlName="isFungible" [ngModel]="product.isFungible">
-            <label class="form-check-label" for="flexCheckDefault">
+            <input class="form-check-input" type="checkbox" id="isFungible" formControlName="isFungible">
+            <label class="form-check-label" for="isFungible">
               ¿Es un producto fungible?
             </label>
             <button [cPopover]="popoverFungibleHtml"
@@ -76,7 +76,8 @@
                     [cPopoverTrigger]="'click'"
                     cButton
                     color="danger"
-                    size="lg" class = "myButton"
+                    size="lg"
+                    class="myButton"
                     type="button">
               ?
               <ng-template #popoverFungibleHtml>
@@ -102,11 +103,11 @@
 
 <h3 class = "mt-5">Formulario</h3>
 
-<pre>Estado de Formulario: {{forma.valid}}
+<pre>Estado de Formulario: {{userForm.valid}}
   <br>
-  Status:{{forma.status}}
+  Status:{{userForm.status}}
 </pre>
 
 <pre>
-  {{forma.value | json}}
+  {{userForm.value | json}}
 </pre>

@@ -4,9 +4,8 @@
 
 .myButton {
   font-size: 13px;
-  font-weight: bold;
-  background: #eeeeee;
-  color: #333333;
+  background-color: #F79123;
+  color: white;
   border: 1px none #cccccc;
   border-radius: 27px;
   padding: 5px 10px;
@@ -15,11 +14,25 @@
 }
 
 .myButton:hover {
-  background: #e5e5e5;
-  color: #333333;
+  background-color: #FF9933;
+  color: white;
 }
 
 .modal-dialog{
   margin-top: 80px;
+}
+
+.popover-body{
+  text-align: justify;
+}
+
+.btn-primary:hover{
+  background-color: #FF9933;
+  border: #FF9933
+}
+
+.btn-primary{
+  background-color: #F79123;
+  border: #F79123
 }
 
