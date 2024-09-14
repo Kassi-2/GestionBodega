@@ -16,3 +16,40 @@
 .badge {
   font-size: 0.85rem;
 }
+.caja-numeros{
+  margin-left: 10px;
+}
+
+.myButton {
+  font-size: 13px;
+  background-color: #F79123;
+  color: white;
+  border: 1px none #cccccc;
+  border-radius: 27px;
+  padding: 5px 10px;
+  letter-spacing: 0px;
+  margin-left: 10px;
+}
+
+.myButton:hover {
+  background-color: #FF9933;
+  color: white;
+}
+
+.modal-dialog{
+  margin-top: 80px;
+}
+
+.popover-body{
+  text-align: justify;
+}
+
+.btn-primary:hover{
+  background-color: #FF9933;
+  border: #FF9933
+}
+
+.btn-primary{
+  background-color: #F79123;
+  border: #F79123
+}

@@ -1,6 +1,7 @@
 import { Observable, of } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { Product } from '../models/products.interface';
+import { observableToBeFn } from 'rxjs/internal/testing/TestScheduler';
 
 
 @Injectable({
@@ -16,7 +17,7 @@ export class ProductService {
       stock: 10,
       criticalStock: 1,
       status: true,
-      isFungible: true
+      isFungible: false
     },
     {
       idProduct: 2,
@@ -25,7 +26,7 @@ export class ProductService {
       stock: 6,
       criticalStock: 1,
       status: true,
-      isFungible: true
+      isFungible: false
     },
     {
       idProduct: 3,
@@ -34,7 +35,7 @@ export class ProductService {
       stock: 40,
       criticalStock: 1,
       status: true,
-      isFungible: true
+      isFungible: false
     },
     {
       idProduct: 4,
@@ -64,8 +65,26 @@ export class ProductService {
     return this.products
   }
 
+  updateProduct(updatedProduct: Product): Observable<Product> {
+    // Encuentra el índice del producto que se debe actualizar
+    const index = this.products.findIndex(product => product.idProduct === updatedProduct.idProduct);
+
+    if (index !== -1) {
+      // Actualiza el producto en el arreglo
+      this.products[index] = { ...this.products[index], ...updatedProduct };
+    }
+
+    // Devuelve el producto actualizado como Observable
+    return of(this.products[index]);
+  }
+
+
   deleteProduct(idProduct: number): void {
     this.products = this.products.filter(product => product.idProduct !== idProduct);
+  }
+
+  getProductForEdit(idProduct: number): Product | undefined {
+    return this.products.find(product => product.idProduct === idProduct);
   }
 
 }
