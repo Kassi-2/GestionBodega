@@ -1,15 +1,41 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import { UserType } from '@prisma/client';
+import {
+  IsEmail,
+  IsEnum,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export class UserCreateDTO {
   @IsNotEmpty()
   @IsString()
-  run: string;
+  rut: string;
 
   @IsNotEmpty()
   @IsString()
-  firstName: string;
+  name: string;
+
+  @IsOptional()
+  @IsEmail()
+  @IsString()
+  mail: string;
+
+  @IsOptional()
+  @IsNumber()
+  phoneNumber: number;
 
   @IsNotEmpty()
   @IsString()
-  lastName: string;
+  @IsEnum(UserType)
+  type: UserType;
+
+  @IsOptional()
+  @IsString()
+  degree: string;
+
+  @IsOptional()
+  @IsString()
+  role: string;
 }
