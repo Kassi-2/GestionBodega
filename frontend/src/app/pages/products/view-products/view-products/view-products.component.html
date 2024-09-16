@@ -30,23 +30,6 @@
     <div class="accordion-item" *ngFor="let product of filteredList(); let i = index">
 
       <!-- Modal for deletion -->
-      <div class="modal fade" id="deleteModal{{i}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" [attr.aria-labelledby]="'deleteModalLabel{{i}}'" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="deleteModalLabel{{i}}">Eliminación</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-              ¿Estás seguro que deseas eliminar el producto?
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
-              <button type="button" class="btn btn-success" (click)="deleteProduct(product.idProduct)" data-bs-dismiss="modal">Confirmar</button>
-            </div>
-          </div>
-        </div>
-      </div>
 
       <h2 class="accordion-header" id="heading{{i}}">
         <button class="accordion-button collapsed d-flex justify-content-between align-items-center"
@@ -73,7 +56,7 @@
           <p><strong>Descripción:</strong> {{product.description}}</p>
 
           <a href="#" class="btn btn-primary" [attr.data-bs-toggle]="'modal'" [attr.data-bs-target]="'#exampleModal' + i" (click)="$event.stopPropagation()" (click)="editProduct(product.idProduct)"><i class="bi bi-pencil-square"></i></a>
-          <a href="#" class="btn btn-danger" [attr.data-bs-toggle]="'modal'" [attr.data-bs-target]="'#deleteModal' + i" (click)="$event.stopPropagation()"><i class="bi bi-trash3-fill"></i></a>
+          <a href="#" class="btn btn-danger" [attr.data-bs-toggle]="'modal'" [attr.data-bs-target]="'#deleteModal' + i" (click)="$event.stopPropagation()" (click)="deleteProduct(product.idProduct)"><i class="bi bi-trash3-fill"></i></a>
           <button class="btn btn-secondary">Ver historial</button>
         </div>
       </div>
@@ -177,9 +160,6 @@
           </div>
         </div>
       </div>
-
-      <!-- div for edit product -->
-
     </div>
   </div>
 

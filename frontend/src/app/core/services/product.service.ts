@@ -66,18 +66,18 @@ export class ProductService {
   }
 
   updateProduct(updatedProduct: Product): Observable<Product> {
-    // Encuentra el índice del producto que se debe actualizar
     const index = this.products.findIndex(product => product.idProduct === updatedProduct.idProduct);
 
     if (index !== -1) {
-      // Actualiza el producto en el arreglo
       this.products[index] = { ...this.products[index], ...updatedProduct };
     }
 
-    // Devuelve el producto actualizado como Observable
     return of(this.products[index]);
   }
 
+  nameUnique(name: string, idProduct?: number): boolean {
+    return !this.products.some(product => product.name === name && product.idProduct !== idProduct);
+  }
 
   deleteProduct(idProduct: number): void {
     this.products = this.products.filter(product => product.idProduct !== idProduct);

@@ -6,6 +6,8 @@ import { ProductService } from '../../../../core/services/product.service';
 import { PopoverModule } from '@coreui/angular';
 import { Popover } from 'bootstrap';
 import * as bootstrap from 'bootstrap';
+import Swal from 'sweetalert2';
+
 
 
 @Component({
@@ -18,13 +20,13 @@ import * as bootstrap from 'bootstrap';
 
 export class ViewProductsComponent implements OnInit {
 
-  private originalProduct: Product | null = null;
-  selectedProductId: number | null = null;
-
-
   public userForm!: FormGroup;
 
-  products: Product[] = []
+  private originalProduct: Product | null = null;
+
+  selectedProductId: number | null = null;
+
+  products: Product[] = [];
 
   forma!: FormGroup;
 
@@ -40,7 +42,7 @@ export class ViewProductsComponent implements OnInit {
       description: [''],
       stock: ['', Validators.min(0)],
       criticalStock: [''],
-      status: [false],
+      status: [true],
       isFungible: [false]
 
     })
@@ -85,17 +87,56 @@ export class ViewProductsComponent implements OnInit {
 
 //Eliminar un producto
   deleteProduct(idProduct: number): void {
-    this.productService.deleteProduct(idProduct);
-    this.getProducts();
-  }
+  // Configurar el estilo personalizado para los botones
+  const swalWithBootstrapButtons = Swal.mixin({
+    customClass: {
+      confirmButton: "btn btn-success",
+      cancelButton: "btn btn-danger me-2"
+    },
+    buttonsStyling: false
+  });
 
-//Editar producto
+  // Mostrar la alerta de confirmación
+  swalWithBootstrapButtons.fire({
+    title: "¿Estás seguro?",
+    text: "¡Estás a punto de eliminar un producto!",
+    icon: "error",
+    iconHtml: '<i class="custom-icon bi bi-exclamation-triangle-fill"></i>',
+    showCancelButton: true,
+    confirmButtonText: "Sí, estoy seguro",
+    cancelButtonText: "No, cancelar",
+    reverseButtons: true
+  }).then((result) => {
+    if (result.isConfirmed) {
+        this.productService.deleteProduct(idProduct);
+        this.getProducts();
+
+        swalWithBootstrapButtons.fire({
+          title: "¡Eliminado!",
+          text: "El producto ha sido eliminado exitosamente.",
+          icon: "success",
+          timer: 1500,
+          showConfirmButton: false
+        });
+    } else if (result.dismiss === Swal.DismissReason.cancel) {
+      swalWithBootstrapButtons.fire({
+        title: "Cancelado",
+        text: "El producto no se ha eliminado.",
+        icon: "error",
+        timer: 1500,
+        showConfirmButton: false
+      });
+    }
+  });
+}
+
+//Editar producto, se edita el nombre del producto, la descripción del producto, el stock del producto,
+//el stock crítico del producto y si es fungible.
   editProduct(idProduct: number) {
     this.selectedProductId = idProduct;
     const product = this.productService.getProductForEdit(idProduct);
 
     if (product) {
-
       this.originalProduct = { ...product };
 
       this.forma.patchValue({
@@ -108,27 +149,46 @@ export class ViewProductsComponent implements OnInit {
     }
   }
 
-
 // enviar datos editados del producto
   onSubmit() {
+
     if (this.forma.invalid) {
       return Object.values(this.forma.controls).forEach(control => {
         control.markAllAsTouched();
       });
     }
-    console.log(this.originalProduct);
 
+    const updatedProduct: Product = {idProduct: this.selectedProductId, ...this.forma.value };
 
-    const updatedProduct: Product = { ...this.forma.value, idProduct: this.selectedProductId };
-    console.log("esto es" + updatedProduct);
+    if (!this.productService.nameUnique(updatedProduct.name, updatedProduct.idProduct)) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Nombre duplicado',
+        text: 'Ya existe un producto con ese nombre. Por favor, elija un nombre diferente.',
+        confirmButtonText: 'Aceptar'
+      });
+      return;
+    }
 
     if (this.originalProduct && JSON.stringify(this.originalProduct) === JSON.stringify(updatedProduct)) {
-      // Si los valores no han cambiado, no actualiza el producto y muestra un mensaje si es necesario
-      console.log('No hay cambios en el producto.');
+      Swal.fire({
+        position: "center",
+        icon: "success",
+        title: "El producto se actualizo con exito!",
+        showConfirmButton: false,
+        timer: 1500
+      });
       return;
     }
 
     this.productService.updateProduct(updatedProduct).subscribe(response => {
+      Swal.fire({
+        position: "center",
+        icon: "success",
+        title: "El producto se actualizo con exito!",
+        showConfirmButton: false,
+        timer: 1500
+      });
       this.getProducts();
     });
 
