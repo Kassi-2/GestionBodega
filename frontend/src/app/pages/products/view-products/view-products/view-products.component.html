@@ -1,161 +1,155 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css">
+
 </head>
 <body>
-  <!-- input for search -->
-  <div>
-    <input type="text" [(ngModel)]="searchTerm" placeholder="Buscar..." class="form-control" />
+
+  <!-- Input for search -->
+  <div class="container my-3">
+
   </div>
 
-  <div class="col-12 btn-container mb-3">
-    <a href="#" class="btn btn-green" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="bi bi-patch-plus-fill" ></i></a>
-  </div>
-
-  <div class="accordion" id="accordionExample">
-    <table class="table">
-      <thead>
-        <tr>
-          <th scope="col">Código</th>
-          <th scope="col">Nombre</th>
-          <th scope="col">Stock</th>
-          <th scope="col">Estado</th>
-        </tr>
-      </thead>
-    </table>
-    <div class="accordion-item" *ngFor="let product of filteredList(); let i = index">
-
-      <!-- Modal for deletion -->
-
-      <h2 class="accordion-header" id="heading{{i}}">
-        <button class="accordion-button collapsed d-flex justify-content-between align-items-center"
-          type="button" data-bs-toggle="collapse"
-          [attr.data-bs-target]="'#collapse' + i"
-          aria-expanded="false"
-          [attr.aria-controls]="'collapse' + i">
-
-          <div class="text-start">
-            <strong>Producto:</strong> {{product.name}}
-            <strong>ID:</strong> {{product.idProduct}}
-            <strong>Stock:</strong> {{product.stock}}
-          </div>
-          <div>
-            <span class="badge bg-success">Disponible</span>
-          </div>
-        </button>
-      </h2>
-
-      <div id="collapse{{i}}" class="accordion-collapse collapse"
-        [attr.aria-labelledby]="'heading' + i"
-        data-bs-parent="#accordionExample">
-        <div class="accordion-body">
-          <p><strong>Descripción:</strong> {{product.description}}</p>
-
-          <a href="#" class="btn btn-primary" [attr.data-bs-toggle]="'modal'" [attr.data-bs-target]="'#exampleModal' + i" (click)="$event.stopPropagation()" (click)="editProduct(product.idProduct)"><i class="bi bi-pencil-square"></i></a>
-          <a href="#" class="btn btn-danger" [attr.data-bs-toggle]="'modal'" [attr.data-bs-target]="'#deleteModal' + i" (click)="$event.stopPropagation()" (click)="deleteProduct(product.idProduct)"><i class="bi bi-trash3-fill"></i></a>
-          <button class="btn btn-secondary">Ver historial</button>
+  <div class="container mb-4">
+    <div class="d-flex align-items-center justify-content-between">
+      <div class="d-flex align-items-center">
+        <p class="mb-0 me-2 fw-semibold">Ordenar por:</p>
+        <div class="dropdown">
+          <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
+            {{ selectedOption }} <!-- Muestra la opción seleccionada -->
+          </button>
+          <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2">
+            <li><a class="dropdown-item" href="#" (click)="selectOption('A-Z')">A-Z</a></li>
+            <li><a class="dropdown-item" href="#" (click)="selectOption('Z-A')">Z-A</a></li>
+            <li><a class="dropdown-item" href="#" (click)="selectOption('De menor a mayor stock')">De menor a mayor stock</a></li>
+            <li><a class="dropdown-item" href="#" (click)="selectOption('De mayor a menor stock')">De mayor a menor stock</a></li>
+          </ul>
         </div>
       </div>
 
-      <!-- Modal for editing -->
-      <div class="modal fade" id="exampleModal{{i}}" tabindex="-1" [attr.aria-labelledby]="'exampleModalLabel{{i}}'" aria-hidden="true">
 
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h1 class="modal-title fs-5" id="exampleModalLabel{{i}}">Agregar Producto</h1>
-              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      <div class="ms-3 flex-grow-1 me-4">
+        <input type="text" [(ngModel)]="searchTerm" placeholder="Buscar..." class="form-control" style="min-width: 300px;" />
+      </div>
+
+      <a href="#" class="btn btn-success d-flex align-items-center">
+        <i class="bi bi-patch-plus-fill me-2"></i> Añadir Producto
+      </a>
+
+    </div>
+  </div>
+
+
+  <div class="container">
+    <div class="accordion" id="accordionExample">
+      <table class="table table-striped table-bordered">
+        <thead class="table-light">
+          <tr>
+            <th scope="col">Código</th>
+            <th scope="col">Nombre</th>
+            <th scope="col">Stock</th>
+            <th scope="col">Estado</th>
+          </tr>
+        </thead>
+      </table>
+
+      <div class="accordion-item" *ngFor="let product of filteredList(); let i = index">
+        <!-- Accordion Item -->
+        <h2 class="accordion-header" id="heading{{i}}">
+          <button class="accordion-button collapsed d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" [attr.data-bs-target]="'#collapse' + i" aria-expanded="false" [attr.aria-controls]="'collapse' + i">
+            <div class="d-flex align-items-center">
+              <div class="codeProduct">
+                {{product.idProduct}}
+              </div>
+              <div class="nameProduct">
+                {{product.name}}
+              </div>
+              <div class="stockProduct">
+               {{product.stock}}
+              </div>
             </div>
-            <div class="modal-body">
-              <form [formGroup]="forma" (ngSubmit)="onSubmit()" >
-
-                <div class="mb-3">
-                  <label for="productName" class="col-form-label">Nombre:</label>
-                  <input type="text" class="form-control" id="productName"  name="name" required formControlName="name" [class.is-invalid] = 'notValidName' placeholder="Nombre del Producto">
-                  <small *ngIf = "notValidName" class = "text-danger">Ingrese un nombre de producto.</small>
-                </div>
-
-                <div class="mb-3">
-                  <label for="productCategory" class="col-form-label">Categoría:</label>
-                  <select class="form-control" id="productCategory" >
-                    <option>Seleccione una categoría...</option>
-                    <option>Insumos</option>
-                    <option>Equipos</option>
-                    <option>Herramientas</option>
-                  </select>
-                </div>
-
-                <div class="mb-3">
-                  <label for="productDescription" class="col-form-label">Descripción:</label>
-                  <textarea class="form-control" id="productDescription"  name="description"  formControlName="description"></textarea>
-
-                </div>
-                <div class="mb-3">
-                  <label for="initialStock" class="col-form-label">Stock Inicial:</label>
-                  <input type="number" value ="0" class="form-control" id="initialStock"  name="stock"  formControlName="stock" (keypress)="preventNegative($event)" placeholder="Stock inicial del producto">
-
-                </div>
-                <div class="mb-3">
-                  <label for="criticalStock" class="col-form-label">Stock Crítico:</label>
-
-                  <button [cPopover]="popoverHtml"
-                          cPopoverPlacement="right"
-                          [cPopoverTrigger]="'click'"
-                          cButton
-                          class="m-1"
-                          color="danger"
-                          size="lg" class = "myButton"
-                          type="button">
-                    ?
-                    <ng-template #popoverHtml>
-                      <h3 class="popover-header">
-                        Stock Crítico
-                      </h3>
-                      <div class="popover-body">
-                        Es el número de productos en el que el sistema mandará una alarma cuando el stock llegue a ese número. <i cTextColor="info"></i>
-                      </div>
-                    </ng-template>
-                  </button>
-
-                  <input type="number" class="form-control" id="criticalStock"  name="criticalStock" required formControlName="criticalStock"  placeholder="Stock crítico del producto" >
-                  <small  class = "text-danger">Ingrese un stock crítico.</small>
-
-                </div>
-
-                <div class="form-check">
-                  <input class="form-check-input" type="checkbox" id="isFungible" formControlName="isFungible">
-                  <label class="form-check-label" for="isFungible">
-                    ¿Es un producto fungible?
-                  </label>
-                  <button [cPopover]="popoverFungibleHtml"
-                          cPopoverPlacement="right"
-                          [cPopoverTrigger]="'click'"
-                          cButton
-                          color="danger"
-                          size="lg"
-                          class="myButton"
-                          type="button">
-                    ?
-                    <ng-template #popoverFungibleHtml>
-                      <h3 class="popover-header">
-                        Producto fungible
-                      </h3>
-                      <div class="popover-body">
-                        Los productos fungibles son aquellos que al prestarse no son devueltos. Esto quiere decir que al ingresar un producto fungible a un préstamo, éste se disminuirá el stock del producto en la cantidad prestada una vez finalizado el préstamo. <i cTextColor="info"></i>
-                      </div>
-                    </ng-template>
-                  </button>
-                </div>
-
-              </form>
+            <div class="state-for-product">
+              <span *ngIf="product.stock > 0; else noStock" class="badge bg-success">Disponible</span>
+              <ng-template #noStock>
+                <span class="badge bg-danger">No disponible</span>
+              </ng-template>
             </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" >Cancelar</button>
-              <button type="submit" class="btn btn-primary" data-bs-dismiss="modal" (click)="onSubmit()">Confirmar</button>
+          </button>
+        </h2>
+
+        <div id="collapse{{i}}" class="accordion-collapse collapse" [attr.aria-labelledby]="'heading' + i" data-bs-parent="#accordionExample">
+          <div class="accordion-body">
+            <p><strong>Descripción:</strong> {{product.description}}</p>
+            <div class="d-flex">
+              <a href="#" class="btn btn-primary me-2" [attr.data-bs-toggle]="'modal'" [attr.data-bs-target]="'#exampleModal' + i" (click)="editProduct(product.idProduct)">
+                <i class="bi bi-pencil-square"></i> Editar
+              </a>
+              <a href="#" class="btn btn-danger me-2" [attr.data-bs-toggle]="'modal'" [attr.data-bs-target]="'#deleteModal' + i" (click)="deleteProduct(product.idProduct)">
+                <i class="bi bi-trash3-fill"></i> Eliminar
+              </a>
+              <button class="btn btn-secondary">Ver historial</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Modal for editing -->
+        <div class="modal fade" id="exampleModal{{i}}" tabindex="-1" [attr.aria-labelledby]="'exampleModalLabel{{i}}'" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel{{i}}">Editar Producto</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+              </div>
+              <div class="modal-body">
+                <form [formGroup]="forma" (ngSubmit)="onSubmit()">
+                  <div class="mb-3">
+                    <label for="productName" class="col-form-label">Nombre:</label>
+                    <input type="text" class="form-control" id="productName" formControlName="name" [class.is-invalid]="notValidName" placeholder="Nombre del Producto">
+                    <small *ngIf="notValidName" class="text-danger">Ingrese un nombre de producto.</small>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="productCategory" class="col-form-label">Categoría:</label>
+                    <select class="form-control" id="productCategory">
+                      <option>Seleccione una categoría...</option>
+                      <option>Insumos</option>
+                      <option>Equipos</option>
+                      <option>Herramientas</option>
+                    </select>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="productDescription" class="col-form-label">Descripción:</label>
+                    <textarea class="form-control" id="productDescription" formControlName="description"></textarea>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="initialStock" class="col-form-label">Stock Actual:</label>
+                    <input type="number" class="form-control" id="initialStock" formControlName="stock" (keypress)="preventNegative($event)" placeholder="Stock inicial del producto">
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="criticalStock" class="col-form-label">Stock Crítico:</label>
+                    <input type="number" class="form-control" id="criticalStock" name="criticalStock" required formControlName="criticalStock" (keypress)="preventNegative($event)" placeholder="Stock crítico del producto">
+                  <small *ngIf="forma.get('criticalStock')?.invalid && forma.get('criticalStock')?.touched" class="text-danger">
+                    Ingrese un stock crítico.
+                  </small>
+                  </div>
+
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="isFungible" formControlName="isFungible">
+                    <label class="form-check-label" for="isFungible">¿Es un producto fungible?</label>
+                  </div>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" >Cancelar</button>
+                <button type="submit" class="btn btn-primary" data-bs-dismiss="modal" (click)="onSubmit()">Confirmar</button>
+              </div>
             </div>
           </div>
         </div>
@@ -163,9 +157,6 @@
     </div>
   </div>
 
-
-
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76A1ev39kVw4D1N+0D0E/lp6AS0eO2v9b4zDiS9PtPjSmiCh0sc3Onmr4/sdD9" crossorigin="anonymous"></script>
-
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

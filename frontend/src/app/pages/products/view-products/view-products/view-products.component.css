@@ -2,6 +2,9 @@
   background-color: #f8f9fa; /* Color más suave */
   padding: 15px;
   border: none;
+  display: flex;
+  justify-content: space-between; /* Alinea el contenido a los extremos */
+  align-items: center; /* Centra verticalmente los elementos */
 }
 
 .accordion-button:hover {
@@ -16,7 +19,8 @@
 .badge {
   font-size: 0.85rem;
 }
-.caja-numeros{
+
+.caja-numeros {
   margin-left: 10px;
 }
 
@@ -36,21 +40,106 @@
   color: white;
 }
 
-.modal-dialog{
-  margin-top: 80px;
+.modal-dialog {
+  margin-top: 30px;
 }
 
-.popover-body{
+.popover-body {
   text-align: justify;
 }
 
-.btn-primary:hover{
+.btn-primary:hover {
   background-color: #FF9933;
-  border: #FF9933
+  border: #FF9933;
 }
 
-.btn-primary{
+.btn-primary {
   background-color: #F79123;
-  border: #F79123
+  border: #F79123;
 }
 
+body {
+  background-color: #f7f9fc;
+  font-family: Arial, sans-serif;
+}
+.btn-green {
+  background-color: #28a745;
+  color: white;
+}
+.btn-green:hover {
+  background-color: #218838;
+}
+.btn-container {
+  text-align: right;
+}
+.accordion-header {
+  background-color: #f1f3f5;
+  border-radius: 8px;
+}
+.accordion-button {
+  font-weight: bold;
+}
+.modal-header, .modal-footer {
+  background-color: #f8f9fa;
+}
+.myButton {
+  margin-left: 5px;
+}
+.form-check-input:checked {
+  background-color: #28a745;
+  border-color: #28a745;
+}
+.accordion-button {
+  background-color: #f8f9fa; /* Color más suave */
+  padding: 15px;
+  border: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.accordion-button:hover {
+  background-color: #e2e6ea;
+}
+
+.accordion-body {
+  background-color: #ffffff;
+  border-top: 1px solid #ddd;
+}
+
+.badge {
+  font-size: 0.85rem;
+}
+
+.state-for-product {
+  display: flex;
+  align-items: center;
+}
+
+.state-for-product .badge {
+  margin-left: 10px;
+}
+
+.d-flex {
+  display: flex;
+}
+
+.codeProduct {
+  position: absolute;
+  left: 0,11%;
+}
+
+.nameProduct {
+  position: absolute;
+  left: 26.2%;
+}
+
+.stockProduct {
+  position: absolute;
+  left: 54.5%;
+}
+
+.state-for-product {
+  position: absolute;
+  left: 75%;
+}

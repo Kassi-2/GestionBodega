@@ -24,7 +24,7 @@ export class ProductService {
       name: 'Alicate',
       description: 'Alicate multifuncional',
       stock: 6,
-      criticalStock: 1,
+      criticalStock: 2,
       status: true,
       isFungible: false
     },
@@ -41,7 +41,7 @@ export class ProductService {
       idProduct: 4,
       name: 'Confort',
       description: 'Confort para mascotas',
-      stock: 10,
+      stock: 0,
       criticalStock: 1,
       status: true,
       isFungible: true
@@ -51,7 +51,7 @@ export class ProductService {
       name: 'Cloro',
       description: 'Cloro de limpieza',
       stock: 10,
-      criticalStock: 1,
+      criticalStock: 3,
       status: true,
       isFungible: true
     }

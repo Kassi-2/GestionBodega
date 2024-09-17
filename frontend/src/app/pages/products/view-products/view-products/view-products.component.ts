@@ -26,6 +26,8 @@ export class ViewProductsComponent implements OnInit {
 
   selectedProductId: number | null = null;
 
+  selectedOption: string = 'A-Z';
+
   products: Product[] = [];
 
   forma!: FormGroup;
@@ -64,6 +66,10 @@ export class ViewProductsComponent implements OnInit {
 
   get notValidName(){
     return this.forma.get('name')?.invalid && this.forma.get('name')?.touched;
+  }
+
+  selectOption(option: string) {
+    this.selectedOption = option;
   }
 
   preventNegative(event: KeyboardEvent) {
