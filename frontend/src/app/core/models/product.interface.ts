@@ -6,5 +6,4 @@ export interface Product {
     criticalStock: number ;
     status: boolean;
     isFungible: boolean;
-
 }
