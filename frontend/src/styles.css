@@ -16,3 +16,6 @@
 .swal2-cancel {
   background-color: #dc3545; /* Cambiar el color del botón de cancelación */
 }
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

@@ -1,43 +1,54 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { Form, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Product } from '../../../../core/models/products.interface';
 import { ProductService } from '../../../../core/services/product.service';
 import { PopoverModule } from '@coreui/angular';
-import { Popover } from 'bootstrap';
 import * as bootstrap from 'bootstrap';
 import Swal from 'sweetalert2';
-
-
+import { PageEvent } from '@angular/material/paginator';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-view-products',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, PopoverModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, PopoverModule, MatPaginatorModule],
   templateUrl: './view-products.component.html',
   styleUrls: ['./view-products.component.css']
 })
 
 export class ViewProductsComponent implements OnInit {
 
-  public userForm!: FormGroup;
-
+  public forma!: FormGroup;
   private originalProduct: Product | null = null;
 
   selectedProductId: number | null = null;
-
-  selectedOption: string = 'A-Z';
-
   products: Product[] = [];
-
-  forma!: FormGroup;
-
   exampleStock: number = 0;
 
+  //Estos atributos serviran para buscar un producto según el nombre y para la paginación de la lista de productos.
+  searchTerm: string = '';
+  pageSize = 3;
+  start: number = 0;
+  end: number = this.pageSize;
+  selectedOption: string = 'A-Z';
+
+
+  //Esta función constructor crea el formulario con el que se va a trabajar (para agregar o editar un producto).
   constructor(private productService: ProductService, private fb: FormBuilder) {
     this.createForm();
   }
 
+  //Esta función es para cambiar la página de la paginación de la lista de productos.
+  changePage(e: PageEvent) {
+    this.start = e.pageIndex * e.pageSize;
+    this.end = Math.min(this.start + e.pageSize, this.products.length);
+  }
+
+
+
+
+  // Inicializamos el formulario con valores predeterminados (formato del producto).
   createForm() {
     this.forma = this.fb.group({
       name: ['', [Validators.required]],
@@ -46,74 +57,65 @@ export class ViewProductsComponent implements OnInit {
       criticalStock: [''],
       status: [true],
       isFungible: [false]
-
-    })
-  }
-
-
-  ngOnInit(): void {
-    this.getProducts();
-
-    this.userForm = new FormGroup({
-      idProduct: new FormControl(),
-      name: new FormControl('', [Validators.required]),
-      description: new FormControl(null),
-      stock: new FormControl('', [Validators.min(0)]),
-      criticalStock: new FormControl('', [Validators.required]),
-      isFungible: new FormControl(false)
     });
   }
 
-  get notValidName(){
+  //Esta funcion obtiene los productos de la lista.
+  ngOnInit(): void {
+    this.getProducts();
+  }
+
+  //Esta función es para validar si el campo del nombre esta correcto, esto muestra un mensaje.
+  get notValidName() {
     return this.forma.get('name')?.invalid && this.forma.get('name')?.touched;
   }
 
+  //Esta función es para actualizar la opción seleccionada.
   selectOption(option: string) {
     this.selectedOption = option;
   }
 
+  //Este función es para evitar que se ingrese ciertos cáracteres.
   preventNegative(event: KeyboardEvent) {
     if (event.key === '-' || event.key === '+') {
       event.preventDefault();
     }
   }
 
-//Buscador de productos
-  searchTerm: string = ''
-    filteredList() {
-    return this.products.filter(products =>
-      products.name.toLowerCase().includes(this.searchTerm.toLowerCase())
+  //Filtrar la lista por el nombre y por ordenar productos por paginación.
+  filteredList(): Product[] {
+    const filteredProducts = this.products.filter(product =>
+      product.name.toLowerCase().includes(this.searchTerm.toLowerCase())
     );
+    return filteredProducts.slice(this.start, this.end);
   }
 
-//Obtener todos los productos
+  // Obtener todos los productos de la lista.
   getProducts(): void {
     this.products = this.productService.getProducts();
   }
 
-//Eliminar un producto
+  // Eliminar un producto de la lista (muestra una alerta de confimar eliminación).
   deleteProduct(idProduct: number): void {
-  // Configurar el estilo personalizado para los botones
-  const swalWithBootstrapButtons = Swal.mixin({
-    customClass: {
-      confirmButton: "btn btn-success",
-      cancelButton: "btn btn-danger me-2"
-    },
-    buttonsStyling: false
-  });
+    const swalWithBootstrapButtons = Swal.mixin({
+      customClass: {
+        confirmButton: "btn btn-success",
+        cancelButton: "btn btn-danger me-2"
+      },
+      buttonsStyling: false
+    });
 
-  // Mostrar la alerta de confirmación
-  swalWithBootstrapButtons.fire({
-    title: "¿Estás seguro?",
-    text: "¡Estás a punto de eliminar un producto!",
-    icon: "error",
-    iconHtml: '<i class="custom-icon bi bi-exclamation-triangle-fill"></i>',
-    showCancelButton: true,
-    confirmButtonText: "Sí, estoy seguro",
-    cancelButtonText: "No, cancelar",
-    reverseButtons: true
-  }).then((result) => {
-    if (result.isConfirmed) {
+    swalWithBootstrapButtons.fire({
+      title: "¿Estás seguro?",
+      text: "¡Estás a punto de eliminar un producto!",
+      icon: "error",
+      iconHtml: '<i class="custom-icon bi bi-exclamation-triangle-fill"></i>',
+      showCancelButton: true,
+      confirmButtonText: "Sí, estoy seguro",
+      cancelButtonText: "No, cancelar",
+      reverseButtons: true
+    }).then((result) => {
+      if (result.isConfirmed) {
         this.productService.deleteProduct(idProduct);
         this.getProducts();
 
@@ -124,20 +126,20 @@ export class ViewProductsComponent implements OnInit {
           timer: 1500,
           showConfirmButton: false
         });
-    } else if (result.dismiss === Swal.DismissReason.cancel) {
-      swalWithBootstrapButtons.fire({
-        title: "Cancelado",
-        text: "El producto no se ha eliminado.",
-        icon: "error",
-        timer: 1500,
-        showConfirmButton: false
-      });
-    }
-  });
-}
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        swalWithBootstrapButtons.fire({
+          title: "Cancelado",
+          text: "El producto no se ha eliminado.",
+          icon: "error",
+          timer: 1500,
+          showConfirmButton: false
+        });
+      }
+    });
+  }
 
-//Editar producto, se edita el nombre del producto, la descripción del producto, el stock del producto,
-//el stock crítico del producto y si es fungible.
+  // Esta funcion obtiene la información de un producto según su idProducto, rellenando el formulario con la
+  // información del producto correspondiente al idProducto.
   editProduct(idProduct: number) {
     this.selectedProductId = idProduct;
     const product = this.productService.getProductForEdit(idProduct);
@@ -155,16 +157,17 @@ export class ViewProductsComponent implements OnInit {
     }
   }
 
-// enviar datos editados del producto
+  // Editar un producto de la lista (muestra una alerta de confirmar la edición) y se asegura que la información
+  // enviada del formuario cumpla con las restricciones, como puede ser que el nombre no se repita con otro producto
+  // o que el formulario fuese invalido según sus validaciones.
   onSubmit() {
-
     if (this.forma.invalid) {
       return Object.values(this.forma.controls).forEach(control => {
         control.markAllAsTouched();
       });
     }
 
-    const updatedProduct: Product = {idProduct: this.selectedProductId, ...this.forma.value };
+    const updatedProduct: Product = { idProduct: this.selectedProductId, ...this.forma.value };
 
     if (!this.productService.nameUnique(updatedProduct.name, updatedProduct.idProduct)) {
       Swal.fire({
