@@ -15,13 +15,13 @@
                 <tr>
                     <td>{{teacher.rut}}</td>
                     <td>{{teacher.name}}</td>
-                    <td> {{teacher.mail}} <br> @if (teacher.phoneNumber != 0) { +569 {{teacher.phoneNumber}} }</td>
+                    <td> {{teacher.mail}} <br> @if (teacher.phoneNumber != 0) { +56 {{teacher.phoneNumber}} }</td>
                     <td>
                         <div class="d-flex gap-2 justify-content-end">
-                            <button type="button" class="btn btn-outline-secondary btn-sm">
+                            <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#modalEditUser" (click)="editUser(teacher.id)">
                               <i class="bi bi-pencil-square"> editar</i>
                             </button>
-                            <button type="button" class="btn btn-outline-danger btn-sm">
+                            <button type="button" class="btn btn-outline-danger btn-sm" (click)="deleteUser(teacher.id)">
                               <i class="bi bi-x-square"> eliminar</i>
                             </button>
                         </div>
@@ -31,5 +31,4 @@
         </tbody>
     </table>
   </div>
-
-<app-add-user></app-add-user>
+<app-user-edit [user]="user"></app-user-edit>

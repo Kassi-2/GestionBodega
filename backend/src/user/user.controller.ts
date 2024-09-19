@@ -4,12 +4,19 @@ import {
   HttpCode,
   Get,
   Post,
-  Patch,
   Delete,
   Body,
+  Put,
+  Param,
+  ParseIntPipe,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UserCreateDTO } from './dto/user-create.dto';
+import { UserUpdateDTO } from './dto/user-update.dto';
+import { UserImportDTO } from './dto/user-import.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('users')
 export class UserController {
@@ -41,8 +48,8 @@ export class UserController {
 
   @Get('user/:id')
   @HttpCode(HttpStatus.OK)
-  public async getUserById() {
-    return await this.userService.getUserById();
+  public async getUserById(@Param('id', ParseIntPipe) id: number) {
+    return await this.userService.getUserById(id);
   }
 
   @Get('/degrees')
@@ -57,15 +64,27 @@ export class UserController {
     return await this.userService.createUser(request);
   }
 
-  @Patch('/id')
+  @Put('/:id')
   @HttpCode(HttpStatus.OK)
-  public async updateUser() {
-    return await this.userService.updateUser();
+  public async updateUser(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() request: UserUpdateDTO,
+  ) {
+    console.log(request);
+    return await this.userService.updateUser(id, request);
   }
 
-  @Delete()
+  @Delete('/:id')
   @HttpCode(HttpStatus.OK)
-  public async deleteUser() {
-    return await this.userService.deleteUser();
+  public async deleteUser(@Param('id', ParseIntPipe) id: number) {
+    return await this.userService.deleteUser(id);
+  }
+
+  @Post('/import')
+  @HttpCode(HttpStatus.CREATED)
+  @UseInterceptors(FileInterceptor('file'))
+  public async importUsers(@UploadedFile() file, @Body() data: UserImportDTO) {
+    const { type, degree } = data;
+    return await this.userService.importUsers(type, degree, file);
   }
 }

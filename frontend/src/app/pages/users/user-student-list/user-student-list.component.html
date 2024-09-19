@@ -12,26 +12,26 @@
             </tr>
         </thead>
         <tbody>
-            @for (student of students; track $index) {
+        @if (degrees) {
+            @for (student of filteredStudents; track $index) {
                 <tr>
                     <td>{{student.rut}}</td>
                     <td>{{student.name}}</td>
                     <td>{{getDegree(student.student.codeDegree)}}</td>
-                    <td> {{student.mail}} <br> @if (student.phoneNumber != 0 ) { +569 {{student.phoneNumber}} }</td>
+                    <td> {{student.mail}} <br> @if (student.phoneNumber != 0 ) { +56 {{student.phoneNumber}} }</td>
                     <td>
                         <div class="d-flex gap-2 justify-content-end">
-                            <button type="button" class="btn btn-outline-secondary btn-sm">
+                            <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#modalEditUser" (click)="editUser(student.id)">
                               <i class="bi bi-pencil-square"> editar</i>
                             </button>
-                            <button type="button" class="btn btn-outline-danger btn-sm">
+                            <button type="button" class="btn btn-outline-danger btn-sm" (click)="deleteUser(student.id)">
                               <i class="bi bi-x-square"> eliminar</i>
                             </button>
                         </div>
                     </td>
                 </tr>
-            }
+            }}
         </tbody>
     </table>
-  </div>
-
-<app-add-user></app-add-user>
+</div>
+<app-user-edit [user]="user"></app-user-edit>

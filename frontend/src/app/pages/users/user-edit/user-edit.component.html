@@ -1,11 +1,11 @@
-
-<div class="modal fade" id="modalAddUser" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" [formGroup]="userForm">
-      <div class="modal-content">
+<div class="modal fade" id="modalEditUser" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content" [formGroup]="userForm">
         <div class="modal-header">
-          <h1 class="modal-title fs-5" id="exampleModalLabel">Registrar Usuario</h1>
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Editar Usuario</h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
+        @if (user) {
         <div class="modal-body">
           
           <div class="mb-3">
@@ -65,16 +65,18 @@
           </div>
 
         </div>
+      
         <div class="modal-footer">
-          <button class="btn btn-secondary" data-bs-dismiss="modal" (click)="clearForm()">Cancelar</button>
-          <button class="btn btn-primary" data-bs-target="#modalConfirmation" data-bs-toggle="modal" [disabled]="!userForm.valid">Registrar</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalConfirmationEdit" [disabled]="!userForm.valid">Editar</button>
         </div>
+      }
       </div>
     </div>
 </div>
 
 
-<div class="modal fade" id="modalConfirmation" aria-hidden="true" aria-labelledby="exampleModalToggleLabel2" tabindex="-1">
+<div class="modal fade" id="modalConfirmationEdit" aria-hidden="true" aria-labelledby="exampleModalToggleLabel2" tabindex="-1">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
@@ -82,7 +84,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <p>Estás seguro que deseas registrar al usuario:</p>
+        <p>Estás seguro que deseas editar al usuario:</p>
         <ul>
           <li><strong>Rut:</strong> {{ userForm.get('rut')?.value }}</li>
           <li><strong>Nombre Completo:</strong> {{ userForm.get('name')?.value }}</li>
@@ -100,9 +102,10 @@
         </ul>
       </div>
       <div class="modal-footer">
-        <button class="btn btn-secondary" data-bs-target="#modalAddUser" data-bs-toggle="modal">Cancelar</button>
-        <button class="btn btn-primary" data-bs-toggle="modal" (click)="register()">Confirmar</button>
+        <button class="btn btn-secondary" data-bs-target="#modalEditUser" data-bs-toggle="modal">Cancelar</button>
+        <button class="btn btn-primary" data-bs-toggle="modal" (click)="edit()">Confirmar</button>
       </div>
     </div>
   </div>
 </div>
+

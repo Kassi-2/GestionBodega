@@ -1,60 +1,55 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { SidebarComponent } from '../../../shared/components/sidebar/sidebar.component';
-import {
-  AbstractControl,
-  FormControl,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-  ValidationErrors,
-  ValidatorFn,
-  Validators,
-} from '@angular/forms';
-import { UserEdit, UserRegister } from '../../../core/models/user.interface';
+import { AbstractControl, FormControl, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 import { UserService } from '../../../core/services/user.service';
 import { Degree } from '../../../core/models/degree.interface';
-import { HttpClientModule } from '@angular/common/http';
+import { User, UserEdit } from '../../../core/models/user.interface';
 
 declare var bootstrap: any;
 
 @Component({
-  selector: 'app-add-user',
+  selector: 'app-user-edit',
   standalone: true,
-  imports: [
-    SidebarComponent,
-    ReactiveFormsModule,
-    FormsModule,
-    HttpClientModule,
-  ],
-  templateUrl: './add-user.component.html',
-  styleUrl: './add-user.component.css',
+  imports: [SidebarComponent, ReactiveFormsModule, FormsModule, HttpClientModule],
+  templateUrl: './user-edit.component.html',
+  styleUrl: './user-edit.component.css',
   providers: [UserService],
 })
-export class AddUserComponent implements OnInit, OnDestroy {
-  constructor(private userService: UserService) {}
+export class UserEditComponent implements OnInit, OnDestroy, OnChanges {
+  constructor(private userService: UserService, private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     this.getAllDegrees();
   }
-  ngOnDestroy(): void {}
+  ngOnDestroy(): void {
+  }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['user'] && this.user) {
+      this.patchFormValues(this.user);
+      this.cdr.detectChanges();
+    }
+  }
+
+  @Input() user!: User;
   public degrees!: Degree[];
   public userForm: FormGroup = new FormGroup({
-    rut: new FormControl('', [
+    rut: new FormControl('', [ 
       Validators.required,
       Validators.pattern('^\\d{7,8}-[\\dkK]$'),
       checkRunValidator(),
     ]),
     name: new FormControl('', [Validators.required]),
     type: new FormControl('', [Validators.required]),
-    mail: new FormControl('', Validators.email),
+    mail: new FormControl('', [Validators.email]),
     phoneNumber: new FormControl(),
     degree: new FormControl(),
     role: new FormControl(),
   });
 
-  public register() {
-    const user: UserRegister = {
+  public edit() {
+    const user: UserEdit = {
       rut: this.userForm.get('rut')?.value,
       name: this.userForm.get('name')?.value,
       type: this.userForm.get('type')?.value,
@@ -64,7 +59,9 @@ export class AddUserComponent implements OnInit, OnDestroy {
       role: this.userForm.get('role')?.value,
     };
 
-    this.userService.register(user).subscribe({
+    console.log(user);
+
+    this.userService.updateUser(this.user.id,user).subscribe({
       next: () => {
         window.location.reload();
         this.clearForm();
@@ -75,9 +72,22 @@ export class AddUserComponent implements OnInit, OnDestroy {
     });
   }
 
+
   private getAllDegrees() {
     this.userService.getAllDegrees().subscribe((degrees: Degree[]) => {
       this.degrees = degrees;
+    });
+  }
+
+  private patchFormValues(user: User): void {
+    this.userForm.patchValue({
+      rut: user.rut,
+      name: user.name,
+      type: user.type,
+      mail: user.mail,
+      phoneNumber: user.phoneNumber && user.phoneNumber !== 0 ? user.phoneNumber : '',
+      degree: user.student?.codeDegree,
+      role: user.assistant?.role,
     });
   }
 
@@ -133,3 +143,4 @@ function checkRun(run: string): boolean {
 
   return cdEntered === cdCalculated;
 }
+

@@ -17,13 +17,13 @@
                     <td>{{assistant.rut}}</td>
                     <td>{{assistant.name}}</td>
                     <td>{{assistant.assitant.role}}</td>
-                    <td> {{assistant.mail}} <br> @if (assistant.phoneNumber != 0) { +569 {{assistant.phoneNumber}} }</td>
+                    <td> {{assistant.mail}} <br> @if (assistant.phoneNumber != 0) { +56 {{assistant.phoneNumber}} }</td>
                     <td>
                         <div class="d-flex gap-2 justify-content-end">
-                            <button type="button" class="btn btn-outline-secondary btn-sm">
+                            <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#modalEditUser" (click)="editUser(assistant.id)">
                               <i class="bi bi-pencil-square"> editar</i>
                             </button>
-                            <button type="button" class="btn btn-outline-danger btn-sm">
+                            <button type="button" class="btn btn-outline-danger btn-sm" (click)="deleteUser(assistant.id)">
                               <i class="bi bi-x-square"> eliminar</i>
                             </button>
                         </div>
@@ -34,4 +34,5 @@
     </table>
   </div>
 
-<app-add-user></app-add-user>
+<app-user-edit [user]="user"></app-user-edit>
+

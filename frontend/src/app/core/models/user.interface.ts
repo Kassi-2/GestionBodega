@@ -1,3 +1,35 @@
+export interface UserRegister {
+  rut: string;
+  name: string;
+  type: string;
+  mail?: string;
+  phoneNumber?: number;
+  degree?: string;
+  role?: string;
+}
+
+export interface UserEdit{
+  rut?: string;
+  name?: string;
+  type?: string;
+  mail?: string;
+  phoneNumber?: number;
+  degree?: string;
+  role?: string;
+}
+
+export interface User{
+  id: number;
+  rut: string;
+  name: string;
+  mail?: string;
+  phoneNumber?: number;
+  type: string;
+  student?: Student;
+  assistant?: Assistant;
+  teacher?: Teacher;
+}
+
 export interface UserStudent {
   id: number;
   rut: string;
@@ -26,16 +58,6 @@ export interface UserTeacher {
   mail?: string;
   phoneNumber?: number;
   teacher: Teacher;
-}
-
-export interface UserRegister {
-  rut: string;
-  name: string;
-  type: string;
-  mail?: string;
-  phoneNumber?: number;
-  degree?: string;
-  role?: string;
 }
 
 export interface Student {
