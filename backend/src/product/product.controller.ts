@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Put, Delete, Body, Param, NotFoundException, ValidationPipe, BadRequestException} from "@nestjs/common";
+import { Controller, Get, Post, Put, Delete, Body, Param, NotFoundException, ValidationPipe, BadRequestException } from "@nestjs/common";
 import { ProductService } from "./product.service";
 import { product } from "@prisma/client";
 import { ProductCreateDTO } from "./dto/product-crate.dto";
@@ -8,9 +8,21 @@ import { ProductUpdateDTO } from "./dto/product-update.dto";
 export class ProductController{
     constructor(private readonly productService: ProductService){}
 
-        @Get("/active")
-        async getActiveProducts(){
-            return this.productService.getActiveProducts()
+        @Get("/active-name-asc")
+        async getActiveProductsNameAsc(){
+            return this.productService.getActiveProductsNameAsc()
+        }
+        @Get("/active-name-desc")
+        async getActiveProductsNameDesc(){
+            return this.productService.getActiveProductsNameDesc()
+        }
+        @Get("/active-stock-asc")
+        async getActiveProductsStockAsc(){
+            return this.productService.getActiveProductsStockAsc()
+        }
+        @Get("/active-stock-desc")
+        async getActiveProductsStockDesc(){
+            return this.productService.getActiveProductsStockDesc()
         }
 
         @Get("/available")
@@ -18,7 +30,7 @@ export class ProductController{
             return this.productService.getAvailableProducts()
         }
 
-        @Get(":id")
+        @Get("/product/:id")
         async getProductById(@Param('id') id: string){
             const productFound= await this.productService.getProductById(Number(id))
             if (!productFound) throw new NotFoundException('No se encontro ese producto')
@@ -55,7 +67,8 @@ export class ProductController{
         @Delete(":id")
         async deleteProduct(@Param('id') id: string){
             const productFound= await this.productService.deleteProduct(Number(id))
-            if (!productFound) throw new NotFoundException('No se encontro ese producto')
+            if (!productFound) throw new NotFoundException("No se encontro ese producto")
             return productFound
         }
+
 }

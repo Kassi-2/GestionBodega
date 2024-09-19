@@ -11,8 +11,8 @@ export class ProductService{
 
     //Obtener todos los productos de la tabla product de la base de datos
     //Devuelve un array de solo los productos que tienen estado true=activo, 
-    //y los entrega ordenados alfabéticamente
-    async getActiveProducts(): Promise <product[]>{
+    //y los entrega ordenados alfabéticamente por nombre ascendentemente
+    async getActiveProductsNameAsc(): Promise <product[]>{
         return this.prisma.product.findMany({
             where:{
                 state: true,
@@ -22,9 +22,51 @@ export class ProductService{
             }
         });
     }
+
+    //Obtener todos los productos de la tabla product de la base de datos
+    //Devuelve un array de solo los productos que tienen estado true=activo, 
+    //y los entrega ordenados alfabéticamente por nombre descendentemente
+    async getActiveProductsNameDesc(): Promise <product[]>{
+        return this.prisma.product.findMany({
+            where:{
+                state: true,
+            },
+            orderBy:{
+                name: "desc",
+            }
+        });
+    }
+
+    //Obtener todos los productos de la tabla product de la base de datos
+    //Devuelve un array de solo los productos que tienen estado true=activo, 
+    //y los entrega ordenados ascendentemente por stock
+    async getActiveProductsStockAsc(): Promise <product[]>{
+        return this.prisma.product.findMany({
+            where:{
+                state: true,
+            },
+            orderBy:{
+                stock: "asc",
+            }
+        });
+    }
+
+    //Obtener todos los productos de la tabla product de la base de datos
+    //Devuelve un array de solo los productos que tienen estado true=activo, 
+    //y los entrega ordenados descendentemente por stock
+    async getActiveProductsStockDesc(): Promise <product[]>{
+        return this.prisma.product.findMany({
+            where:{
+                state: true,
+            },
+            orderBy:{
+                stock: "desc",
+            }
+        });
+    }
     //Obtener todos los productos de la tabla product de la base de datos
     //Devuelve un array de solo los productos que tienen un stock mayor a 0
-    //y los entrega ordenados alfabéticamente
+    //y los entrega ordenados alfabéticamente por nombre
     async getAvailableProducts(): Promise <product[]>{
         return this.prisma.product.findMany({
             where:{
@@ -80,8 +122,15 @@ export class ProductService{
     }
     
     //Eliminar un producto, pero no se borra de la base de datos
-    //solo se actualiza el estado del producto de "activo" "desactivo"
+    //primero busca que el producto esté en la base de datos, y además tenga estado true
+    //solo se actualiza el estado del producto de "activo" "desactivo", true a false
     async deleteProduct(id:number): Promise<product>{
+        const product = await this.prisma.product.findUnique({
+            where: { id },
+        });
+        if (!product || product.state !== true) {
+            throw new NotFoundException("No se encontró el producto");
+        }
         return this.prisma.product.update({
             where: {
                 id
@@ -136,5 +185,6 @@ export class ProductService{
             data,
         });
     }
+
      
 }
