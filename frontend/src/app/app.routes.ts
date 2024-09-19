@@ -4,12 +4,14 @@ import { AddUserComponent } from './pages/users/add-user/add-user.component';
 import { UserStudentListComponent } from './pages/users/user-student-list/user-student-list.component';
 import { UserTeacherListComponent } from './pages/users/user-teacher-list/user-teacher-list.component';
 import { UserAssistantListComponent } from './pages/users/user-assistant-list/user-assistant-list.component';
+import { AppComponent } from './app.component';
+import { ViewProductsComponent } from './pages/products/view-products/view-products/view-products.component';
+import { AddProductComponent } from './pages/products/add-product/add-product/add-product.component';
 
 export const routes: Routes = [
-  {
-    path: '',
-    loadChildren: () => import('./pages/products/view-products/products.routing').then(m => m.routesProduct)
-  },
+  { path: '', component: AppComponent },
+  { path: 'inventory', component: ViewProductsComponent },
+  { path: 'inventory/add-product', component: AddProductComponent },
   { path: 'users/students', component: UserStudentListComponent },
   { path: 'users/teachers', component: UserTeacherListComponent },
   { path: 'users/assistants', component: UserAssistantListComponent },

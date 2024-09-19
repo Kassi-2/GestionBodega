@@ -1,8 +1,4 @@
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-  Agregar Producto
-</button>
-
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -91,8 +87,9 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="closeModal()">Cancelar</button>
-        <button type="submit" class="btn btn-primary" (click)="onSubmit()">Confirmar</button>
+        <button type="submit" class="btn btn-primary" (click)="onSubmit()" data-bs-dismiss="modal">Confirmar</button>
       </div>
     </div>
   </div>
 </div>
+<div>

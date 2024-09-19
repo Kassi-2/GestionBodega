@@ -14,6 +14,7 @@ import * as bootstrap from 'bootstrap';
 import Swal from 'sweetalert2';
 import { PageEvent } from '@angular/material/paginator';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { AddProductComponent } from "../../add-product/add-product/add-product.component";
 
 @Component({
   selector: 'app-view-products',
@@ -24,7 +25,8 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     ReactiveFormsModule,
     PopoverModule,
     MatPaginatorModule,
-  ],
+    AddProductComponent
+],
   templateUrl: './view-products.component.html',
   styleUrls: ['./view-products.component.css'],
 })
