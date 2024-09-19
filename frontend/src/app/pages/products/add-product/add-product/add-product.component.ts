@@ -1,0 +1,166 @@
+import { Component, OnInit } from '@angular/core';
+import { ProductService } from '../../../../core/services/product.service';
+import {
+  FormBuilder,
+  FormGroup,
+  FormControl,
+  Validators,
+} from '@angular/forms';
+import { Subscription } from 'rxjs';
+import { Product } from '../../../../core/models/product.interface';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { PopoverModule } from '@coreui/angular';
+
+@Component({
+  selector: 'app-add-product',
+  standalone: true,
+  imports: [FormsModule, ReactiveFormsModule, CommonModule, PopoverModule],
+  templateUrl: './add-product.component.html',
+  styleUrls: ['./add-product.component.css'],
+})
+export class AddProductComponent implements OnInit {
+  public products: Product[] = [
+    {
+      idProduct: 0,
+      name: '',
+      description: '',
+      stock: 0,
+      criticalStock: 0,
+      status: true,
+      isFungible: false,
+    },
+  ];
+  private subscription: Subscription = new Subscription();
+  public userForm!: FormGroup;
+  isFungible: boolean = false;
+  succesfulEntry: boolean = true;
+
+  /**
+   * Crea una instancia de AddProductComponent.
+   *
+   * @param {FormBuilder} fb
+   * @param {ProductService} productService
+   * @memberof AddProductComponent
+   */
+  constructor(
+    private fb: FormBuilder,
+    private productService: ProductService
+  ) {}
+
+  ngOnInit() {
+    this.userForm = new FormGroup({
+      idProduct: new FormControl(),
+      name: new FormControl('', [Validators.required]),
+      description: new FormControl(null),
+      stock: new FormControl('', [Validators.min(0)]),
+      criticalStock: new FormControl('', [Validators.required]),
+      isFungible: new FormControl(false),
+    });
+  }
+  /**
+   *  Verifica que si el nombre no es válido o si posiciona el mouse dentro del input y luego sale, marque la casilla con un error diciendo que tiene que ingresar un valor.
+   *
+   * @readonly
+   * @memberof AddProductComponent
+   */
+  get notValidName() {
+    return (
+      this.userForm.get('name')?.invalid && this.userForm.get('name')?.touched
+    );
+  }
+  /**
+   * Verifica si el stock crítico no es válido o si posiciona el mouse dentro del input y luego sale, marque la casilla con un error diciendo que tiene que ingresar un valor.
+   *
+   * @readonly
+   * @memberof AddProductComponent
+   */
+  get notValidCriticalStock() {
+    return (
+      this.userForm.get('criticalStock')?.invalid &&
+      this.userForm.get('criticalStock')?.touched
+    );
+  }
+
+  /**
+   * Función que evita que se ingresen números negativos en un input.
+   *
+   * @param {KeyboardEvent} event
+   * @memberof AddProductComponent
+   */
+  preventNegative(event: KeyboardEvent) {
+    if (event.key === '-' || event.key === '+') {
+      event.preventDefault();
+    }
+  }
+  /**
+   * Función para cerrar el modal y formatear el formulario.
+   *
+   * @memberof AddProductComponent
+   */
+  closeModal() {
+    this.userForm.reset();
+  }
+
+  /**
+   * Función para almacenar la información del formulario. Primero verifica si se rellenaron las casillas obligatorias, luego se llama al servicio productService para obtener el último
+   * ID utilizado, para así sumarle 1 y almacenarlo como el ID del nuevo producto. Luego obtiene los valores del formulario, verifica que el stock -si no se ingresa nada- sea 0, y luego
+   * guarda los valores nuevos en el producto temporal. Finalmente, envía al servicio el nuevo producto y si existe uno con el mismo nombre, manda un mensaje de error. Luego, se resetea
+   * el formulario.
+   *
+   * @return {*}
+   * @memberof AddProductComponent
+   */
+  onSubmit(): any {
+    if (this.userForm.invalid) {
+      Object.values(this.userForm.controls).forEach((control) => {
+        control.markAsTouched();
+      });
+      return;
+    }
+
+    this.subscription.add(
+      this.productService.getIDLastProduct().subscribe((lastId) => {
+        const newId = lastId + 1;
+
+        const formValues = this.userForm.value;
+        const stockValue =
+          formValues.stock === null || formValues.stock === ''
+            ? 0
+            : Number(formValues.stock);
+
+        const newProduct: Product = {
+          idProduct: newId,
+          name: formValues.name,
+          description: formValues.description ?? null,
+          stock: stockValue,
+          criticalStock: formValues.criticalStock,
+          status: true,
+          isFungible: formValues.isFungible ?? false,
+        };
+
+        this.subscription.add(
+          this.productService
+            .checkProductExists(newProduct.name)
+            .subscribe((exists) => {
+              if (exists) {
+                alert('El producto ya existe. Por favor, ingrese otro nombre.');
+              } else {
+                this.productService.addProduct(newProduct);
+                console.log('Producto agregado:', newProduct);
+
+                this.userForm.reset({
+                  idProduct: null,
+                  name: '',
+                  description: null,
+                  stock: null,
+                  criticalStock: null,
+                  isFungible: false,
+                });
+              }
+            })
+        );
+      })
+    );
+  }
+}
