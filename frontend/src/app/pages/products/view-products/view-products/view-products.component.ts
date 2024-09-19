@@ -1,6 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { Product } from '../../../../core/models/products.interface';
 import { ProductService } from '../../../../core/services/product.service';
 import { PopoverModule } from '@coreui/angular';
@@ -12,13 +18,17 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 @Component({
   selector: 'app-view-products',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, PopoverModule, MatPaginatorModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    PopoverModule,
+    MatPaginatorModule,
+  ],
   templateUrl: './view-products.component.html',
-  styleUrls: ['./view-products.component.css']
+  styleUrls: ['./view-products.component.css'],
 })
-
 export class ViewProductsComponent implements OnInit {
-
   public forma!: FormGroup;
   private originalProduct: Product | null = null;
 
@@ -33,7 +43,6 @@ export class ViewProductsComponent implements OnInit {
   end: number = this.pageSize;
   selectedOption: string = 'A-Z';
 
-
   //Esta función constructor crea el formulario con el que se va a trabajar (para agregar o editar un producto).
   constructor(private productService: ProductService, private fb: FormBuilder) {
     this.createForm();
@@ -45,9 +54,6 @@ export class ViewProductsComponent implements OnInit {
     this.end = Math.min(this.start + e.pageSize, this.products.length);
   }
 
-
-
-
   // Inicializamos el formulario con valores predeterminados (formato del producto).
   createForm() {
     this.forma = this.fb.group({
@@ -56,7 +62,7 @@ export class ViewProductsComponent implements OnInit {
       stock: ['', Validators.min(0)],
       criticalStock: [''],
       status: [true],
-      isFungible: [false]
+      isFungible: [false],
     });
   }
 
@@ -84,7 +90,7 @@ export class ViewProductsComponent implements OnInit {
 
   //Filtrar la lista por el nombre y por ordenar productos por paginación.
   filteredList(): Product[] {
-    const filteredProducts = this.products.filter(product =>
+    const filteredProducts = this.products.filter((product) =>
       product.name.toLowerCase().includes(this.searchTerm.toLowerCase())
     );
     return filteredProducts.slice(this.start, this.end);
@@ -97,46 +103,76 @@ export class ViewProductsComponent implements OnInit {
 
   // Eliminar un producto de la lista (muestra una alerta de confimar eliminación).
   deleteProduct(idProduct: number): void {
+    const productToDelete = this.products.find(
+      (product) => product.idProduct === idProduct
+    );
+
     const swalWithBootstrapButtons = Swal.mixin({
       customClass: {
-        confirmButton: "btn btn-success",
-        cancelButton: "btn btn-danger me-2"
+        confirmButton: 'btn btn-success',
+        cancelButton: 'btn btn-danger me-2',
       },
-      buttonsStyling: false
+      buttonsStyling: false,
     });
 
-    swalWithBootstrapButtons.fire({
-      title: "¿Estás seguro?",
-      text: "¡Estás a punto de eliminar un producto!",
-      icon: "error",
-      iconHtml: '<i class="custom-icon bi bi-exclamation-triangle-fill"></i>',
-      showCancelButton: true,
-      confirmButtonText: "Sí, estoy seguro",
-      cancelButtonText: "No, cancelar",
-      reverseButtons: true
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.productService.deleteProduct(idProduct);
-        this.getProducts();
+    if (!productToDelete) {
+      console.error('Producto no encontrado');
+      Swal.fire({
+        title: 'Error',
+        text: 'El producto que intentas eliminar no existe.',
+        icon: 'error',
+        timer: 1500,
+        showConfirmButton: false
+      });
+      return;
+    }
 
-        swalWithBootstrapButtons.fire({
-          title: "¡Eliminado!",
-          text: "El producto ha sido eliminado exitosamente.",
-          icon: "success",
-          timer: 1500,
-          showConfirmButton: false
-        });
-      } else if (result.dismiss === Swal.DismissReason.cancel) {
-        swalWithBootstrapButtons.fire({
-          title: "Cancelado",
-          text: "El producto no se ha eliminado.",
-          icon: "error",
-          timer: 1500,
-          showConfirmButton: false
-        });
-      }
-    });
+    swalWithBootstrapButtons
+      .fire({
+        title: '¿Estás seguro?',
+        text: `¡Estás a punto de eliminar el producto "${productToDelete.name}"!`,
+        iconHtml: `
+          <div style="
+            background-color: orange;
+            border-radius: 50%;
+            width: 4rem;
+            height: 4rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          ">
+            <i class="bi bi-exclamation-triangle-fill" style="color: grey; font-size: 2rem;"></i>
+          </div>`,
+        showCancelButton: true,
+        confirmButtonText: 'Sí, estoy seguro',
+        cancelButtonText: 'No, cancelar',
+        reverseButtons: true,
+      })
+      .then((result) => {
+        if (result.isConfirmed) {
+          this.productService.deleteProduct(idProduct);
+          this.getProducts();
+
+          swalWithBootstrapButtons.fire({
+            title: '¡Eliminado!',
+            text: 'El producto ha sido eliminado exitosamente.',
+            icon: 'success',
+            timer: 1500,
+            showConfirmButton: false,
+          });
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+          swalWithBootstrapButtons.fire({
+            title: 'Cancelado',
+            text: 'El producto no se ha eliminado.',
+            icon: 'error',
+            timer: 1500,
+            showConfirmButton: false,
+          });
+        }
+      });
   }
+
+
 
   // Esta funcion obtiene la información de un producto según su idProducto, rellenando el formulario con la
   // información del producto correspondiente al idProducto.
@@ -152,7 +188,7 @@ export class ViewProductsComponent implements OnInit {
         description: product.description,
         stock: product.stock,
         criticalStock: product.criticalStock,
-        isFungible: product.isFungible
+        isFungible: product.isFungible,
       });
     }
   }
@@ -162,41 +198,52 @@ export class ViewProductsComponent implements OnInit {
   // o que el formulario fuese invalido según sus validaciones.
   onSubmit() {
     if (this.forma.invalid) {
-      return Object.values(this.forma.controls).forEach(control => {
+      return Object.values(this.forma.controls).forEach((control) => {
         control.markAllAsTouched();
       });
     }
 
-    const updatedProduct: Product = { idProduct: this.selectedProductId, ...this.forma.value };
+    const updatedProduct: Product = {
+      idProduct: this.selectedProductId,
+      ...this.forma.value,
+    };
 
-    if (!this.productService.nameUnique(updatedProduct.name, updatedProduct.idProduct)) {
+    if (
+      !this.productService.nameUnique(
+        updatedProduct.name,
+        updatedProduct.idProduct
+      )
+    ) {
       Swal.fire({
         icon: 'error',
         title: 'Nombre duplicado',
         text: 'Ya existe un producto con ese nombre. Por favor, elija un nombre diferente.',
-        confirmButtonText: 'Aceptar'
+        confirmButtonText: 'Aceptar',
       });
       return;
     }
 
-    if (this.originalProduct && JSON.stringify(this.originalProduct) === JSON.stringify(updatedProduct)) {
+    if (
+      this.originalProduct &&
+      JSON.stringify(this.originalProduct) === JSON.stringify(updatedProduct)
+    ) {
       Swal.fire({
-        position: "center",
-        icon: "success",
-        title: "El producto se actualizo con exito!",
+        position: 'center',
+        icon: 'success',
+        title: 'El producto se actualizo con exito!',
         showConfirmButton: false,
-        timer: 1500
+        timer: 1500,
       });
       return;
     }
 
-    this.productService.updateProduct(updatedProduct).subscribe(response => {
+    this.productService.updateProduct(updatedProduct).subscribe((response) => {
       Swal.fire({
-        position: "center",
-        icon: "success",
-        title: "El producto se actualizo con exito!",
+        position: 'center',
+        icon: 'success',
+        title: 'El producto se actualizo con exito!',
         showConfirmButton: false,
-        timer: 1500
+        timer: 1500,
       });
       this.getProducts();
     });
