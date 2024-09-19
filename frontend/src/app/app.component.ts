@@ -1,11 +1,14 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { ViewProductsComponent } from './pages/products/view-products/view-products/view-products.component';
+import { MatPaginatorModule } from '@angular/material/paginator';
 import { AddProductComponent } from './pages/products/add-product/add-product/add-product.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, AddProductComponent],
+  imports: [RouterOutlet, CommonModule, ViewProductsComponent, MatPaginatorModule, AddProductComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })

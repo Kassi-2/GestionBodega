@@ -1,9 +1,9 @@
 export interface Product {
     idProduct: number;
     name: string;
-    description: string| null;
+    description: string;
     stock: number;
-    criticalStock: number ;
+    criticalStock: number| null ;
     status: boolean;
     isFungible: boolean;
 }
