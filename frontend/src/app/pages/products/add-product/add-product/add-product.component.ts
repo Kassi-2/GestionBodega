@@ -7,28 +7,32 @@ import {
   Validators,
 } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { Product } from '../../../../core/models/product.interface';
+import { Product, NewProduct } from '../../../../core/models/product.interface';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { PopoverModule } from '@coreui/angular';
+import { HttpClientModule } from '@angular/common/http';
+
 
 @Component({
   selector: 'app-add-product',
   standalone: true,
-  imports: [FormsModule, ReactiveFormsModule, CommonModule, PopoverModule],
+  imports: [FormsModule, ReactiveFormsModule, CommonModule, PopoverModule, HttpClientModule],
   templateUrl: './add-product.component.html',
   styleUrls: ['./add-product.component.css'],
+  providers: [ProductService],
+
 })
 export class AddProductComponent implements OnInit {
   public products: Product[] = [
     {
-      idProduct: 0,
+      id: 0,
       name: '',
       description: '',
       stock: 0,
       criticalStock: 0,
-      status: true,
-      isFungible: false,
+      state: true,
+      fungible: false,
     },
   ];
   private subscription: Subscription = new Subscription();
@@ -119,34 +123,35 @@ export class AddProductComponent implements OnInit {
       return;
     }
 
-    this.subscription.add(
-      this.productService.getIDLastProduct().subscribe((lastId) => {
-        const newId = lastId + 1;
+    const formValues = this.userForm.value;
 
-        const formValues = this.userForm.value;
-        const stockValue =
-          formValues.stock === null || formValues.stock === ''
-            ? 0
-            : Number(formValues.stock);
+    const stockValue =
+    formValues.stock === null || formValues.stock === ''
+      ? 0
+      : Number(formValues.stock);
 
-        const newProduct: Product = {
-          idProduct: newId,
-          name: formValues.name,
-          description: formValues.description ?? null,
-          stock: stockValue,
-          criticalStock: formValues.criticalStock,
-          status: true,
-          isFungible: formValues.isFungible ?? false,
-        };
+    const newProduct: NewProduct = {
+      name: formValues.name,
+      description: formValues.description ?? null,
+      stock: stockValue,
+      criticalStock: formValues.criticalStock,
+      fungible: formValues.isFungible ?? false,
+    };
+
 
         this.subscription.add(
-          this.productService
-            .checkProductExists(newProduct.name)
-            .subscribe((exists) => {
-              if (exists) {
-                alert('El producto ya existe. Por favor, ingrese otro nombre.');
-              } else {
-                this.productService.addProduct(newProduct);
+
+                this.productService.addProduct(newProduct).subscribe({
+                  next: (response) => {
+                    ///agregar funcion que avise que se agrego correctamente
+                    window.location.reload();
+                  },
+                  error: (error) => {
+                    ///agregar funcion que avise que no se agrego correctamente
+                  }
+                }
+                )
+                );
                 console.log('Producto agregado:', newProduct);
 
                 this.userForm.reset({
@@ -155,12 +160,7 @@ export class AddProductComponent implements OnInit {
                   description: null,
                   stock: null,
                   criticalStock: null,
-                  isFungible: false,
+                  fungible: false,
                 });
               }
-            })
-        );
-      })
-    );
-  }
 }

@@ -10,11 +10,12 @@ import {
 import { Product } from '../../../../core/models/product.interface';
 import { ProductService } from '../../../../core/services/product.service';
 import { PopoverModule } from '@coreui/angular';
-import * as bootstrap from 'bootstrap';
 import Swal from 'sweetalert2';
 import { PageEvent } from '@angular/material/paginator';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { AddProductComponent } from "../../add-product/add-product/add-product.component";
+import { HttpClientModule } from '@angular/common/http';
+
 
 @Component({
   selector: 'app-view-products',
@@ -25,10 +26,13 @@ import { AddProductComponent } from "../../add-product/add-product/add-product.c
     ReactiveFormsModule,
     PopoverModule,
     MatPaginatorModule,
-    AddProductComponent
+    AddProductComponent,
+    HttpClientModule
 ],
   templateUrl: './view-products.component.html',
   styleUrls: ['./view-products.component.css'],
+  providers: [ProductService],
+
 })
 export class ViewProductsComponent implements OnInit {
   public forma!: FormGroup;
@@ -63,8 +67,7 @@ export class ViewProductsComponent implements OnInit {
       description: [''],
       stock: ['', Validators.min(0)],
       criticalStock: [''],
-      status: [true],
-      isFungible: [false],
+      fungible: [false],
     });
   }
 
@@ -100,14 +103,11 @@ export class ViewProductsComponent implements OnInit {
 
   // Obtener todos los productos de la lista.
   getProducts(): void {
-    this.products = this.productService.getProducts();
+    this.productService.getProducts().subscribe((products) =>{this.products = products});
   }
 
   // Eliminar un producto de la lista (muestra una alerta de confimar eliminación).
   deleteProduct(idProduct: number): void {
-    const productToDelete = this.products.find(
-      (product) => product.idProduct === idProduct
-    );
 
     const swalWithBootstrapButtons = Swal.mixin({
       customClass: {
@@ -117,22 +117,10 @@ export class ViewProductsComponent implements OnInit {
       buttonsStyling: false,
     });
 
-    if (!productToDelete) {
-      console.error('Producto no encontrado');
-      Swal.fire({
-        title: 'Error',
-        text: 'El producto que intentas eliminar no existe.',
-        icon: 'error',
-        timer: 1500,
-        showConfirmButton: false
-      });
-      return;
-    }
-
     swalWithBootstrapButtons
       .fire({
         title: '¿Estás seguro?',
-        text: `¡Estás a punto de eliminar el producto "${productToDelete.name}"!`,
+        text: `¡Estás a punto de eliminar este producto!`,
         iconHtml: `
           <div style="
             background-color: orange;
@@ -152,23 +140,29 @@ export class ViewProductsComponent implements OnInit {
       })
       .then((result) => {
         if (result.isConfirmed) {
-          this.productService.deleteProduct(idProduct);
-          this.getProducts();
+          this.productService.deleteProduct(idProduct).subscribe({
+            next: (response) => {
+              swalWithBootstrapButtons.fire({
+                title: '¡Eliminado!',
+                text: 'El producto ha sido eliminado exitosamente.',
+                icon: 'success',
+                timer: 1500,
+                showConfirmButton: false,
+              });
 
-          swalWithBootstrapButtons.fire({
-            title: '¡Eliminado!',
-            text: 'El producto ha sido eliminado exitosamente.',
-            icon: 'success',
-            timer: 1500,
-            showConfirmButton: false,
-          });
-        } else if (result.dismiss === Swal.DismissReason.cancel) {
-          swalWithBootstrapButtons.fire({
-            title: 'Cancelado',
-            text: 'El producto no se ha eliminado.',
-            icon: 'error',
-            timer: 1500,
-            showConfirmButton: false,
+              this.getProducts();
+
+            },
+
+            error: (error) => {
+              swalWithBootstrapButtons.fire({
+                title: 'Cancelado',
+                text: 'El producto no se ha eliminado.',
+                icon: 'error',
+                timer: 1500,
+                showConfirmButton: false,
+              });
+            }
           });
         }
       });
@@ -180,19 +174,29 @@ export class ViewProductsComponent implements OnInit {
   // información del producto correspondiente al idProducto.
   editProduct(idProduct: number) {
     this.selectedProductId = idProduct;
-    const product = this.productService.getProductForEdit(idProduct);
+    let product!: Product;
+    this.productService.getProductForEdit(idProduct).subscribe({
+      next: (response) => {
+        product = response;
 
-    if (product) {
-      this.originalProduct = { ...product };
+          this.forma.patchValue({
+            name: product.name,
+            description: product.description,
+            stock: product.stock,
+            criticalStock: product.criticalStock,
+            fungible: product.fungible,
 
-      this.forma.patchValue({
-        name: product.name,
-        description: product.description,
-        stock: product.stock,
-        criticalStock: product.criticalStock,
-        isFungible: product.isFungible,
-      });
-    }
+          });
+
+
+      },
+
+      error: (error) => {
+        alert(error.error.message);
+      }
+    });
+
+
   }
 
   // Editar un producto de la lista (muestra una alerta de confirmar la edición) y se asegura que la información
@@ -206,48 +210,33 @@ export class ViewProductsComponent implements OnInit {
     }
 
     const updatedProduct: Product = {
-      idProduct: this.selectedProductId,
+      id: this.selectedProductId,
       ...this.forma.value,
     };
 
-    if (
-      !this.productService.nameUnique(
-        updatedProduct.name,
-        updatedProduct.idProduct
-      )
-    ) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Nombre duplicado',
-        text: 'Ya existe un producto con ese nombre. Por favor, elija un nombre diferente.',
-        confirmButtonText: 'Aceptar',
-      });
-      return;
-    }
 
-    if (
-      this.originalProduct &&
-      JSON.stringify(this.originalProduct) === JSON.stringify(updatedProduct)
-    ) {
-      Swal.fire({
-        position: 'center',
-        icon: 'success',
-        title: 'El producto se actualizo con exito!',
-        showConfirmButton: false,
-        timer: 1500,
-      });
-      return;
-    }
+    this.productService.updateProduct(updatedProduct.id, updatedProduct).subscribe({
 
-    this.productService.updateProduct(updatedProduct).subscribe((response) => {
-      Swal.fire({
-        position: 'center',
-        icon: 'success',
-        title: 'El producto se actualizo con exito!',
-        showConfirmButton: false,
-        timer: 1500,
-      });
-      this.getProducts();
+      next: (response) => {
+        Swal.fire({
+          position: 'center',
+          icon: 'success',
+          title: 'El producto se actualizo con exito!',
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        this.getProducts();
+      },
+      error: (error) => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: error.error.message,
+          confirmButtonText: 'Aceptar',
+        });
+        return;
+      }
+
     });
 
     this.forma.reset();
