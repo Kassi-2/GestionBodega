@@ -31,10 +31,11 @@ import { HttpClientModule } from '@angular/common/http';
 ],
   templateUrl: './view-products.component.html',
   styleUrls: ['./view-products.component.css'],
-  providers: [ProductService],
+  providers: [ProductService]
 
 })
 export class ViewProductsComponent implements OnInit {
+
   public forma!: FormGroup;
   private originalProduct: Product | null = null;
 
@@ -96,10 +97,12 @@ export class ViewProductsComponent implements OnInit {
   //Filtrar la lista por el nombre y por ordenar productos por paginación.
   filteredList(): Product[] {
     const filteredProducts = this.products.filter((product) =>
-      product.name.toLowerCase().includes(this.searchTerm.toLowerCase())
+      product.name.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+      product.id.toString().includes(this.searchTerm.toLowerCase())
     );
     return filteredProducts.slice(this.start, this.end);
   }
+
 
   // Obtener todos los productos de la lista.
   getProducts(): void {
@@ -123,7 +126,7 @@ export class ViewProductsComponent implements OnInit {
         text: `¡Estás a punto de eliminar este producto!`,
         iconHtml: `
           <div style="
-            background-color: orange;
+            background-color: FCBF49;
             border-radius: 50%;
             width: 4rem;
             height: 4rem;
@@ -131,7 +134,7 @@ export class ViewProductsComponent implements OnInit {
             align-items: center;
             justify-content: center;
           ">
-            <i class="bi bi-exclamation-triangle-fill" style="color: grey; font-size: 2rem;"></i>
+            <i class="bi bi-exclamation-triangle-fill"></i>
           </div>`,
         showCancelButton: true,
         confirmButtonText: 'Sí, estoy seguro',
@@ -153,8 +156,8 @@ export class ViewProductsComponent implements OnInit {
               this.getProducts();
 
             },
-
-            error: (error) => {
+          });
+          }else{
               swalWithBootstrapButtons.fire({
                 title: 'Cancelado',
                 text: 'El producto no se ha eliminado.',
@@ -165,8 +168,6 @@ export class ViewProductsComponent implements OnInit {
             }
           });
         }
-      });
-  }
 
 
 

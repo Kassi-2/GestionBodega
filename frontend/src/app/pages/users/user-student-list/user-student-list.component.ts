@@ -7,6 +7,8 @@ import { Degree } from '../../../core/models/degree.interface';
 import { Subscription } from 'rxjs';
 import { UserEditComponent } from "../user-edit/user-edit.component";
 import { SearchService } from '../../../core/services/search.service';
+import { Student } from './../../../core/models/user.interface';
+
 
 @Component({
   selector: 'app-user-student-list',
@@ -22,6 +24,7 @@ export class UserStudentListComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.subscriptions.add(this.getAllStudents());
     this.subscriptions.add(this.getAllDegrees());
+
     this.searchService.searchTerm$.subscribe((term: string) => {
       this.filteredStudents = this.students.filter((student) =>
         student.name.toLowerCase().includes(term.toLowerCase()) ||
@@ -29,6 +32,7 @@ export class UserStudentListComponent implements OnInit, OnDestroy {
       );
     });
   }
+
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
   }
@@ -65,6 +69,7 @@ export class UserStudentListComponent implements OnInit, OnDestroy {
       this.filteredStudents = students;
     });
   }
+
 
   private getAllDegrees() {
     this.userService.getAllDegrees().subscribe((degrees: Degree[]) => {

@@ -5,10 +5,10 @@ import { BehaviorSubject } from 'rxjs';
   providedIn: 'root'
 })
 export class SearchService {
-  private searchTermSubject = new BehaviorSubject<string>('');
-  searchTerm$ = this.searchTermSubject.asObservable();
+  private searchTermSource = new BehaviorSubject<string>('');
+public searchTerm$ = this.searchTermSource.asObservable();
 
-  updateSearchTerm(term: string) {
-    this.searchTermSubject.next(term);
-  }
+updateSearchTerm(term: string) {
+  this.searchTermSource.next(term);
+}
 }

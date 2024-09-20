@@ -1,5 +1,5 @@
 <app-user-options></app-user-options>
-    
+
 <div class="table-responsive-sm container-xl" style="margin-top: 20px;">
     <table class="table table-striped-columns table-sm">
         <thead>
@@ -11,7 +11,7 @@
             </tr>
         </thead>
         <tbody>
-            @for (teacher of teachers; track $index) {
+            @for (teacher of filteredTeacher; track $index) {
                 <tr>
                     <td>{{teacher.rut}}</td>
                     <td>{{teacher.name}}</td>

@@ -1,3 +1,4 @@
+import { SearchService } from './../../../core/services/search.service';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Assistant, User, UserAssitant } from '../../../core/models/user.interface';
 import { UserService } from '../../../core/services/user.service';
@@ -14,14 +15,22 @@ import { UserEditComponent } from "../user-edit/user-edit.component";
   providers: [UserService],
 })
 export class UserAssistantListComponent implements OnInit, OnDestroy {
-  constructor(private userService: UserService) {}
+  constructor(private userService: UserService, private searchService: SearchService) {}
   ngOnInit(): void {
     this.getAllAssistants();
+    this.searchService.searchTerm$.subscribe((term: string) => {
+      this.filteredAssitant = this.assistants.filter((assistant) =>
+        assistant.name.toLowerCase().includes(term.toLowerCase()) ||
+        assistant.rut.includes(term)
+      );
+    });
   }
   ngOnDestroy(): void {}
 
   public user!: User;
   public assistants!: UserAssitant[];
+  public filteredAssitant: UserAssitant[] = [];
+
 
   public deleteUser(id: number) {
     const confirmation = confirm('Estas seguro de eliminar al usuario?');
@@ -49,6 +58,7 @@ export class UserAssistantListComponent implements OnInit, OnDestroy {
       .getALLAssistants()
       .subscribe((assistants: UserAssitant[]) => {
         this.assistants = assistants;
+        this.filteredAssitant = assistants;
       });
   }
 }
