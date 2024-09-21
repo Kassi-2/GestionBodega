@@ -48,7 +48,7 @@ export class ViewProductsComponent implements OnInit {
   pageSize = 3;
   start: number = 0;
   end: number = this.pageSize;
-  selectedOption: string = 'A-Z';
+  selectedOption: string = '';
 
   //Esta función constructor crea el formulario con el que se va a trabajar (para agregar o editar un producto).
   constructor(private productService: ProductService, private fb: FormBuilder) {
@@ -199,7 +199,28 @@ export class ViewProductsComponent implements OnInit {
 
 
   }
+  //Funcion que ordena la lista de productos según la opción que escogio.
+  onSelected(option: string){
+    this.selectedOption = option;
+    this.productService.filterListProduct(this.selectedOption).subscribe({
+      next: (response) => {
+        this.products = response;
+      },
+      error: (error) => {
+        console.error(error.error.message);
+      }
+    });
+  }
 
+  ngAfterViewInit(): void {
+    const accordionElement = document.getElementById('accordionExample');
+    accordionElement?.addEventListener('show.bs.collapse', function () {
+      console.log('Accordion opened');
+    });
+    accordionElement?.addEventListener('hide.bs.collapse', function () {
+      console.log('Accordion closed');
+    });
+  }
   // Editar un producto de la lista (muestra una alerta de confirmar la edición) y se asegura que la información
   // enviada del formuario cumpla con las restricciones, como puede ser que el nombre no se repita con otro producto
   // o que el formulario fuese invalido según sus validaciones.

@@ -208,4 +208,43 @@ input[type="number"]::-webkit-outer-spin-button {
   gap: 1rem;
 }
 
+.custom-select {
+	position: relative;
+}
+
+.custom-select select {
+	appearance: none;
+	-webkit-appearance: none;
+	width: 100%;
+	font-size: 18px;
+	padding: 5px 10px 5px 10px;
+	background-color: #FFFFFF;
+	border: 1px solid #FF9933;
+	border-radius: 18px;
+	color: #000000;
+	cursor: pointer;
+	outline: none;
+	box-shadow: 3px 3px 2px 0px #E2E2E2;
+}
+
+.custom-select select:focus {
+	background: #FFFFFF;
+	border: 1px solid #666666;
+	border-radius: 18px;
+}
+
+.custom-select::after {
+	content: "";
+	position: absolute;
+	pointer-events: none;
+	top: 50%;
+	right: 10px;
+	transform: translate(0, -50%);
+	width: 12px;
+	height: 12px;
+	background-color: #000000;
+	clip-path: polygon(50% 80%, 0 20%, 100% 20%);
+}
+
+
 
