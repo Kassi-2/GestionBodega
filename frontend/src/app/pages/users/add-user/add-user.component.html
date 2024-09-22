@@ -7,60 +7,76 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          
+
           <div class="mb-3">
-            <div class="d-flex justify-content-start gap-4">
-              <label for="formGroupExampleInput" class="form-label">Rut</label>
-              <span class="bi bi-question-circle" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Rut sin puntos, con guion y digito verificador: 1111111-1" ></span>
-            </div>
-            <input type="text" class="form-control" id="run" formControlName="rut" placeholder="Rut">
+            <div >
+
+              <label for="formGroupExampleInput" class="form-label">Run</label>
+              <button
+                  type="button"
+                  class="myButton"
+                  placement="end"
+                  ngbPopover="Run sin puntos, con guión y dígito verificador. Ejemplo: 12345678-9"
+                  popoverTitle="Formato de RUN"
+                >?</button>
+
+
+          </div>
+            <input [class.is-invalid]='notValidRut' type="text" class="form-control" id="run" formControlName="rut" placeholder="Rut">
+            <small *ngIf="notValidRut" class="text-danger">Ingrese un rut.</small>
           </div>
 
           <div class="mb-3">
             <label for="formGroupExampleInput" class="form-label">Nombre Completo</label>
-            <input type="text" class="form-control" id="formGroupExampleInput" formControlName="name" placeholder="Nombre Completo">
+            <input [class.is-invalid]='notValidName' type="text" class="form-control" id="formGroupExampleInput" formControlName="name" placeholder="Nombre Completo">
+            <small *ngIf="notValidName" class="text-danger">Ingrese un nombre.</small>
           </div>
 
           <div class="mb-3">
             <label for="formGroupExampleInput" class="form-label">Tipo de Usuario</label>
-            <select class="form-control form-select" formControlName="type" aria-label="Large select example">
+            <select [class.is-invalid]='notValidType' class="form-control form-select" formControlName="type" aria-label="Large select example">
               <option value="Student">Alumno</option>
               <option value="Teacher">Profesor</option>
               <option value="Assistant">Asistente</option>
             </select>
+            <small *ngIf="notValidType" class="text-danger">Ingrese un tipo de usuario.</small>
           </div>
-          
+
           @if (this.userForm.get('type')?.value == "Student") {
             <div class="mb-3">
               <label for="formGroupExampleInput" class="form-label">Carrera</label>
-                <select class="form-control form-select" formControlName="degree" aria-label="Large select example">
+                <select [class.is-invalid]='notValidDegree' class="form-control form-select" formControlName="degree" aria-label="Large select example">
                   @for (degree of degrees; track $index) {
                     <option value={{degree.code}}>{{degree.name}}</option>
                   }
                 </select>
+                <small *ngIf="notValidDegree" class="text-danger">Ingrese una carrera.</small>
             </div>
           }
           @else if (this.userForm.get('type')?.value == "Assistant"){
             <div class="mb-3">
               <label for="formGroupExampleInput" class="form-label">Cargo</label>
-                <select class="form-control form-select" formControlName="role" aria-label="Large select example">
+                <select [class.is-invalid]='notValidRole' class="form-control form-select" formControlName="role" aria-label="Large select example">
                   <option value="Secretaria">Secretaria</option>
                   <option value="Auxiliar">Auxiliar</option>
                 </select>
+                <small *ngIf="notValidRole" class="text-danger">Ingrese un cargo.</small>
             </div>
           }
 
 
           <div class="mb-3">
             <label for="formGroupExampleInput" class="form-label">Correo Electrónico</label>
-            <input type="text" class="form-control" id="formGroupExampleInput2" formControlName="mail" placeholder="ejemplo@ejemplo.com">
+            <input [class.is-invalid]='notValidMail' type="text" class="form-control" id="formGroupExampleInput2" formControlName="mail" placeholder="ejemplo@ejemplo.com">
+            <small *ngIf="notValidMail" class="text-danger">Ingrese un correo electrónico.</small>
           </div>
 
           <div class="mb-3">
             <label for="formGroupExampleInput" class="form-label">Número de celular</label>
             <div class="input-group">
               <div class="input-group-text">+56 </div>
-              <input type="text" class="form-control" id="specificSizeInputGroupUsername" formControlName="phoneNumber" pattern="[0-9]{9}" placeholder="">
+              <input [class.is-invalid]='notValidPhoneNumber' type="text" class="form-control" id="specificSizeInputGroupUsername" formControlName="phoneNumber" pattern="[0-9]{9}" placeholder="">
+              <small *ngIf="notValidPhoneNumber" class="text-danger">Ingrese un Número de celular.</small>
             </div>
           </div>
 

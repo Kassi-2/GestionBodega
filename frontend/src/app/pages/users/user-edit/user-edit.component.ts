@@ -5,13 +5,16 @@ import { HttpClientModule } from '@angular/common/http';
 import { UserService } from '../../../core/services/user.service';
 import { Degree } from '../../../core/models/degree.interface';
 import { User, UserEdit } from '../../../core/models/user.interface';
+import { NgbPopoverModule } from '@ng-bootstrap/ng-bootstrap';
+import { CommonModule } from '@angular/common';
+
 
 declare var bootstrap: any;
 
 @Component({
   selector: 'app-user-edit',
   standalone: true,
-  imports: [SidebarComponent, ReactiveFormsModule, FormsModule, HttpClientModule],
+  imports: [SidebarComponent, ReactiveFormsModule, FormsModule, HttpClientModule, NgbPopoverModule, CommonModule],
   templateUrl: './user-edit.component.html',
   styleUrl: './user-edit.component.css',
   providers: [UserService],
@@ -35,7 +38,7 @@ export class UserEditComponent implements OnInit, OnDestroy, OnChanges {
   @Input() user!: User;
   public degrees!: Degree[];
   public userForm: FormGroup = new FormGroup({
-    rut: new FormControl('', [ 
+    rut: new FormControl('', [
       Validators.required,
       Validators.pattern('^\\d{7,8}-[\\dkK]$'),
       checkRunValidator(),
@@ -47,6 +50,48 @@ export class UserEditComponent implements OnInit, OnDestroy, OnChanges {
     degree: new FormControl(),
     role: new FormControl(),
   });
+
+  get notValidRut() {
+    return (
+      this.userForm.get('rut')?.invalid && this.userForm.get('rut')?.touched
+    );
+  }
+
+  get notValidName() {
+    return (
+      this.userForm.get('name')?.invalid && this.userForm.get('name')?.touched
+    );
+  }
+
+  get notValidType() {
+    return (
+      this.userForm.get('type')?.invalid && this.userForm.get('type')?.touched
+    );
+  }
+
+  get notValidMail() {
+    return (
+      this.userForm.get('mail')?.invalid && this.userForm.get('mail')?.touched
+    );
+  }
+
+  get notValidPhoneNumber() {
+    return (
+      this.userForm.get('phoneNumber')?.invalid && this.userForm.get('phoneNumber')?.touched
+    );
+  }
+
+  get notValidDegree() {
+    return (
+      this.userForm.get('degree')?.invalid && this.userForm.get('degree')?.touched
+    );
+  }
+
+  get notValidRole() {
+    return (
+      this.userForm.get('role')?.invalid && this.userForm.get('role')?.touched
+    );
+  }
 
   public edit() {
     const user: UserEdit = {

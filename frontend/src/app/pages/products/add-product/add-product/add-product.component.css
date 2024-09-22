@@ -6,10 +6,11 @@
   font-size: 13px;
   background-color: #f79123;
   color: white;
-  border: 1px none #cccccc;
+  border: none; /* Cambié de '1px none' a 'none' */
   border-radius: 27px;
   padding: 5px 10px;
-  letter-spacing: 0px;
+  letter-spacing: 0;
+  padding-bottom: 3px;
   margin-left: 10px;
 }
 

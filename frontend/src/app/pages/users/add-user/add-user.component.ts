@@ -14,6 +14,11 @@ import { UserEdit, UserRegister } from '../../../core/models/user.interface';
 import { UserService } from '../../../core/services/user.service';
 import { Degree } from '../../../core/models/degree.interface';
 import { HttpClientModule } from '@angular/common/http';
+import { PopoverComponent } from '@coreui/angular';
+import { NgbPopoverModule } from '@ng-bootstrap/ng-bootstrap';
+import { CommonModule } from '@angular/common';
+
+
 
 declare var bootstrap: any;
 
@@ -22,9 +27,12 @@ declare var bootstrap: any;
   standalone: true,
   imports: [
     SidebarComponent,
+    NgbPopoverModule,
     ReactiveFormsModule,
     FormsModule,
     HttpClientModule,
+    PopoverComponent,
+    CommonModule
   ],
   templateUrl: './add-user.component.html',
   styleUrl: './add-user.component.css',
@@ -79,6 +87,48 @@ export class AddUserComponent implements OnInit, OnDestroy {
     this.userService.getAllDegrees().subscribe((degrees: Degree[]) => {
       this.degrees = degrees;
     });
+  }
+
+  get notValidRut() {
+    return (
+      this.userForm.get('rut')?.invalid && this.userForm.get('rut')?.touched
+    );
+  }
+
+  get notValidName() {
+    return (
+      this.userForm.get('name')?.invalid && this.userForm.get('name')?.touched
+    );
+  }
+
+  get notValidType() {
+    return (
+      this.userForm.get('type')?.invalid && this.userForm.get('type')?.touched
+    );
+  }
+
+  get notValidMail() {
+    return (
+      this.userForm.get('mail')?.invalid && this.userForm.get('mail')?.touched
+    );
+  }
+
+  get notValidPhoneNumber() {
+    return (
+      this.userForm.get('phoneNumber')?.invalid && this.userForm.get('phoneNumber')?.touched
+    );
+  }
+
+  get notValidDegree() {
+    return (
+      this.userForm.get('degree')?.invalid && this.userForm.get('degree')?.touched
+    );
+  }
+
+  get notValidRole() {
+    return (
+      this.userForm.get('role')?.invalid && this.userForm.get('role')?.touched
+    );
   }
 
   public clearForm() {

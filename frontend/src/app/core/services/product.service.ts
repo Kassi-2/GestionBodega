@@ -39,9 +39,9 @@ export class ProductService {
     } else if (option === "Z-A") {
       return this.http.get<Product[]>(`${this.apiUrl}/active-name-desc`);
     } else if (option === "De mayor a menor stock") {
-      return this.http.get<Product[]>(`${this.apiUrl}/active-stock-asc`);
-    } else if (option === "De menor a mayor stock") {
       return this.http.get<Product[]>(`${this.apiUrl}/active-stock-desc`);
+    } else if (option === "De menor a mayor stock") {
+      return this.http.get<Product[]>(`${this.apiUrl}/active-stock-asc`);
     } else {
       return this.http.get<Product[]>(`${this.apiUrl}/active-name-asc`);
     }
