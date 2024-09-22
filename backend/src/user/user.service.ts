@@ -76,7 +76,7 @@ export class UserService {
 
   public async createUser(user: UserCreateDTO) {
     const existUser = await this.prismaService.borrower.findUnique({
-      where: { rut: user.rut },
+      where: { rut: user.rut.toUpperCase() },
     });
 
     if (existUser) {
@@ -86,10 +86,10 @@ export class UserService {
         );
       }
       await this.prismaService.borrower.update({
-        where: { rut: user.rut },
+        where: { rut: user.rut.toUpperCase() },
         data: {
           state: true,
-          rut: user.rut,
+          rut: user.rut.toUpperCase(),
           name: user.name.toUpperCase(),
           mail: user.mail ? user.mail.toLowerCase() : undefined,
           phoneNumber: user.phoneNumber,
@@ -138,7 +138,7 @@ export class UserService {
     try {
       const borrower: Borrower = await this.prismaService.borrower.create({
         data: {
-          rut: user.rut,
+          rut: user.rut.toUpperCase(),
           name: user.name.toUpperCase(),
           mail: user.mail ? user.mail.toLowerCase() : undefined,
           phoneNumber: user.phoneNumber,
@@ -246,7 +246,8 @@ export class UserService {
         const userUpdate = this.prismaService.borrower.update({
           where: { id },
           data: {
-            rut: user.rut,
+            state: true,
+            rut: user.rut.toUpperCase(),
             name: user.name.toUpperCase(),
             mail: user.mail ? user.mail.toLowerCase() : undefined,
             phoneNumber: user.phoneNumber,
@@ -269,7 +270,8 @@ export class UserService {
         const userUpdate = this.prismaService.borrower.update({
           where: { id },
           data: {
-            rut: user.rut,
+            state: true,
+            rut: user.rut.toUpperCase(),
             name: user.name.toUpperCase(),
             mail: user.mail ? user.mail.toLowerCase() : undefined,
             phoneNumber: user.phoneNumber,
@@ -316,9 +318,9 @@ export class UserService {
       const users = XLSX.utils.sheet_to_json(sheet);
 
       const processedUsers = users.map((user) => ({
-        rut: user['Rut'],
-        name: user['Nombre'],
-        mail: user['E-mail'],
+        rut: user['Rut'].toUpperCase(),
+        name: user['Nombre'].toUpperCase(),
+        mail: user['E-mail'].toLowerCase(),
         phoneNumber: user['Fono'],
         role: user['Rol'],
       }));
@@ -326,7 +328,7 @@ export class UserService {
 
       processedUsers.forEach(async (user) => {
         const existUser = await this.prismaService.borrower.findUnique({
-          where: { rut: user.rut },
+          where: { rut: user.rut.toUpperCase() },
         });
         if (!existUser) {
           const userDTO: UserCreateDTO = {
