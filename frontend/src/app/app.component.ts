@@ -1,19 +1,15 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { ViewProductsComponent } from './pages/products/view-products/view-products/view-products.component';
-import { MatPaginatorModule } from '@angular/material/paginator';
-import { AddProductComponent } from './pages/products/add-product/add-product/add-product.component';
-import { SidebarComponent } from "./shared/components/sidebar/sidebar.component";
+import { SidebarComponent } from './shared/components/sidebar/sidebar.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, CommonModule, ViewProductsComponent, MatPaginatorModule, AddProductComponent, SidebarComponent],
+  imports: [RouterOutlet, CommonModule, SidebarComponent],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  styleUrl: './app.component.css',
 })
 export class AppComponent {
   title = 'frontend';
 }
-

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ProductService } from '../../../../core/services/product.service';
+import { ProductService } from '../../../core/services/product.service';
 import {
   FormBuilder,
   FormGroup,
@@ -7,7 +7,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { Product, NewProduct } from '../../../../core/models/product.interface';
+import { Product, NewProduct } from '../../../core/models/product.interface';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { PopoverModule } from '@coreui/angular';
