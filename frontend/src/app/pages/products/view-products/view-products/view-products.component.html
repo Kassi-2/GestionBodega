@@ -47,7 +47,6 @@
             </tr>
           </thead>
         </table>
-<!-- acordeon bootstrap -->
         <div
           class="accordion-item"
           *ngFor="let product of filteredList(); let i = index"
@@ -62,22 +61,12 @@
               [attr.aria-controls]="'collapse' + i"
             >
               <div class="d-flex align-items-center">
-                <div class="codeProduct">
-                  {{ product.id }}
-                </div>
-                <div class="nameProduct">
-                  {{ product.name }}
-                </div>
-                <div class="stockProduct">
-                  {{ product.stock }}
-                </div>
+                <div class="codeProduct">{{ product.id }}</div>
+                <div class="nameProduct">{{ product.name }}</div>
+                <div class="stockProduct">{{ product.stock }}</div>
               </div>
               <div class="state-for-product">
-                <span
-                  *ngIf="product.stock > 0; else noStock"
-                  class="badge bg-success"
-                  >Disponible</span
-                >
+                <span *ngIf="product.stock > 0; else noStock" class="badge bg-success">Disponible</span>
                 <ng-template #noStock>
                   <span class="badge bg-danger">No disponible</span>
                 </ng-template>
@@ -93,11 +82,10 @@
           >
             <div class="accordion-body">
               <p><strong>Descripción:</strong> {{ product.description }}</p>
-              <p *ngIf="product.fungible == true; else noFungible"><strong>¿El producto es fungible?: </strong>Sí, si es fungible</p>
-
-                <ng-template #noFungible>
-                  <p><strong>¿El producto es fungible?: </strong>No, no es fungible</p>
-                </ng-template>
+              <p *ngIf="product.fungible; else noFungible"><strong>¿El producto es fungible?: </strong>Sí, si es fungible</p>
+              <ng-template #noFungible>
+                <p><strong>¿El producto es fungible?: </strong>No, no es fungible</p>
+              </ng-template>
               <div class="d-flex">
                 <a
                   href="#"
@@ -117,146 +105,7 @@
                 >
                   <i class="bi bi-trash3-fill"></i> Eliminar
                 </a>
-                <button class="btn btn-secondary"><i class="bi bi-clock-history"> </i> Ver historial</button>
-              </div>
-            </div>
-          </div>
-
-          <!-- Modal for editing -->
-          <div
-            class="modal fade"
-            id="exampleModal{{ i }}"
-            tabindex="-1"
-            [attr.aria-labelledby]="'exampleModalLabel{{i}}'"
-            aria-hidden="true"
-          >
-            <div class="modal-dialog">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h1 class="modal-title fs-5" id="exampleModalLabel{{ i }}">
-                    Editar Producto
-                  </h1>
-                  <button
-                    type="button"
-                    class="btn-close"
-                    data-bs-dismiss="modal"
-                  ></button>
-                </div>
-                <div class="modal-body">
-                  <form [formGroup]="forma" (ngSubmit)="onSubmit()">
-                    <div class="mb-3">
-                      <label for="idProduct" class="col-form-label"
-                        >Código de producto:</label
-                      >
-                      <input value="{{product.id}}" type="text" id="idProduct" class="form-control" disabled>
-                      <label for="productName" class="col-form-label"
-                        >Nombre:</label
-                      >
-                      <input
-                        type="text"
-                        class="form-control"
-                        id="productName"
-                        formControlName="name"
-                        [class.is-invalid]="notValidName"
-                        placeholder="Nombre del Producto"
-                      />
-                      <small *ngIf="notValidName" class="text-danger"
-                        >Ingrese un nombre de producto.</small
-                      >
-                    </div>
-
-                    <div class="mb-3">
-                      <label for="productCategory" class="col-form-label"
-                        >Categoría:</label
-                      >
-                      <select class="form-control" id="productCategory">
-                        <option>Seleccione una categoría...</option>
-                        <option>Insumos</option>
-                        <option>Equipos</option>
-                        <option>Herramientas</option>
-                      </select>
-                    </div>
-
-                    <div class="mb-3">
-                      <label for="productDescription" class="col-form-label"
-                        >Descripción:</label
-                      >
-                      <textarea
-                        class="form-control"
-                        id="productDescription"
-                        formControlName="description"
-                      ></textarea>
-                    </div>
-
-                    <div class="mb-3">
-                      <label for="initialStock" class="col-form-label"
-                        >Stock Actual:</label
-                      >
-                      <input
-                        type="number"
-                        class="form-control"
-                        id="initialStock"
-                        formControlName="stock"
-                        (keypress)="preventNegative($event)"
-                        placeholder="Stock inicial del producto"
-                      />
-                    </div>
-
-                    <div class="mb-3">
-                      <label for="criticalStock" class="col-form-label"
-                        >Stock Crítico:</label
-                      >
-                      <input
-                        type="number"
-                        class="form-control"
-                        id="criticalStock"
-                        name="criticalStock"
-                        required
-                        formControlName="criticalStock"
-                        (keypress)="preventNegative($event)"
-                        placeholder="Stock crítico del producto"
-                      />
-                      <small
-                        *ngIf="
-                          forma.get('criticalStock')?.invalid &&
-                          forma.get('criticalStock')?.touched
-                        "
-                        class="text-danger"
-                      >
-                        Ingrese un stock crítico.
-                      </small>
-                    </div>
-
-                    <div class="form-check">
-                      <input
-                        class="form-check-input"
-                        type="checkbox"
-                        id="fungible"
-                        formControlName="fungible"
-                      />
-                      <label class="form-check-label" for="fungible"
-                        >¿Es un producto fungible?</label
-                      >
-                    </div>
-                  </form>
-                </div>
-                <div class="modal-footer">
-                  <button
-                    type="button"
-                    class="btn btn-secondary"
-                    data-bs-dismiss="modal"
-                  >
-                    Cancelar
-                  </button>
-                  <button
-                    type="submit"
-                    class="btn btn-primary"
-                    data-bs-dismiss="modal"
-                    (click)="onSubmit()"
-                  >
-                    Confirmar
-                  </button>
-                </div>
+                <button class="btn btn-secondary"><i class="bi bi-clock-history"></i> Ver historial</button>
               </div>
             </div>
           </div>
@@ -269,6 +118,7 @@
       >
       </mat-paginator>
     </div>
+
 
   </body>
   <app-add-product></app-add-product>

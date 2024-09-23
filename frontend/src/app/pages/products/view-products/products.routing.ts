@@ -6,8 +6,6 @@ import { ViewProductsComponent } from './view-products/view-products.component';
 //   {  },
 // ];
 
-export const routesProduct: Routes = [
-  {path: '', component: ViewProductsComponent}
-]
+export const routesProduct: Routes = []
 
 export const ProductsRoutes = RouterModule.forChild(routes);

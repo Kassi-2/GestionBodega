@@ -9,11 +9,26 @@ import { ViewProductsComponent } from './pages/products/view-products/view-produ
 import { AddProductComponent } from './pages/products/add-product/add-product/add-product.component';
 
 export const routes: Routes = [
-  { path: '', component: AppComponent },
-  { path: 'inventory', component: ViewProductsComponent },
-  { path: 'inventory/add-product', component: AddProductComponent },
-  { path: 'users/students', component: UserStudentListComponent },
-  { path: 'users/teachers', component: UserTeacherListComponent },
-  { path: 'users/assistants', component: UserAssistantListComponent },
-  { path: 'users/create', component: AddUserComponent },
+
+  {
+    path: '',
+    redirectTo: 'inicio',
+    pathMatch: 'full'
+  },
+  {
+    path: 'inicio',
+    data: { key: 'inicio' },
+    loadChildren: () => import('../app/app.component').then(x => x.AppComponent),
+    pathMatch: 'full'
+  },
+
+
+    { path: 'inventory', component: ViewProductsComponent, pathMatch: 'full' },
+    { path: 'inventory/add-product', component: AddProductComponent },
+    { path: 'users/students', component: UserStudentListComponent },
+    { path: 'users/teachers', component: UserTeacherListComponent },
+    { path: 'users/assistants', component: UserAssistantListComponent },
+    { path: 'users/create', component: AddUserComponent },
+
+
 ];
