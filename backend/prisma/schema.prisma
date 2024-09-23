@@ -24,7 +24,7 @@ model Borrower {
 
   student  Student?
   teacher  Teacher?
-  assitant Assistant?
+  assistant Assistant?
 }
 
 model Student {

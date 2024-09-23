@@ -47,7 +47,7 @@ export interface UserAssitant {
   type: string;
   mail?: string;
   phoneNumber?: number;
-  assitant: Assistant;
+  assistant: Assistant;
 }
 
 export interface UserTeacher {

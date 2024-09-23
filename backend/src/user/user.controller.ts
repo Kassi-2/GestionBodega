@@ -43,7 +43,7 @@ export class UserController {
   @Get('/assistants')
   @HttpCode(HttpStatus.OK)
   public async getAllAssistant() {
-    return await this.userService.getAllAssitants();
+    return await this.userService.getAllAssistants();
   }
 
   @Get('user/:id')
@@ -70,7 +70,6 @@ export class UserController {
     @Param('id', ParseIntPipe) id: number,
     @Body() request: UserUpdateDTO,
   ) {
-    console.log(request);
     return await this.userService.updateUser(id, request);
   }
 

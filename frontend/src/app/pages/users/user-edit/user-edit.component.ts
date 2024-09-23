@@ -104,8 +104,6 @@ export class UserEditComponent implements OnInit, OnDestroy, OnChanges {
       role: this.userForm.get('role')?.value,
     };
 
-    console.log(user);
-
     this.userService.updateUser(this.user.id,user).subscribe({
       next: () => {
         window.location.reload();
@@ -113,6 +111,7 @@ export class UserEditComponent implements OnInit, OnDestroy, OnChanges {
       },
       error: (error) => {
         alert(error.error.message);
+        window.location.reload();
       },
     });
   }

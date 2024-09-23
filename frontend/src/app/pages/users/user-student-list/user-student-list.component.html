@@ -18,7 +18,7 @@
                     <td>{{student.rut}}</td>
                     <td>{{student.name}}</td>
                     <td>{{getDegree(student.student.codeDegree)}}</td>
-                    <td> {{student.mail}} <br> @if (student.phoneNumber != 0 ) { +56 {{student.phoneNumber}} }</td>
+                    <td> {{student.mail}} <br> @if (student.phoneNumber != 0 && student.phoneNumber) { +56 {{student.phoneNumber}} }</td>
                     <td>
                         <div class="d-flex gap-2 justify-content-end">
                             <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#modalEditUser" (click)="editUser(student.id)">

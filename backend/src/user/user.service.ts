@@ -37,11 +37,11 @@ export class UserService {
     }
   }
 
-  public async getAllAssitants() {
+  public async getAllAssistants() {
     try {
       return await this.prismaService.borrower.findMany({
         where: { state: true, type: 'Assistant' },
-        include: { assitant: true },
+        include: { assistant: true },
         orderBy: { name: 'asc' },
       });
     } catch (error) {
@@ -56,7 +56,7 @@ export class UserService {
         include: {
           student: true,
           teacher: true,
-          assitant: true,
+          assistant: true,
         },
       });
       if (!existUser) {
@@ -324,7 +324,6 @@ export class UserService {
         phoneNumber: user['Fono'],
         role: user['Rol'],
       }));
-      console.log(processedUsers);
 
       processedUsers.forEach(async (user) => {
         const existUser = await this.prismaService.borrower.findUnique({

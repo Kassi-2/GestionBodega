@@ -16,8 +16,8 @@
                 <tr>
                     <td>{{assistant.rut}}</td>
                     <td>{{assistant.name}}</td>
-                    <td>{{assistant.assitant.role}}</td>
-                    <td> {{assistant.mail}} <br> @if (assistant.phoneNumber != 0) { +56 {{assistant.phoneNumber}} }</td>
+                    <td>{{assistant.assistant.role}}</td>
+                    <td> {{assistant.mail}} <br> @if (assistant.phoneNumber != 0 && assistant.phoneNumber) { +56 {{assistant.phoneNumber}} }</td>
                     <td>
                         <div class="d-flex gap-2 justify-content-end">
                             <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#modalEditUser" (click)="editUser(assistant.id)">

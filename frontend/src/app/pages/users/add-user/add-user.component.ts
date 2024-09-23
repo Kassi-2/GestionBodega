@@ -79,6 +79,7 @@ export class AddUserComponent implements OnInit, OnDestroy {
       },
       error: (error) => {
         alert(error.error.message);
+        window.location.reload();
       },
     });
   }
