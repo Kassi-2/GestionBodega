@@ -1,4 +1,5 @@
 <body>
+  <h1 class = "titulo">Inventario</h1>
   <br>
   <div class="container mb-4">
     <div class="d-flex align-items-center justify-content-between">
@@ -24,7 +25,7 @@
         <input type="text" [(ngModel)]="searchTerm" placeholder="Buscar..." class="input" style="min-width: 500px" />
       </div>
 
-      <a href="inventory/add-product" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addProductModal">
+      <a href="inventory/add-product" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#addProductModal">
         <i class="bi bi-plus-circle"></i> Añadir Producto
       </a>
     </div>
@@ -78,15 +79,15 @@
               <p><strong>¿El producto es fungible?: </strong>No, no es fungible</p>
             </ng-template>
             <div class="d-flex">
-              <a href="#" class="btn btn-primary me-2" [attr.data-bs-toggle]="'modal'"
+              <a href="#" class="btn btn-outline-warning me-2" [attr.data-bs-toggle]="'modal'"
                 [attr.data-bs-target]="'#exampleModal' + i" (click)="editProduct(product.id)">
                 <i class="bi bi-pencil-square"></i> Editar
               </a>
-              <a href="#" class="btn btn-danger me-2" [attr.data-bs-toggle]="'modal'"
+              <a href="#" class="btn btn-outline-danger me-2" [attr.data-bs-toggle]="'modal'"
                 [attr.data-bs-target]="'#deleteModal' + i" (click)="deleteProduct(product.id)">
                 <i class="bi bi-trash3-fill"></i> Eliminar
               </a>
-              <button class="btn btn-secondary"><i class="bi bi-clock-history"> </i> Ver historial</button>
+              <button class="btn btn-outline-secondary me-2"><i class="bi bi-clock-history"> </i> Ver historial</button>
             </div>
           </div>
         </div>
