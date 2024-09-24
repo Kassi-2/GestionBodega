@@ -42,7 +42,7 @@ export class ViewProductsComponent implements OnInit {
 
   //Estos atributos serviran para buscar un producto según el nombre y para la paginación de la lista de productos.
   searchTerm: string = '';
-  pageSize = 3;
+  pageSize = 10;
   start: number = 0;
   end: number = this.pageSize;
   selectedOption: string = '';

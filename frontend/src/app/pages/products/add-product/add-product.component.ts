@@ -12,6 +12,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { PopoverModule } from '@coreui/angular';
 import { HttpClientModule } from '@angular/common/http';
+import Swal from 'sweetalert2';
 
 
 @Component({
@@ -138,29 +139,56 @@ export class AddProductComponent implements OnInit {
       fungible: formValues.isFungible ?? false,
     };
 
+    const swalWithBootstrapButtons = Swal.mixin({
+      customClass: {
+        confirmButton: 'btn btn-success',
+        cancelButton: 'btn btn-danger me-2',
+      },
+      buttonsStyling: false,
+    });
 
         this.subscription.add(
 
                 this.productService.addProduct(newProduct).subscribe({
                   next: (response) => {
-                    ///agregar funcion que avise que se agrego correctamente
-                    window.location.reload();
+                    swalWithBootstrapButtons.fire({
+                      title: '¡Agregado!',
+                      text: 'El producto ha sido agregado exitosamente.',
+                      icon: 'success',
+                      timer: 1500,
+                      showConfirmButton: false,
+                    });
+
+                    this.userForm.reset({
+                      idProduct: null,
+                      name: '',
+                      description: null,
+                      stock: null,
+                      criticalStock: null,
+                      fungible: false,
+                    });
+
+                    setTimeout(() => {
+                      window.location.reload();
+                    }, 1500);
                   },
                   error: (error) => {
-                    ///agregar funcion que avise que no se agrego correctamente
+                    swalWithBootstrapButtons.fire({
+                      title: 'Error',
+                      text: 'El producto no se ha agregado. El nombre del producto está repetido u ocurrió un error.',
+                      icon: 'error',
+                      timer: 1500,
+                      showConfirmButton: false,
+                    });
                   }
                 }
                 )
                 );
-                console.log('Producto agregado:', newProduct);
 
-                this.userForm.reset({
-                  idProduct: null,
-                  name: '',
-                  description: null,
-                  stock: null,
-                  criticalStock: null,
-                  fungible: false,
-                });
+
+
               }
-}
+
+          }
+
+
