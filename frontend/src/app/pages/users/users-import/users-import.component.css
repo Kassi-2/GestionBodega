@@ -8,4 +8,20 @@
   border: #f79123;
 }
 
+.myButton {
+  font-size: 13px;
+  background-color: #f79123;
+  color: white;
+  border: none; /* Cambié de '1px none' a 'none' */
+  border-radius: 27px;
+  padding: 5px 10px;
+  letter-spacing: 0;
+  padding-bottom: 3px;
+  margin-left: 10px;
+}
+
+.myButton:hover {
+  background-color: #ff9933;
+  color: white;
+}
 

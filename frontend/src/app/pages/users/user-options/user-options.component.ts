@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 import { UserAssistantListComponent } from '../user-assistant-list/user-assistant-list.component';
 import { UserService } from '../../../core/services/user.service';
 import { UserTeacher } from '../../../core/models/user.interface';
-import { AddUserComponent } from "../add-user/add-user.component";
-import { UsersImportComponent } from "../users-import/users-import.component";
+import { AddUserComponent } from '../add-user/add-user.component';
+import { UsersImportComponent } from '../users-import/users-import.component';
 import { SearchService } from '../../../core/services/search.service';
 import { FormsModule } from '@angular/forms';
 
@@ -12,13 +12,17 @@ import { FormsModule } from '@angular/forms';
   standalone: true,
   imports: [AddUserComponent, UsersImportComponent, FormsModule],
   templateUrl: './user-options.component.html',
-  styleUrl: './user-options.component.css'
+  styleUrl: './user-options.component.css',
 })
 export class UserOptionsComponent {
   searchTerm: string = '';
 
   constructor(private searchService: SearchService) {}
-
+  /**
+   * Función que enía al servicio el término de búsqueda que ingresó el usuario para listar los usuarios que coincidan con lo ingresado.
+   *
+   * @memberof UserOptionsComponent
+   */
   onSearch() {
     this.searchService.updateSearchTerm(this.searchTerm);
   }

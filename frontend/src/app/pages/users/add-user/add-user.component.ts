@@ -18,8 +18,6 @@ import { PopoverComponent } from '@coreui/angular';
 import { NgbPopoverModule } from '@ng-bootstrap/ng-bootstrap';
 import { CommonModule } from '@angular/common';
 
-
-
 declare var bootstrap: any;
 
 @Component({
@@ -32,7 +30,7 @@ declare var bootstrap: any;
     FormsModule,
     HttpClientModule,
     PopoverComponent,
-    CommonModule
+    CommonModule,
   ],
   templateUrl: './add-user.component.html',
   styleUrl: './add-user.component.css',
@@ -60,7 +58,11 @@ export class AddUserComponent implements OnInit, OnDestroy {
     degree: new FormControl(),
     role: new FormControl(),
   });
-
+  /**
+   * Función que rescata del formulario la información ingresada con el usuario y envía al servicio el usuario nuevo para que lo agregue a la base de datos.
+   *
+   * @memberof AddUserComponent
+   */
   public register() {
     const user: UserRegister = {
       rut: this.userForm.get('rut')?.value,
@@ -83,55 +85,101 @@ export class AddUserComponent implements OnInit, OnDestroy {
       },
     });
   }
-
+  /**
+   * Función que solicita a la base de datos un arreglo de tipo Degree con todas las carreras activas registradas en la base de datos.
+   *
+   * @private
+   * @memberof AddUserComponent
+   */
   private getAllDegrees() {
     this.userService.getAllDegrees().subscribe((degrees: Degree[]) => {
       this.degrees = degrees;
     });
   }
-
+  /**
+   * Función que verifica si el rut es inválido para enviar una alerta.
+   *
+   * @readonly
+   * @memberof AddUserComponent
+   */
   get notValidRut() {
     return (
       this.userForm.get('rut')?.invalid && this.userForm.get('rut')?.touched
     );
   }
-
+  /**
+   * Función que verifica si el nombre es inválido para enviar una alerta.
+   *
+   * @readonly
+   * @memberof AddUserComponent
+   */
   get notValidName() {
     return (
       this.userForm.get('name')?.invalid && this.userForm.get('name')?.touched
     );
   }
-
+  /**
+   * Función que verifica si el tipo de usuario es inválido para enviar una alerta.
+   *
+   * @readonly
+   * @memberof AddUserComponent
+   */
   get notValidType() {
     return (
       this.userForm.get('type')?.invalid && this.userForm.get('type')?.touched
     );
   }
-
+  /**
+   * Función que verifica si el mail es inválido para enviar una alerta.
+   *
+   * @readonly
+   * @memberof AddUserComponent
+   */
   get notValidMail() {
     return (
       this.userForm.get('mail')?.invalid && this.userForm.get('mail')?.touched
     );
   }
-
+  /**
+   * Función que verifica si el número de teléfono es inválido para enviar una alerta.
+   *
+   * @readonly
+   * @memberof AddUserComponent
+   */
   get notValidPhoneNumber() {
     return (
-      this.userForm.get('phoneNumber')?.invalid && this.userForm.get('phoneNumber')?.touched
+      this.userForm.get('phoneNumber')?.invalid &&
+      this.userForm.get('phoneNumber')?.touched
     );
   }
-
+  /**
+   * Función que verifica si la carrera es inválida para enviar una alerta.
+   *
+   * @readonly
+   * @memberof AddUserComponent
+   */
   get notValidDegree() {
     return (
-      this.userForm.get('degree')?.invalid && this.userForm.get('degree')?.touched
+      this.userForm.get('degree')?.invalid &&
+      this.userForm.get('degree')?.touched
     );
   }
-
+  /**
+   * Función que verifica si el rol es inválido para enviar una alerta.
+   *
+   * @readonly
+   * @memberof AddUserComponent
+   */
   get notValidRole() {
     return (
       this.userForm.get('role')?.invalid && this.userForm.get('role')?.touched
     );
   }
-
+  /**
+   * Función que limpia el formulario.
+   *
+   * @memberof AddUserComponent
+   */
   public clearForm() {
     this.userForm.reset({
       rut: '',
@@ -143,7 +191,13 @@ export class AddUserComponent implements OnInit, OnDestroy {
       role: '',
     });
   }
-
+  /**
+   * Función que busca la información de una carrera en específico según el código.
+   *
+   * @param {string} code
+   * @return {*}
+   * @memberof AddUserComponent
+   */
   public getDegree(code: string) {
     const degree = this.degrees.find((d) => d.code == code);
     return degree?.name;
@@ -158,14 +212,24 @@ export class AddUserComponent implements OnInit, OnDestroy {
     });
   }
 }
-
+/**
+ * Función que verifica la validación del rut ingresado por el usuario.
+ *
+ * @export
+ * @return {*}  {ValidatorFn}
+ */
 export function checkRunValidator(): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
     const isValid = checkRun(control.value);
     return isValid ? null : { invalidRun: true };
   };
 }
-
+/**
+ * Función que verifica el formato del rut ingresado por el usuario.
+ *
+ * @param {string} run
+ * @return {*}  {boolean}
+ */
 function checkRun(run: string): boolean {
   run = run.replace('-', '');
 

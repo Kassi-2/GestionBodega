@@ -14,15 +14,19 @@ import { PopoverModule } from '@coreui/angular';
 import { HttpClientModule } from '@angular/common/http';
 import Swal from 'sweetalert2';
 
-
 @Component({
   selector: 'app-add-product',
   standalone: true,
-  imports: [FormsModule, ReactiveFormsModule, CommonModule, PopoverModule, HttpClientModule],
+  imports: [
+    FormsModule,
+    ReactiveFormsModule,
+    CommonModule,
+    PopoverModule,
+    HttpClientModule,
+  ],
   templateUrl: './add-product.component.html',
   styleUrls: ['./add-product.component.css'],
   providers: [ProductService],
-
 })
 export class AddProductComponent implements OnInit {
   public products: Product[] = [
@@ -127,9 +131,9 @@ export class AddProductComponent implements OnInit {
     const formValues = this.userForm.value;
 
     const stockValue =
-    formValues.stock === null || formValues.stock === ''
-      ? 0
-      : Number(formValues.stock);
+      formValues.stock === null || formValues.stock === ''
+        ? 0
+        : Number(formValues.stock);
 
     const newProduct: NewProduct = {
       name: formValues.name,
@@ -147,48 +151,40 @@ export class AddProductComponent implements OnInit {
       buttonsStyling: false,
     });
 
-        this.subscription.add(
+    this.subscription.add(
+      this.productService.addProduct(newProduct).subscribe({
+        next: (response) => {
+          swalWithBootstrapButtons.fire({
+            title: '¡Agregado!',
+            text: 'El producto ha sido agregado exitosamente.',
+            icon: 'success',
+            timer: 1500,
+            showConfirmButton: false,
+          });
 
-                this.productService.addProduct(newProduct).subscribe({
-                  next: (response) => {
-                    swalWithBootstrapButtons.fire({
-                      title: '¡Agregado!',
-                      text: 'El producto ha sido agregado exitosamente.',
-                      icon: 'success',
-                      timer: 1500,
-                      showConfirmButton: false,
-                    });
+          this.userForm.reset({
+            idProduct: null,
+            name: '',
+            description: null,
+            stock: null,
+            criticalStock: null,
+            fungible: false,
+          });
 
-                    this.userForm.reset({
-                      idProduct: null,
-                      name: '',
-                      description: null,
-                      stock: null,
-                      criticalStock: null,
-                      fungible: false,
-                    });
-
-                    setTimeout(() => {
-                      window.location.reload();
-                    }, 1500);
-                  },
-                  error: (error) => {
-                    swalWithBootstrapButtons.fire({
-                      title: 'Error',
-                      text: 'El producto no se ha agregado. El nombre del producto está repetido u ocurrió un error.',
-                      icon: 'error',
-                      timer: 1500,
-                      showConfirmButton: false,
-                    });
-                  }
-                }
-                )
-                );
-
-
-
-              }
-
-          }
-
-
+          setTimeout(() => {
+            window.location.reload();
+          }, 1500);
+        },
+        error: (error) => {
+          swalWithBootstrapButtons.fire({
+            title: 'Error',
+            text: 'El producto no se ha agregado. El nombre del producto está repetido u ocurrió un error.',
+            icon: 'error',
+            timer: 1500,
+            showConfirmButton: false,
+          });
+        },
+      })
+    );
+  }
+}

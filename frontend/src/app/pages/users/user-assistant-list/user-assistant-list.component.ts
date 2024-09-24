@@ -1,10 +1,14 @@
 import { SearchService } from './../../../core/services/search.service';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Assistant, User, UserAssitant } from '../../../core/models/user.interface';
+import {
+  Assistant,
+  User,
+  UserAssitant,
+} from '../../../core/models/user.interface';
 import { UserService } from '../../../core/services/user.service';
 import { UserOptionsComponent } from '../user-options/user-options.component';
 import { AddUserComponent } from '../add-user/add-user.component';
-import { UserEditComponent } from "../user-edit/user-edit.component";
+import { UserEditComponent } from '../user-edit/user-edit.component';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -16,13 +20,17 @@ import Swal from 'sweetalert2';
   providers: [UserService],
 })
 export class UserAssistantListComponent implements OnInit, OnDestroy {
-  constructor(private userService: UserService, private searchService: SearchService) {}
+  constructor(
+    private userService: UserService,
+    private searchService: SearchService
+  ) {}
   ngOnInit(): void {
     this.getAllAssistants();
     this.searchService.searchTerm$.subscribe((term: string) => {
-      this.filteredAssitant = this.assistants.filter((assistant) =>
-        assistant.name.toLowerCase().includes(term.toLowerCase()) ||
-        assistant.rut.includes(term)
+      this.filteredAssitant = this.assistants.filter(
+        (assistant) =>
+          assistant.name.toLowerCase().includes(term.toLowerCase()) ||
+          assistant.rut.includes(term)
       );
     });
   }
@@ -32,9 +40,13 @@ export class UserAssistantListComponent implements OnInit, OnDestroy {
   public assistants!: UserAssitant[];
   public filteredAssitant: UserAssitant[] = [];
 
-
+  /**
+   * Función que recibe el id de un usuario de tipo Asistente que se desea eliminar. Se crea una ventana de confirmación y se solicita al servicio la eliminación del usuario según el id enviado. Envía un mensaje de éxito o de error según sea necesario.
+   *
+   * @param {number} id
+   * @memberof UserAssistantListComponent
+   */
   public deleteUser(id: number) {
-
     const swalWithBootstrapButtons = Swal.mixin({
       customClass: {
         confirmButton: 'btn btn-success',
@@ -79,25 +91,33 @@ export class UserAssistantListComponent implements OnInit, OnDestroy {
               }, 1500);
             },
           });
-          }
-          else{
-              swalWithBootstrapButtons.fire({
-                title: 'Cancelado',
-                text: 'El usuario no se ha eliminado.',
-                icon: 'error',
-                timer: 1500,
-                showConfirmButton: false,
-              });
-            }
+        } else {
+          swalWithBootstrapButtons.fire({
+            title: 'Cancelado',
+            text: 'El usuario no se ha eliminado.',
+            icon: 'error',
+            timer: 1500,
+            showConfirmButton: false,
           });
+        }
+      });
   }
-
+  /**
+   * Función que recibe el id de un usuario y envía al servicio la información del usuario a editar.
+   *
+   * @param {number} id
+   * @memberof UserAssistantListComponent
+   */
   public editUser(id: number) {
     this.userService.getUserById(id).subscribe((user: User) => {
       this.user = user;
     });
   }
-
+  /**
+   * Función que solicita al servicio la lista de todos los usuarios de tipo Asistente activos de la base de datos.
+   *
+   * @memberof UserAssistantListComponent
+   */
   public getAllAssistants() {
     this.userService
       .getALLAssistants()

@@ -5,12 +5,10 @@ import { UserService } from '../../../core/services/user.service';
 import { User, UserStudent } from '../../../core/models/user.interface';
 import { Degree } from '../../../core/models/degree.interface';
 import { Subscription } from 'rxjs';
-import { UserEditComponent } from "../user-edit/user-edit.component";
+import { UserEditComponent } from '../user-edit/user-edit.component';
 import { SearchService } from '../../../core/services/search.service';
 import { Student } from './../../../core/models/user.interface';
 import Swal from 'sweetalert2';
-
-
 
 @Component({
   selector: 'app-user-student-list',
@@ -21,16 +19,20 @@ import Swal from 'sweetalert2';
   providers: [UserService, SearchService],
 })
 export class UserStudentListComponent implements OnInit, OnDestroy {
-  constructor(private userService: UserService, private searchService: SearchService) {}
+  constructor(
+    private userService: UserService,
+    private searchService: SearchService
+  ) {}
 
   ngOnInit(): void {
     this.subscriptions.add(this.getAllStudents());
     this.subscriptions.add(this.getAllDegrees());
 
     this.searchService.searchTerm$.subscribe((term: string) => {
-      this.filteredStudents = this.students.filter((student) =>
-        student.name.toLowerCase().includes(term.toLowerCase()) ||
-        student.rut.includes(term)
+      this.filteredStudents = this.students.filter(
+        (student) =>
+          student.name.toLowerCase().includes(term.toLowerCase()) ||
+          student.rut.includes(term)
       );
     });
   }
@@ -38,15 +40,20 @@ export class UserStudentListComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
   }
+
   public selectedUserId!: number;
   public user!: User;
   private subscriptions: Subscription = new Subscription();
   public students!: UserStudent[];
   public degrees!: Degree[];
   public filteredStudents: UserStudent[] = [];
-
+  /**
+   *Función que recibe el id de un usuario de tipo estudiante, dentro crea una alerta y manda la información al servicio para que lo elimine de la base de datos. Manda un aviso si se realizó exitosamente o si ocurrió un error.
+   *
+   * @param {number} id
+   * @memberof UserStudentListComponent
+   */
   public deleteUser(id: number) {
-
     const swalWithBootstrapButtons = Swal.mixin({
       customClass: {
         confirmButton: 'btn btn-success',
@@ -91,28 +98,35 @@ export class UserStudentListComponent implements OnInit, OnDestroy {
               }, 1500);
             },
           });
-          }
-          else{
-              swalWithBootstrapButtons.fire({
-                title: 'Cancelado',
-                text: 'El usuario no se ha eliminado.',
-                icon: 'error',
-                timer: 1500,
-                showConfirmButton: false,
-              });
-            }
+        } else {
+          swalWithBootstrapButtons.fire({
+            title: 'Cancelado',
+            text: 'El usuario no se ha eliminado.',
+            icon: 'error',
+            timer: 1500,
+            showConfirmButton: false,
           });
-
-
         }
+      });
+  }
 
-
-
+  /**
+   *Función busca la información de una carrera según su código.
+   *
+   * @param {string} code
+   * @return {*}
+   * @memberof UserStudentListComponent
+   */
   public getDegree(code: string) {
     const degree = this.degrees.find((d) => d.code == code);
     return degree?.name;
   }
-
+  /**
+   * Función que llama al servicio para recibir una lista de los usuarios de tipo Estudiante activos de la base de datos.
+   *
+   * @private
+   * @memberof UserStudentListComponent
+   */
   private getAllStudents() {
     this.userService.getAllStudents().subscribe((students: UserStudent[]) => {
       this.students = students;
@@ -120,13 +134,23 @@ export class UserStudentListComponent implements OnInit, OnDestroy {
     });
   }
 
-
+  /**
+   * Función que solicita al servicio todas las carreras activas registradas en la base de datos.
+   *
+   * @private
+   * @memberof UserStudentListComponent
+   */
   private getAllDegrees() {
     this.userService.getAllDegrees().subscribe((degrees: Degree[]) => {
       this.degrees = degrees;
     });
   }
-
+  /**
+   * Función que recibe el id de un usuario de tipo Estudiante para enviar la información al servicio y lo actualice en la base de datos.
+   *
+   * @param {number} id
+   * @memberof UserStudentListComponent
+   */
   public editUser(id: number) {
     this.userService.getUserById(id).subscribe((user: User) => {
       this.user = user;

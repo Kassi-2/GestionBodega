@@ -1,37 +1,39 @@
 <app-user-options></app-user-options>
 
 <div class="table-responsive-sm container-xl" style="margin-top: 20px;">
-    <table class="table table-striped-columns table-sm">
-        <thead>
-            <tr>
-                <th>Rut</th>
-                <th>Nombre</th>
-                <th>Carrera</th>
-                <th>Contactos</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-        @if (degrees) {
-            @for (student of filteredStudents; track $index) {
-                <tr>
-                    <td>{{student.rut}}</td>
-                    <td>{{student.name}}</td>
-                    <td>{{getDegree(student.student.codeDegree)}}</td>
-                    <td> {{student.mail}} <br> @if (student.phoneNumber != 0 && student.phoneNumber) { +56 {{student.phoneNumber}} }</td>
-                    <td>
-                        <div class="d-flex gap-2 justify-content-end">
-                            <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#modalEditUser" (click)="editUser(student.id)">
-                              <i class="bi bi-pencil-square"> editar</i>
-                            </button>
-                            <button type="button" class="btn btn-outline-danger btn-sm" (click)="deleteUser(student.id)">
-                              <i class="bi bi-x-square"> eliminar</i>
-                            </button>
-                        </div>
-                    </td>
-                </tr>
-            }}
-        </tbody>
-    </table>
+  <table class="table table-striped-columns table-sm">
+    <thead>
+      <tr>
+        <th>Rut</th>
+        <th>Nombre</th>
+        <th>Carrera</th>
+        <th>Contactos</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      @if (degrees) {
+      @for (student of filteredStudents; track $index) {
+      <tr>
+        <td>{{student.rut}}</td>
+        <td>{{student.name}}</td>
+        <td>{{getDegree(student.student.codeDegree)}}</td>
+        <td> {{student.mail}} <br> @if (student.phoneNumber != 0 && student.phoneNumber) { +56 {{student.phoneNumber}} }
+        </td>
+        <td>
+          <div class="d-flex gap-2 justify-content-end">
+            <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal"
+              data-bs-target="#modalEditUser" (click)="editUser(student.id)">
+              <i class="bi bi-pencil-square"> editar</i>
+            </button>
+            <button type="button" class="btn btn-outline-danger btn-sm" (click)="deleteUser(student.id)">
+              <i class="bi bi-x-square"> eliminar</i>
+            </button>
+          </div>
+        </td>
+      </tr>
+      }}
+    </tbody>
+  </table>
 </div>
 <app-user-edit [user]="user"></app-user-edit>
