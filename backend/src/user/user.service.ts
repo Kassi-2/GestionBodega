@@ -320,10 +320,39 @@ export class UserService {
       const processedUsers = users.map((user) => ({
         rut: user['Rut'].toUpperCase(),
         name: user['Nombre'].toUpperCase(),
-        mail: user['E-mail'].toLowerCase(),
+        mail: user['E-mail'] ? user['E-mail'].toLowerCase() : undefined,
         phoneNumber: user['Fono'],
         role: user['Rol'],
       }));
+
+      console.log(processedUsers);
+
+      switch (type) {
+        case UserType.Student:
+          if (!degree) {
+            throw new BadRequestException(
+              'Los usuarios de tipo estudiante deben tener una carrera asociada',
+            );
+          }
+          await this.prismaService.borrower.updateMany({
+            where: { student: { codeDegree: degree } },
+            data: { state: false },
+          });
+
+          break;
+        case UserType.Teacher:
+          await this.prismaService.borrower.updateMany({
+            where: { type },
+            data: { state: false },
+          });
+          break;
+        case UserType.Assistant:
+          await this.prismaService.borrower.updateMany({
+            where: { type },
+            data: { state: false },
+          });
+          break;
+      }
 
       processedUsers.forEach(async (user) => {
         const existUser = await this.prismaService.borrower.findUnique({
