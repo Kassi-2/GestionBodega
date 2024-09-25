@@ -10,13 +10,20 @@
       <button class="btn navbar-brand" type="button"><i class="bi bi-bell"></i></button>
     </div>
 
-    <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasDarkNavbar" style="width: 250px;"
+    <div class="offcanvas offcanvas-start" tabindex="-1" data-bs-backdrop="static" id="offcanvasDarkNavbar" style="width: 250px;"
       aria-labelledby="offcanvasDarkNavbarLabel">
-      <div class="offcanvas-header" style="background-color: #f79123;justify-content: center;">
-        <a class="navbar-brand" href="#">
-          <img src="assets\images\logo-departamento-mecanica.png" class="container-fluid rounded-5 rounded-top-0"
-            height="210" width="150" alt="Logo">
-        </a>
+      <div class="offcanvas-header" style="background-color: #f79123;">
+        <div class="container-fluid">
+          <div class="row justify-content-end">
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+          </div>
+          <div class="row justify-content-center">
+            <a class="navbar-brand" href="#">
+              <img src="assets\images\logo-departamento-mecanica.png" class="container-fluid rounded-5 rounded-top-0"
+                height="210" width="150" alt="Logo">
+            </a>
+          </div>
+        </div>
       </div>
       <div class="offcanvas-body">
         <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
