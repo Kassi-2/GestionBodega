@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UserCreateDTO } from './dto/user-create.dto';
-import { Borrower, UserType } from '@prisma/client';
+import { Borrower, Degree, UserType } from '@prisma/client';
 import { UserUpdateDTO } from './dto/user-update.dto';
 import * as XLSX from 'xlsx';
 
@@ -13,11 +13,15 @@ import * as XLSX from 'xlsx';
 export class UserService {
   constructor(private prismaService: PrismaService) {}
 
-  public async getAllUsers() {
+  //Obtener todos los usuarios que se encuentren en la base de datos
+  public async getAllUsers(): Promise<Borrower[]> {
     return this.prismaService.borrower.findMany();
   }
 
-  public async getAllStudents() {
+  //Obtener todos los estudiantes activos que se encuentren en la base de datos
+  //Devuelve una promesa que contendra un array de estudiantes y los entrega
+  //ordenados alfabeticamente
+  public async getAllStudents(): Promise<Borrower[]> {
     return await this.prismaService.borrower.findMany({
       where: { state: true, type: 'Student' },
       include: { student: true },
@@ -25,7 +29,10 @@ export class UserService {
     });
   }
 
-  public async getAllTeachers() {
+  //Obtener todos los profesores activos que se encuentren en la base de datos
+  //Devuelve una promesa que contendra un array de profesores y los entrega
+  //ordenados alfabeticamente
+  public async getAllTeachers(): Promise<Borrower[]> {
     try {
       return await this.prismaService.borrower.findMany({
         where: { state: true, type: 'Teacher' },
@@ -37,7 +44,10 @@ export class UserService {
     }
   }
 
-  public async getAllAssistants() {
+  //Obtener todos los asistentes activos que se encuentren en la base de datos
+  //Devuelve una promesa que contendra un array de asistentes y los entrega
+  //ordenados alfabeticamente
+  public async getAllAssistants(): Promise<Borrower[]> {
     try {
       return await this.prismaService.borrower.findMany({
         where: { state: true, type: 'Assistant' },
@@ -49,7 +59,10 @@ export class UserService {
     }
   }
 
-  public async getUserById(id: number) {
+  //Obtener un producto por su id
+  //Devuelve una promesa que contendrá al prestatario
+  //en caso de que no exista el prestatario devolverá un error
+  public async getUserById(id: number): Promise<Borrower> {
     try {
       const existUser = await this.prismaService.borrower.findUnique({
         where: { id },
@@ -70,71 +83,24 @@ export class UserService {
     }
   }
 
-  public async getAllDegrees() {
+  //Obtener todas las carreras que se encuentran en la base de datos
+  //Devuelve una promesa que contendra un array de carreras
+  public async getAllDegrees(): Promise<Degree[]> {
     return this.prismaService.degree.findMany();
   }
 
-  public async createUser(user: UserCreateDTO) {
+  //Crea un usuario ingresando los datos necesarios de un usuario
+  //Devuelve una promesa que contendra al usuario creado
+  //verifica si el usuario existe, en caso de que exista llama a la
+  //funcion de editar, si el usuario no existe entonces lo crea
+  public async createUser(user: UserCreateDTO): Promise<Borrower> {
     const existUser = await this.prismaService.borrower.findUnique({
       where: { rut: user.rut.toUpperCase() },
     });
 
     if (existUser) {
-      if (existUser.type != user.type) {
-        throw new BadRequestException(
-          `Este usuario ya se encuentra registrado como tipo de usuario ${existUser.type}, si desea cambiar su tipo, debe hacerlo editando al usuario.`,
-        );
-      }
-      await this.prismaService.borrower.update({
-        where: { rut: user.rut.toUpperCase() },
-        data: {
-          state: true,
-          rut: user.rut.toUpperCase(),
-          name: user.name.toUpperCase(),
-          mail: user.mail ? user.mail.toLowerCase() : undefined,
-          phoneNumber: user.phoneNumber,
-          type: user.type,
-        },
-      });
-      switch (user.type) {
-        case UserType.Student:
-          await this.prismaService.student.update({
-            where: { id: existUser.id },
-            data: {
-              codeDegree: user.degree,
-            },
-          });
-          break;
-
-        case UserType.Assistant:
-          await this.prismaService.assistant.update({
-            where: { id: existUser.id },
-            data: {
-              role: user.role,
-            },
-          });
-          break;
-      }
-      return existUser;
+      return this.updateUser(existUser.id, user);
     }
-    switch (user.type) {
-      case UserType.Student:
-        if (!user.degree) {
-          throw new BadRequestException(
-            'Los estudiantes deben tener una carrera asignada',
-          );
-        }
-        break;
-
-      case UserType.Assistant:
-        if (!user.role) {
-          throw new BadRequestException(
-            'Los asistentes deben tener un rol asignado',
-          );
-        }
-        break;
-    }
-
     try {
       const borrower: Borrower = await this.prismaService.borrower.create({
         data: {
@@ -173,14 +139,18 @@ export class UserService {
           });
           break;
       }
-
       return borrower;
     } catch (error) {
       throw error;
     }
   }
 
-  public async updateUser(id: number, user: UserUpdateDTO) {
+  //Actualizar un usuario mediante su id
+  //Devuelve una promesa que contendra al usuario editado
+  //verifica si el usuario existe, en caso de que no exista
+  //devuelve un error, si existe entonces actualiza la informacion
+  //del usuarios con los valores que se ingresaron
+  public async updateUser(id: number, user: UserUpdateDTO): Promise<Borrower> {
     try {
       const existUser = await this.prismaService.borrower.findUnique({
         where: { id },
@@ -284,7 +254,10 @@ export class UserService {
     }
   }
 
-  public async deleteUser(id: number) {
+  //Eliminar un usuario, es decir que cambia el estado a desactivado
+  //Devuelve una promesa que contendra la informacion del usuario desactivado
+  //en caso de que el usuario no exista se devolvera un error
+  public async deleteUser(id: number): Promise<Borrower> {
     try {
       const existUser = await this.prismaService.borrower.findUnique({
         where: { id },
@@ -304,11 +277,15 @@ export class UserService {
     }
   }
 
+  //Importar usuarios desde un archivo xlsx
+  //crea y actualiza usuarios en la base de datos, dependiendo
+  //del tipo de usuario realiza diferentes validaciones
+  //si son estudiantes verifiza que tengan una carrera asociada
   public async importUsers(
     type: UserType,
     degree: string | undefined,
     data: any,
-  ) {
+  ): Promise<void> {
     try {
       const workbook = XLSX.read(data.buffer, { type: 'buffer' });
 
@@ -324,8 +301,6 @@ export class UserService {
         phoneNumber: user['Fono'],
         role: user['Rol'],
       }));
-
-      console.log(processedUsers);
 
       switch (type) {
         case UserType.Student:
