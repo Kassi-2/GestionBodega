@@ -5,12 +5,14 @@ import { UserTeacherListComponent } from './pages/users/user-teacher-list/user-t
 import { UserAssistantListComponent } from './pages/users/user-assistant-list/user-assistant-list.component';
 import { ViewProductsComponent } from './pages/products/view-products/view-products.component';
 import { AddProductComponent } from './pages/products/add-product/add-product.component';
+import { RouterModule } from '@angular/router';
+import { NgModule } from '@angular/core';
 
 export const routes: Routes = [
 
   {
     path: '',
-    redirectTo: 'inicio',
+    redirectTo: 'inventory',
     pathMatch: 'full'
   },
   {
@@ -30,3 +32,5 @@ export const routes: Routes = [
 
 
 ];
+
+
