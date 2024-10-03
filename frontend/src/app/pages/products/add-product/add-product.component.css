@@ -1,0 +1,49 @@
+.caja-numeros {
+    margin-left: 10px;
+  }
+  
+  .myButton {
+    font-size: 13px;
+    background-color: #f79123;
+    color: white;
+    border: none; /* Cambié de '1px none' a 'none' */
+    border-radius: 27px;
+    padding: 5px 10px;
+    letter-spacing: 0;
+    padding-bottom: 3px;
+    margin-left: 10px;
+  }
+  
+  .myButton:hover {
+    background-color: #ff9933;
+    color: white;
+  }
+  
+  .modal-dialog {
+    margin-top: 80px;
+  }
+  
+  .popover-body {
+    text-align: justify;
+  }
+  
+  .btn-primary:hover {
+    background-color: #ff9933;
+    border: #ff9933;
+  }
+  
+  .btn-primary {
+    background-color: #f79123;
+    border: #f79123;
+  }
+  
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  
+  .form-check-input:checked {
+    background-color: #ff9933;
+    border-color: #ff9933;
+  }
