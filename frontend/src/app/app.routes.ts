@@ -7,6 +7,7 @@ import { ViewProductsComponent } from './pages/products/view-products/view-produ
 import { AddProductComponent } from './pages/products/add-product/add-product.component';
 import { RouterModule } from '@angular/router';
 import { NgModule } from '@angular/core';
+import { AddLendingComponent } from './pages/lendings/add-lending/add-lending/add-lending.component';
 
 export const routes: Routes = [
 
@@ -29,6 +30,8 @@ export const routes: Routes = [
     { path: 'users/teachers', component: UserTeacherListComponent },
     { path: 'users/assistants', component: UserAssistantListComponent },
     { path: 'users/create', component: AddUserComponent },
+    { path: 'lendings/add-lending', component: AddLendingComponent },
+
 
 
 ];

@@ -1,0 +1,33 @@
+
+  <ul class="nav nav-pills justify-content-center">
+    <li class="nav-item">
+      @if (progressStatus == 1){
+      <a class="nav-link active" aria-current="page" href="#" style="background-color: brown"><i class="bi bi-1-circle"></i>
+        "Seleccionar usuario"</a>
+      }
+      @else {
+        <a class="nav-link disabled" aria-current="page" href="#"><i class="bi bi-1-circle"></i>
+          "Seleccionar usuario"</a>
+      }
+    </li>
+    <li class="nav-item">
+      @if (progressStatus == 2){
+      <a class="nav-link active" aria-current="page" href="#"><i class="bi bi-2-circle"></i>
+        "Agregar productos"</a>
+      }
+      @else {
+        <a class="nav-link disabled" aria-current="page" href="#"><i class="bi bi-2-circle"></i>
+          "Agregar productos"</a>
+      }
+    </li>
+    <li class="nav-item">
+      @if (progressStatus == 3){
+      <a class="nav-link active" aria-current="page" href="#"><i class="bi bi-3-circle"></i>
+        "Confirmar</a>
+      }
+      @else {
+        <a class="nav-link disabled" aria-current="page" href="#"><i class="bi bi-3-circle"></i>
+          "Cofirmar"</a>
+      }
+    </li>
+  </ul>

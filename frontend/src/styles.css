@@ -1,21 +1,20 @@
 
 
 .swal2-popup {
-  background-color: #f9f9f9; /* Fondo de la alerta */
-  border-radius: 15px; /* Bordes redondeados */
-  font-family: 'Times new roman', sans-serif; /* Tipografía personalizada */
+  background-color: #f9f9f9;
+  border-radius: 15px;
 }
 
 .swal2-title {
-  color: #151110; /* Cambiar el color del título */
+  color: #151110;
 }
 
 .swal2-confirm {
-  background-color: #28a745; /* Cambiar el color del botón de confirmación */
+  background-color: #28a745;
 }
 
 .swal2-cancel {
-  background-color: #dc3545; /* Cambiar el color del botón de cancelación */
+  background-color: #dc3545;
 }
 
 html, body { height: 100%; }
