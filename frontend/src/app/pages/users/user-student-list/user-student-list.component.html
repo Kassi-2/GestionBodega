@@ -37,6 +37,8 @@
       }}
     </tbody>
   </table>
-  <ngb-pagination [collectionSize]="filteredStudents.length" [(page)]="page" [pageSize]="pageSize" [maxSize]="5" [rotate]="true" [ellipses]="false" [boundaryLinks]="true" />
+  <div class="d-flex justify-content-center">
+    <ngb-pagination [collectionSize]="filteredStudents.length" [(page)]="page" [pageSize]="pageSize" [maxSize]="5" [rotate]="true" [ellipses]="false" [boundaryLinks]="true" />
+  </div>
 </div>
 <app-user-edit [user]="user"></app-user-edit>

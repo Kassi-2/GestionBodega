@@ -15,7 +15,7 @@
       </tr>
     </thead>
     <tbody>
-      @for (assistant of filteredAssitant; track $index) {
+      @for (assistant of filteredAssistant; track $index) {
       <tr>
         <td>{{assistant.rut}}</td>
         <td>{{assistant.name}}</td>
@@ -37,6 +37,9 @@
       }
     </tbody>
   </table>
+  <div class="d-flex justify-content-center">
+    <ngb-pagination [collectionSize]="filteredAssistant.length" [(page)]="page" [pageSize]="pageSize" [maxSize]="5" [rotate]="true" [ellipses]="false" [boundaryLinks]="true" />
+  </div>
 </div>
 
 <app-user-edit [user]="user"></app-user-edit>

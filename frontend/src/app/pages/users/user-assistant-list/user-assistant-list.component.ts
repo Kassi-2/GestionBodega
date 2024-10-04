@@ -9,11 +9,12 @@ import { UserService } from '../../../core/services/user.service';
 import { UserOptionsComponent } from '../user-options/user-options.component';
 import { UserEditComponent } from '../user-edit/user-edit.component';
 import Swal from 'sweetalert2';
+import { NgbPagination } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-user-assistant-list',
   standalone: true,
-  imports: [UserOptionsComponent, UserEditComponent],
+  imports: [UserOptionsComponent, UserEditComponent, NgbPagination],
   templateUrl: './user-assistant-list.component.html',
   styleUrl: './user-assistant-list.component.css',
   providers: [UserService],
@@ -26,7 +27,7 @@ export class UserAssistantListComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.getAllAssistants();
     this.searchService.searchTerm$.subscribe((term: string) => {
-      this.filteredAssitant = this.assistants.filter(
+      this.filteredAssistant = this.assistants.filter(
         (assistant) =>
           assistant.name.toLowerCase().includes(term.toLowerCase()) ||
           assistant.rut.includes(term)
@@ -37,7 +38,9 @@ export class UserAssistantListComponent implements OnInit, OnDestroy {
 
   public user!: User;
   public assistants!: UserAssitant[];
-  public filteredAssitant: UserAssitant[] = [];
+  public filteredAssistant: UserAssitant[] = [];
+  public page = 1;
+  public pageSize = 15;
 
   /**
    * Función que recibe el id de un usuario de tipo Asistente que se desea eliminar. Se crea una ventana de confirmación y se solicita al servicio la eliminación del usuario según el id enviado. Envía un mensaje de éxito o de error según sea necesario.
@@ -122,7 +125,7 @@ export class UserAssistantListComponent implements OnInit, OnDestroy {
       .getAllAssistants()
       .subscribe((assistants: UserAssitant[]) => {
         this.assistants = assistants;
-        this.filteredAssitant = assistants;
+        this.filteredAssistant = assistants;
       });
   }
 }

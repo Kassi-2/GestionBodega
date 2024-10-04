@@ -5,11 +5,12 @@ import { User, UserTeacher } from '../../../core/models/user.interface';
 import { UserOptionsComponent } from '../user-options/user-options.component';
 import { UserEditComponent } from '../user-edit/user-edit.component';
 import Swal from 'sweetalert2';
+import { NgbPagination } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-user-teacher-list',
   standalone: true,
-  imports: [UserOptionsComponent, UserEditComponent],
+  imports: [UserOptionsComponent, UserEditComponent, NgbPagination],
   templateUrl: './user-teacher-list.component.html',
   styleUrl: './user-teacher-list.component.css',
   providers: [UserService],
@@ -32,6 +33,8 @@ export class UserTeacherListComponent implements OnInit, OnDestroy {
   }
   ngOnDestroy(): void {}
 
+  public page = 1;
+  public pageSize = 15;
   public user!: User;
   public teachers!: UserTeacher[];
   public filteredTeacher: UserTeacher[] = [];
