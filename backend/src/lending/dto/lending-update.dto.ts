@@ -7,10 +7,6 @@ import { IsString, IsNumber, IsOptional, IsArray } from 'class-validator';
   
     @IsOptional()
     @IsNumber()
-    BorrowerId?: number;
-  
-    @IsOptional()
-    @IsNumber()
     teacherId?: number;
 
     @IsOptional()

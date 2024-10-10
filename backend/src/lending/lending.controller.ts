@@ -1,6 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, ValidationPipe } from '@nestjs/common';
 import { LendingService } from './lending.service';
 import { LendingCreateDTO } from './dto/lending-create.dto';
+import { LendingUpdateDTO } from './dto/lending-update.dto';
 
 @Controller('lending')
 export class LendingController {
@@ -44,6 +45,11 @@ export class LendingController {
     @Delete(':id')
     async deletePending(@Param('id') id: string) {
         return this.lendingService.deletePending(Number(id));
+    }
+
+    @Put("/update/:id")
+    async updateLending( @Param('id') id: string, @Body(ValidationPipe) data: LendingUpdateDTO){
+        return this.lendingService.updateLending(Number(id), data)
     }
 }
 
