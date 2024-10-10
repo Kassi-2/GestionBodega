@@ -62,7 +62,20 @@
         <p><strong>Fecha:</strong> {{ selectedLending?.date }}</p>
         <p><strong>Profesor asignado:</strong>
           @if (selectedLending?.teacherId != null) {
-            {{ selectedLending?.teacherName }}
+            @if (isEditMode) {
+                <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  {{ selectedLending?.teacherName }}
+                </button>
+                <ul class="dropdown-menu">
+                  @for (teacher of teachers; track lending; let i = $index) {
+                    <li><a class="dropdown-item" (click)="selectTeacher(teacher)">{{ teacher.name }}</a></li>
+                  }
+                </ul>
+            }
+            @else {
+              {{ selectedLending?.teacherName }}
+            }
+
           }
           @else {
             No existe un profesor asignado
@@ -72,33 +85,41 @@
         <table class="table">
           <thead>
             <tr>
-              <th scope="col">Nombre del producto</th>
+              <th scope="col">Producto</th>
+              <th scope="col">Stock disponible</th>
               <th scope="col">Cantidad</th>
-
             </tr>
           </thead>
           <tbody>
             @for (lending of selectedLending?.lendingProducts; track lending; let i = $index) {
             <tr>
               <td>{{ selectedLending?.lendingProducts[i].name}}</td>
+              <td>{{ selectedLending?.lendingProducts[i].stock}}</td>
               <td>
-              <div class="input-group quantity-input">
-                <button class="btn btn-outline-secondary" type="button" (click)="decreaseAmount(i)">-</button>
-                <input type="text" [(ngModel)]="selectedLending?.lendingProducts[i].amount" class="form-control text-center" readonly />
-                <button class="btn btn-outline-secondary" type="button" (click)="increaseAmount(i)">+</button>
-              </div>
+                <div class="input-group quantity-input">
+                  @if (isEditMode) {
+                  <button class="btn btn-outline-secondary" type="button" (click)="decreaseAmount(i)">-</button>
+                  }
+                  <input type="text" [(ngModel)]="selectedLending?.lendingProducts[i].amount" class="form-control text-center" readonly />
+                  @if (isEditMode) {
+                  <button class="btn btn-outline-secondary" type="button" (click)="increaseAmount(i, selectedLending?.lendingProducts[i].stock)">+</button>
+                  }
+                </div>
               </td>
-
             </tr>
-          }
+            }
           </tbody>
         </table>
       </div>
 
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-        <button type="button" class="btn btn-primary">Guardar cambios</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="disableEditMode()">Cerrar</button>
+        <button type="button" class="btn btn-outline-success" (click)="enableEditMode()">Editar</button>
+        @if (isEditMode) {
+          <button type="button" class="btn btn-primary" (click)="editLending()">Guardar cambios</button>
+        }
       </div>
     </div>
   </div>
 </div>
+

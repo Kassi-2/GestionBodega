@@ -14,6 +14,7 @@ export interface lendingProducts{
   lendingId: number;
   productId: number;
   name: string;
+  stock: number;
   amount: number;
 }
 
