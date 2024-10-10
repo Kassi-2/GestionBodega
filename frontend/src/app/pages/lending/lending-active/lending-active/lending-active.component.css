@@ -1,0 +1,40 @@
+.quantity-input {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.quantity-input input {
+  width: 40px; /* Reduce el ancho del input */
+  text-align: center;
+  font-size: 1.2rem;
+  border: none;
+  box-shadow: none;
+  background-color: white;
+  margin: 0 10px; /* Reduce el espacio alrededor del input */
+}
+
+.quantity-input .btn {
+  font-size: 1.2rem;
+  width: 40px; /* Reduce el tamaño del botón */
+  height: 40px; /* Asegura que sea un círculo */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%; /* Hace los botones completamente redondos */
+  border: 1px solid #ced4da;
+  background-color: #f8f9fa;
+  transition: background-color 0.3s ease;
+}
+
+.quantity-input .btn:hover {
+  background-color: #e2e6ea; /* Color de hover para los botones */
+}
+
+.quantity-input .btn:active {
+  box-shadow: none;
+}
+
+.quantity-input .btn:focus {
+  box-shadow: none;
+}

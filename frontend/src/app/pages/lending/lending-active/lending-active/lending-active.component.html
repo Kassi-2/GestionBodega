@@ -1,13 +1,12 @@
 <app-lending-options></app-lending-options>
-<!-- VISTA PRESTAMOS CON TABLA -->
-<div class="custom_input">
+<!-- <div class="custom_input">
   <svg xmlns="http://www.w3.org/2000/svg" class="svg_icon bi-search" viewBox="0 0 16 16">
     <path
       d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z">
     </path>
   </svg>
   <input type="text" [(ngModel)]="searchTerm" placeholder="Buscar..." class="input" style="min-width: 500px" />
-</div>
+</div> -->
 <div>
   <table class="table table-striped">
     <thead class="table-light">
@@ -15,22 +14,22 @@
         <th scope="col">Id</th>
         <th scope="col">Nombre del prestatario</th>
         <th scope="col">Fecha</th>
-        <th scope="col">Estado</th>
+        <th scope="col">Profesor Asignado</th>
         <th scope="col">Acciones</th>
       </tr>
     </thead>
     <tbody>
-      @for (lending of activeLendings; track lending; let i = $index) {
+      @for (lending of lending; track lending; let i = $index) {
       <tr>
         <th scope="row">{{lending.id}}</th>
-        <td>{{lending.borrowerId}}</td>
+        <td>{{lending.borrowerName}}</td>
         <td>{{lending.date}}</td>
         <td>
-          @if (lending.state == "true") {
-            <span class="badge bg-success">Está asociado</span>
+          @if (lending.teacherId != null) {
+            {{lending.teacherName}}
           }
           @else {
-            <span class="badge bg-danger">No está asociado</span>
+            No existe un profesor asignado
           }
         </td>
         <td>
@@ -59,15 +58,43 @@
       </div>
       <div class="modal-body">
         <p><strong>ID:</strong> {{ selectedLending?.id }}</p>
-        <p><strong>Nombre del prestatario:</strong> {{ selectedLending?.name }}</p>
+        <p><strong>Nombre del prestatario:</strong> {{ selectedLending?.borrowerName }}</p>
         <p><strong>Fecha:</strong> {{ selectedLending?.date }}</p>
-        <p><strong>Estado:</strong>
-          <span [ngClass]="{'bg-success': selectedLending?.associated, 'bg-danger': !selectedLending?.associated}">
-            {{ selectedLending?.associated ? 'Está asociado' : 'No está asociado' }}
-          </span>
+        <p><strong>Profesor asignado:</strong>
+          @if (selectedLending?.teacherId != null) {
+            {{ selectedLending?.teacherName }}
+          }
+          @else {
+            No existe un profesor asignado
+          }
         </p>
         <p><strong>Detalles del préstamo:</strong> {{ selectedLending?.date }}</p>
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">Nombre del producto</th>
+              <th scope="col">Cantidad</th>
+
+            </tr>
+          </thead>
+          <tbody>
+            @for (lending of selectedLending?.lendingProducts; track lending; let i = $index) {
+            <tr>
+              <td>{{ selectedLending?.lendingProducts[i].name}}</td>
+              <td>
+              <div class="input-group quantity-input">
+                <button class="btn btn-outline-secondary" type="button" (click)="decreaseAmount(i)">-</button>
+                <input type="text" [(ngModel)]="selectedLending?.lendingProducts[i].amount" class="form-control text-center" readonly />
+                <button class="btn btn-outline-secondary" type="button" (click)="increaseAmount(i)">+</button>
+              </div>
+              </td>
+
+            </tr>
+          }
+          </tbody>
+        </table>
       </div>
+
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
         <button type="button" class="btn btn-primary">Guardar cambios</button>
@@ -75,4 +102,3 @@
     </div>
   </div>
 </div>
-

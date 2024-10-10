@@ -39,7 +39,7 @@
             <small class="text-danger">Ingrese un tipo de usuario.</small>
             }
           </div>
-  
+
           @if (this.userForm.get('type')?.value == "Student") {
           <div class="mb-3">
             <label for="formGroupExampleInput" class="form-label">Carrera</label>
@@ -61,14 +61,19 @@
               aria-label="Large select example">
               <option value="Secretaria">Secretaria</option>
               <option value="Auxiliar">Auxiliar</option>
+              <option value="Asistente de laboratorio">Asistente de laboratorio</option>
+              <option value="Funcionario administrativo">Funcionario administrativo</option>
+              <option value="Técnicos">Técnicos</option>
+              <option value="Profesionales">Profesionales</option>
+              <option value="otros..">otros..</option>
             </select>
             @if (notValidRole) {
               <small class="text-danger">Ingrese un cargo.</small>
             }
           </div>
           }
-  
-  
+
+
           <div class="mb-3">
             <label for="formGroupExampleInput" class="form-label">Correo Electrónico</label>
             <input [class.is-invalid]='notValidMail' type="text" class="form-control" id="formGroupExampleInput2"
@@ -77,7 +82,7 @@
             <small class="text-danger">Ingrese un correo electrónico.</small>
             }
           </div>
-  
+
           <div class="mb-3">
             <label for="formGroupExampleInput" class="form-label">Número de celular</label>
             <div class="input-group">
@@ -89,7 +94,7 @@
               <small class="text-danger">Ingrese un Número de celular.</small>
             }
           </div>
-  
+
         </div>
         <div class="modal-footer">
           <button class="btn btn-secondary" data-bs-dismiss="modal" (click)="clearForm()">Cancelar</button>
@@ -99,7 +104,7 @@
       </div>
     </div>
   </div>
-  
+
   <div class="modal fade" id="modalConfirmation" aria-hidden="true" aria-labelledby="exampleModalToggleLabel2"
     tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">

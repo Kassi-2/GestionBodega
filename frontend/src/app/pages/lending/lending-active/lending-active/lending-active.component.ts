@@ -1,44 +1,51 @@
-import { lendingProducts, Lending } from './../../../../../core/models/lending.interface';
+import { LendingService } from './../../../../core/services/lending.service';
 import { Component, OnInit } from '@angular/core';
 import { NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap';
 import Swal from 'sweetalert2';
 import { LendingOptionsComponent } from '../../lending-options/lending-options/lending-options.component';
 import { CommonModule } from '@angular/common';
-import { LendingService } from '../../../../../core/services/lending.service';
+import { Lending } from '../../../../core/models/lending.interface';
 import { FormsModule } from '@angular/forms';
-import { BrowserModule } from '@angular/platform-browser';
-
 
 @Component({
   selector: 'app-lending-active',
   standalone: true,
-  imports: [LendingOptionsComponent, NgbAccordionModule, CommonModule, BrowserModule, FormsModule],
+  imports: [LendingOptionsComponent, NgbAccordionModule, CommonModule, FormsModule],
   templateUrl: './lending-active.component.html',
-  styleUrl: './lending-active.component.css'
+  styleUrl: './lending-active.component.css',
+  providers: [LendingService]
 })
 export class LendingActiveComponent {
-  activeLendings: Lending[] = [];
   selectedLending: any;
   searchTerm: string = '';
-
+  lending: Lending[] = [];
 
   constructor(private lendingService: LendingService) {}
 
   ngOnInit() {
-
-    // this.activeLendings = this.lendingService.getActiveLendings();
-
+    this.getLending();
   }
 
-  get filteredLendings(): Lending[] {
-    return this.activeLendings.filter(lending =>
-      lending.state.toLowerCase().includes(this.searchTerm.toLowerCase())
-    );
+  getLending(): void {
+    this.lendingService.getLending().subscribe((lending: Lending[]) => {
+      this.lending = lending
+      console.log(this.lending)
+    });
   }
 
 
   openLendingDetails(lending: any) {
     this.selectedLending = lending;
+  }
+
+  increaseAmount(index: number): void {
+    this.selectedLending.lendingProducts[index].amount++;
+  }
+
+  decreaseAmount(index: number): void {
+    if (this.selectedLending.lendingProducts[index].amount > 0) {
+      this.selectedLending.lendingProducts[index].amount--;
+    }
   }
 
   finishiLending(idLending: number): void {
@@ -58,12 +65,12 @@ export class LendingActiveComponent {
       cancelButtonText: "No, no estoy seguro",
       reverseButtons: true
     }).then((result) => {
-      const lendingToDelete = this.activeLendings.find(lending => lending.id === idLending);
+      const lendingToDelete = this.lending.find(lending => lending.id === idLending);
 
       if (lendingToDelete) {
+        this.lending = this.lending.filter(lending => lending.id !== idLending);
       }
       if (result.isConfirmed) {
-        this.activeLendings = this.activeLendings.filter(lending => lending.id !== idLending);
         swalWithBootstrapButtons.fire({
           title: "Finalizado!",
           text: "El prestamo fue finalizado.",
@@ -98,12 +105,17 @@ export class LendingActiveComponent {
       cancelButtonText: "No, no quiero eliminarlo",
       reverseButtons: true
     }).then((result) => {
-      const lendingToDelete = this.activeLendings.find(lending => lending.id === idLending);
+      const lendingToDelete = this.lending.find(lending => lending.id === idLending);
 
       if (lendingToDelete) {
+        swalWithBootstrapButtons.fire({
+          title: "Error!",
+          text: "El prestamo no fue encontrado.",
+          icon: "error"
+        });
       }
       if (result.isConfirmed) {
-        this.activeLendings = this.activeLendings.filter(lending => lending.id !== idLending);
+        this.lending = this.lending.filter(lending => lending.id !== idLending);
         swalWithBootstrapButtons.fire({
           title: "Eliminado!",
           text: "El prestamo fue eliminado.",
