@@ -109,7 +109,6 @@ export class ViewProductsComponent implements OnInit {
       },
       buttonsStyling: false,
     });
-
     swalWithBootstrapButtons
       .fire({
         title: '¿Estás seguro?',
@@ -194,15 +193,6 @@ export class ViewProductsComponent implements OnInit {
     });
   }
 
-  ngAfterViewInit(): void {
-    const accordionElement = document.getElementById('accordionExample');
-    accordionElement?.addEventListener('show.bs.collapse', function () {
-      console.log('Accordion opened');
-    });
-    accordionElement?.addEventListener('hide.bs.collapse', function () {
-      console.log('Accordion closed');
-    });
-  }
   // Editar un producto de la lista (muestra una alerta de confirmar la edición) y se asegura que la información
   // enviada del formuario cumpla con las restricciones, como puede ser que el nombre no se repita con otro producto
   // o que el formulario fuese invalido según sus validaciones.

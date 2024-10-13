@@ -7,11 +7,12 @@ import { Lending } from '../../../../core/models/lending.interface';
 import Swal from 'sweetalert2';
 import { LendingService } from './../../../../core/services/lending.service';
 import { User,UserTeacher } from './../../../../core/models/user.interface';
+import { NgbPagination } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-lending-finish',
   standalone: true,
-  imports: [LendingOptionsComponent, CommonModule, FormsModule],
+  imports: [LendingOptionsComponent, CommonModule, FormsModule, NgbPagination],
   templateUrl: './lending-finish.component.html',
   styleUrl: './lending-finish.component.css'
 })
@@ -22,11 +23,27 @@ export class LendingFinishComponent {
   searchTerm: string = '';
   lending: Lending[] = [];
   teachers: User[] = [];
+  selectedDate: string = '';
+  public page = 1;
+  public pageSize = 10;
 
   constructor(private lendingService: LendingService, private userService: UserService) {}
 
   ngOnInit() {
     this.getLending();
+  }
+
+  filteredList(): Lending[] {
+    const filteredLendings = this.lending.filter(
+      (lending) =>
+        lending.borrowerName.toLowerCase().includes(this.searchTerm.toLowerCase())
+    );
+    return filteredLendings;
+  }
+
+  selectDate(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    this.selectedDate = input.value;
   }
 
   private getLending(): void {
@@ -63,21 +80,14 @@ export class LendingFinishComponent {
       cancelButtonText: "No, no quiero eliminarlo",
       reverseButtons: true
     }).then((result) => {
-      const lendingToDelete = this.lending.find(lending => lending.id === idLending);
-
-      if (lendingToDelete) {
-        swalWithBootstrapButtons.fire({
-          title: "Error!",
-          text: "El prestamo no fue encontrado.",
-          icon: "error"
-        });
-      }
       if (result.isConfirmed) {
         this.lending = this.lending.filter(lending => lending.id !== idLending);
         swalWithBootstrapButtons.fire({
           title: "Eliminado!",
           text: "El prestamo fue eliminado.",
-          icon: "success"
+          icon: "success",
+          timer: 1500,
+          showConfirmButton: false,
         });
       } else if (
         result.dismiss === Swal.DismissReason.cancel
@@ -85,7 +95,9 @@ export class LendingFinishComponent {
         swalWithBootstrapButtons.fire({
           title: "Cancelado",
           text: "El prestamo no fue eliminado",
-          icon: "error"
+          icon: "error",
+          timer: 1500,
+          showConfirmButton: false,
         });
       }
     });

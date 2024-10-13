@@ -1,7 +1,7 @@
-import { User,UserTeacher } from './../../../../core/models/user.interface';
+import { UserTeacher } from './../../../../core/models/user.interface';
 import { LendingService } from './../../../../core/services/lending.service';
 import { Component, OnInit } from '@angular/core';
-import { NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAccordionModule, NgbPagination } from '@ng-bootstrap/ng-bootstrap';
 import Swal from 'sweetalert2';
 import { LendingOptionsComponent } from '../../lending-options/lending-options/lending-options.component';
 import { CommonModule } from '@angular/common';
@@ -14,23 +14,34 @@ import { UserService } from '../../../../core/services/user.service';
 @Component({
   selector: 'app-lending-active',
   standalone: true,
-  imports: [LendingOptionsComponent, NgbAccordionModule, CommonModule, FormsModule],
+  imports: [LendingOptionsComponent, NgbAccordionModule, CommonModule, FormsModule, NgbPagination],
   templateUrl: './lending-active.component.html',
   styleUrl: './lending-active.component.css',
   providers: [LendingService]
 })
 export class LendingActiveComponent {
   selectedLending: any;
+  resetLending: any;
   searchTerm: string = '';
   lending: Lending[] = [];
-  teachers: User[] = [];
+  teachers: UserTeacher[] = [];
   isEditMode: boolean = false;
+  selectedDate: string = '';
+  public page = 1;
+  public pageSize = 10;
+
+
 
   constructor(private lendingService: LendingService, private userService: UserService) {}
 
   ngOnInit() {
     this.getLending();
 
+  }
+
+  selectDate(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    this.selectedDate = input.value;
   }
 
   getLending(): void {
@@ -47,35 +58,41 @@ export class LendingActiveComponent {
     });
   }
 
+  filteredList(): Lending[] {
+    const filteredLendings = this.lending.filter(
+      (lending) =>
+        lending.borrowerName.toLowerCase().includes(this.searchTerm.toLowerCase())
+    );
+    return filteredLendings;
+  }
+
   selectTeacher(teacher: any) {
     this.selectedLending.teacherId = teacher.rut;
     this.selectedLending.teacherName = teacher.name;
   }
 
-  public editLending() {
+  public editLending(): void {
+    if (!this.selectedLending) return;
+
     const updatedLending: Lending = {
-      id: this.selectedLending.id,
-      date: this.selectedLending.date,
-      state: this.selectedLending.state,
-      comments: this.selectedLending.comments,
-      borrowerId: this.selectedLending.borrowerId,
-      borrowerName: this.selectedLending.borrowerName,
-      teacherId: this.selectedLending.teacherId,
-      teacherName: this.selectedLending.teacherName,
-      lendingProducts: this.selectedLending.lendingProducts.map((product: { productId: any; name: any; stock: any; amount: any; }) => ({
+      ...this.selectedLending,
+      lendingProducts: this.selectedLending.lendingProducts.map((product: any) => ({
         lendingId: this.selectedLending.id,
-        productId: product.productId,
-        name: product.name,
-        stock: product.stock,
-        amount: product.amount
+        ...product
       }))
     };
 
     console.log(updatedLending);
 
-    this.lendingService.updateLending(updatedLending.id, updatedLending).subscribe(response => {
-      console.log('Préstamo actualizado con éxito', response);
-      this.disableEditMode();
+    this.lendingService.updateLending(updatedLending.id, updatedLending).subscribe({
+      next: (response) => {
+        console.log('Préstamo actualizado con éxito', response);
+        this.disableEditMode();
+        this.resetLending = null;
+      },
+      error: (err) => {
+        console.error('Error al actualizar el préstamo', err);
+      }
     });
   }
 
@@ -88,28 +105,37 @@ export class LendingActiveComponent {
     this.isEditMode = false;
   }
 
+  resetChanges() {
+    this.selectedLending = this.resetLending;
+  }
+
   openLendingDetails(lending: any) {
+    this.resetLending = lending;
     this.selectedLending = lending;
     this.getAllTeachers();
   }
 
-  increaseAmount(index: number, stock: number): void {
-    if (this.selectedLending.lendingProducts[index].amount < stock) {
-      this.selectedLending.lendingProducts[index].amount++;
+  increaseAmount(index: number, stock: number) {
+    const product = this.selectedLending.lendingProducts[index];
+    if (product.amount < stock + product.amount) {
+      product.amount++;
+      product.stock--;
     }
   }
 
-  decreaseAmount(index: number): void {
-    if (this.selectedLending.lendingProducts[index].amount > 0) {
-      this.selectedLending.lendingProducts[index].amount--;
+  decreaseAmount(index: number) {
+    const product = this.selectedLending.lendingProducts[index];
+    if (product.amount > 0) {
+      product.amount--;
+      product.stock++;
     }
   }
 
-  finishiLending(idLending: number): void {
+  finishLending(idLending: number): void {
     const swalWithBootstrapButtons = Swal.mixin({
       customClass: {
         confirmButton: "btn btn-success",
-        cancelButton: "btn btn-danger"
+        cancelButton: "btn btn-danger me-2"
       },
       buttonsStyling: false
     });
@@ -122,16 +148,14 @@ export class LendingActiveComponent {
       cancelButtonText: "No, no estoy seguro",
       reverseButtons: true
     }).then((result) => {
-      const lendingToDelete = this.lending.find(lending => lending.id === idLending);
-
-      if (lendingToDelete) {
-        this.lending = this.lending.filter(lending => lending.id !== idLending);
-      }
       if (result.isConfirmed) {
+        this.lending = this.lending.filter(lending => lending.id !== idLending);
         swalWithBootstrapButtons.fire({
           title: "Finalizado!",
           text: "El prestamo fue finalizado.",
-          icon: "success"
+          icon: "success",
+          timer: 1500,
+          showConfirmButton: false,
         });
       } else if (
         result.dismiss === Swal.DismissReason.cancel
@@ -139,52 +163,9 @@ export class LendingActiveComponent {
         swalWithBootstrapButtons.fire({
           title: "Cancelado",
           text: "El prestamo no fue finalizado",
-          icon: "error"
-        });
-      }
-    });
-  }
-
-  deleteLending(idLending: number): void {
-    const swalWithBootstrapButtons = Swal.mixin({
-      customClass: {
-        confirmButton: "btn btn-success",
-        cancelButton: "btn btn-danger"
-      },
-      buttonsStyling: false
-    });
-    swalWithBootstrapButtons.fire({
-      title: "Estas seguro?",
-      text: "Estas a punto de eliminar un prestamo!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "Si, quiero eliminarlo!",
-      cancelButtonText: "No, no quiero eliminarlo",
-      reverseButtons: true
-    }).then((result) => {
-      const lendingToDelete = this.lending.find(lending => lending.id === idLending);
-
-      if (lendingToDelete) {
-        swalWithBootstrapButtons.fire({
-          title: "Error!",
-          text: "El prestamo no fue encontrado.",
-          icon: "error"
-        });
-      }
-      if (result.isConfirmed) {
-        this.lending = this.lending.filter(lending => lending.id !== idLending);
-        swalWithBootstrapButtons.fire({
-          title: "Eliminado!",
-          text: "El prestamo fue eliminado.",
-          icon: "success"
-        });
-      } else if (
-        result.dismiss === Swal.DismissReason.cancel
-      ) {
-        swalWithBootstrapButtons.fire({
-          title: "Cancelado",
-          text: "El prestamo no fue eliminado",
-          icon: "error"
+          icon: "error",
+          timer: 1500,
+          showConfirmButton: false,
         });
       }
     });

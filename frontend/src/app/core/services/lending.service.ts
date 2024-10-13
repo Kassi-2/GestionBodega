@@ -37,7 +37,6 @@ export class LendingService {
   }
 
   public updateLending(id:number, lending: Lending): Observable<UserTeacher[]> {
-    console.log("llego al backend" + JSON.stringify(lending))
     return this.http.get<UserTeacher[]>(`${this.apiUrl}/teachers`);
   }
 
