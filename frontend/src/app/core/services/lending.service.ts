@@ -13,20 +13,21 @@ export class LendingService {
   private apiUrl = 'http://localhost:3000/lending';
   private currentStep = new BehaviorSubject<number>(1);
   private selectedUser = new BehaviorSubject<User | null>(null);
-  private containsSubject = new BehaviorSubject<Contains[]>([]);
+  private containsSubject = new BehaviorSubject<Contains[] | null>(null);
 
 
   public addLending(Lending: Lending) {
     return this.http.post(`${this.apiUrl}`, Lending);
   }
 
-  setContains(contains: Contains) {
+  setContains(contains: Contains[] | null) {
     this.containsSubject.next(contains);
   }
 
   getLending() {
     return this.containsSubject.asObservable();
   }
+
 
   setCurrentStep(step: number) {
     this.currentStep.next(step);
@@ -40,9 +41,10 @@ export class LendingService {
     return this.selectedUser.asObservable();
   }
 
-  setSelectedUser(user: User) {
+  setSelectedUser(user: User | null) {
     this.selectedUser.next(user);
   }
+
 
 
 }

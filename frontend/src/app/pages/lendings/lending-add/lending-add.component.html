@@ -40,13 +40,13 @@
 
 @if (currentStep == 1){
 
-  <h5 style = "margin-left: 15.3%">Seleccione el usuario que desee asociar al préstamo:</h5>
+  <h5 style = "margin-left: 7%; margin-top: 2%; margin-bottom: 1%">Seleccione el usuario que desee asociar al préstamo:</h5>
 
   <div class="d-flex justify-content-center">
     <nav class="navbar bg-body-tertiary justify-content-center d-inline-block"
          style=" border-radius: 10px;">
         <ul class="nav justify-content-center mt-2" style="cursor: pointer;">
-          <li class="nav-item" style="margin-left: 10px;">
+          <li class="nav-item" style="margin-left: 10px; margin-bottom: 3%">
             <a class="nav-link link-dark" (click)="selectUserType('student')">Estudiantes</a>
           </li>
           <li class="nav-item">
@@ -59,10 +59,10 @@
     </nav>
   </div>
 
-  <div style="display: flex; justify-content: center; align-items: center;">
+  <div style="display: flex; justify-content: center; align-items: center; margin-top: 1%; margin-bottom: 1%">
     <div class="custom_input" style="position: relative; width: 40%; display: flex; align-items: center;">
       <svg xmlns="http://www.w3.org/2000/svg" class="svg_icon" viewBox="0 0 16 16"
-           style="position: absolute; left: 18px; width: 16px; height: 16px;">
+           style="position: absolute; left: 18px; width: 16px; height: 16px">
         <path
           d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z">
         </path>
@@ -74,77 +74,58 @@
 
 
 
-  @if (selectedUserType == "student"){
-    <div class="list-group container-xl" style="margin-top: 10px;">
-
-          @if (degrees) {
-          @for (student of filteredStudents | slice: (page-1) * pageSize : page * pageSize; track $index) {
-            <div class="list-group-item list-group-item-action custom-active-border"
-            [class.active]="selectedUser === student"
-            [style.backgroundColor]="selectedUser === student ? 'orange' : 'inherit'"
-            (click)="selectUser(student)">
-            <div class="d-flex justify-content-between" style="cursor: pointer">
-              <div>
-                <strong>{{ student.name }}</strong>
-                <p> <b>Rut:</b> {{ student.rut }} - <b>Carrera: </b>{{getDegree(student.student.codeDegree)}}</p>
-              </div>
+  <div class="list-group container-xl" style="margin-top: 10px;">
+    @if (selectedUserType == "student") {
+      @for (student of filteredStudents | slice: (page-1) * pageSize : page * pageSize; track $index) {
+        <div
+          class="list-group-item list-group-item-action custom-active-border"
+          [ngClass]="{'active': selectedUser === student}"
+          [style.backgroundColor]="selectedUser === student ? 'orange' : 'inherit'"
+          (click)="selectUser(student)">
+          <div class="d-flex justify-content-between" style="cursor: pointer">
+            <div>
+              <strong>{{ student.name }}</strong>
+              <p> <b>Rut:</b> {{ student.rut }} - <b>Carrera: </b>{{getDegree(student.student.codeDegree)}}</p>
             </div>
-            </div>
-          }}
-      <div class="d-flex justify-content-center"style="margin-top: 20px;" >
-        <ngb-pagination [collectionSize]="filteredStudents.length" [(page)]="page" [pageSize]="pageSize" [maxSize]="5" [rotate]="true" [ellipses]="false" [boundaryLinks]="true" />
-      </div>
-    </div>
-  }
+          </div>
+        </div>
+      }}
 
 
-
-  @if (selectedUserType == 'teacher') {
-    <div class="list-group container-xl" style="margin-top: 20px;">
+    @if (selectedUserType == "teacher") {
       @for (teacher of filteredTeachers | slice: (page - 1) * pageSize : page * pageSize; track $index) {
-        <div class="list-group-item list-group-item-action"
-             [class.active]="selectedUser === teacher"
-             [style.backgroundColor]="selectedUser === teacher ? 'orange' : 'inherit'"
-             (click)="selectUser(teacher)">
+        <div
+          class="list-group-item list-group-item-action"
+          [class.active]="selectedUser === teacher"
+          [style.backgroundColor]="selectedUser === teacher ? 'orange' : 'inherit'"
+          (click)="selectUser(teacher)">
           <div class="d-flex justify-content-between" style="cursor: pointer">
             <div>
               <strong>{{ teacher.name }}</strong>
-              <p> <b>Rut:</b> {{ teacher.rut }} </p>
+              <p> <b>Rut:</b> {{ teacher.rut }}</p>
             </div>
           </div>
         </div>
-      }
-
-      <div class="d-flex justify-content-center mt-3">
-        <ngb-pagination
-          [(page)]="page"
-          [pageSize]="pageSize"
-          [collectionSize]="filteredTeachers.length"
-          [maxSize]="5"
-          [rotate]="true"
-          [ellipses]="false"
-          [boundaryLinks]="true">
-        </ngb-pagination>
-      </div>
-    </div>
-}
+      }}
 
 
-@if (selectedUserType == 'assistant') {
-  <div class="list-group container-xl" style="margin-top: 20px;">
-    @for (assistant of filteredAssistants | slice: (page - 1) * pageSize : page * pageSize; track $index) {
-      <div class="list-group-item list-group-item-action"
-           [class.active]="selectedUser === assistant"
-           [style.backgroundColor]="selectedUser === assistant ? 'orange' : 'inherit'"
-           (click)="selectUser(assistant)">
-        <div class="d-flex justify-content-between" style="cursor: pointer">
-          <div>
-            <strong>{{ assistant.name }}</strong>
-            <p> <b>Rut:</b> {{ assistant.rut }}</p>
+    @if (selectedUserType == "assistant") {
+      @for (assistant of filteredAssistants | slice: (page - 1) * pageSize : page * pageSize; track $index) {
+        <div
+          class="list-group-item list-group-item-action"
+          [class.active]="selectedUser === assistant"
+          [style.backgroundColor]="selectedUser === assistant ? 'orange' : 'inherit'"
+          (click)="selectUser(assistant)">
+          <div class="d-flex justify-content-between" style="cursor: pointer">
+            <div>
+              <strong>{{ assistant.name }}</strong>
+              <p> <b>Rut:</b> {{ assistant.rut }}</p>
+            </div>
           </div>
         </div>
-      </div>
-    }
+      }}
+    </div>
+
 
     <div class="d-flex justify-content-center mt-3">
       <ngb-pagination
@@ -157,8 +138,8 @@
         [boundaryLinks]="true">
       </ngb-pagination>
     </div>
-  </div>
-}
+
+
 
   <div class="d-flex justify-content-center" style="margin-top: 20px; margin-bottom: 40px;">
     <button routerLink="/lending" (click)="cancel()" class="btn btn-secondary" style = "margin-right: 20px" >Cancelar</button>
@@ -170,7 +151,7 @@
 @if (currentStep == 2){
 
   <div>
-    <button (click)="stepDown()" class="btn btn-primary"><i class="bi bi-arrow-left"></i></button>
+    <button (click)="stepDown()" class="btn btn-primary" style="margin-left: 8%"><i class="bi bi-arrow-left"></i></button>
   </div>
 
   <div class="container">
@@ -203,26 +184,30 @@
             <tbody>
 
               @for (product of filteredList() | slice: (page-1) * pageSize : page * pageSize; track product; let i = $index) {
-              <tr>
-                <td>{{ product.id }}</td>
-                <td>{{ product.name }}</td>
-                <td>{{ product.stock }}</td>
-                <td>
-
-                  <div class="d-flex align-items-center">
-                    <button class="btn btn-outline-primary" (click)="decrementQuantity(product.id)">-</button>
-                    <span class="mx-2">{{ getQuantity(product.id) }}</span>
-                    <button class="btn btn-outline-primary" (click)="incrementQuantity(product.id, product.stock)">+</button>
-                  </div>
-                </td>
-              </tr>
+                <tr>
+                  <td>{{ product.id }}</td>
+                  <td>{{ product.name }}</td>
+                  <td>{{ product.stock }}</td>
+                  <td>
+                    <div class="d-flex align-items-center">
+                      <button class="btn btn-outline-primary" (click)="decrementQuantity(product.id)"
+                        [disabled]="getQuantity(product.id) === 0">-</button>
+                      <span class="mx-2">{{ getQuantity(product.id) }}</span>
+                      <button class="btn btn-outline-primary" (click)="incrementQuantity(product.id, product.stock)"
+                        [disabled]="product.stock === 0">+</button>
+                    </div>
+                  </td>
+                </tr>
               }
+
             </tbody>
           </table>
         </div>
     </div>
 
-    <ngb-pagination [collectionSize]="products.length" [(page)]="page" [pageSize]="pageSize" [maxSize]="5" [rotate]="true" [ellipses]="false" [boundaryLinks]="true" />
+    <div class="d-flex justify-content-center" style="margin-top: 20px; margin-bottom: 40px;">
+      <ngb-pagination [collectionSize]="products.length" [(page)]="page" [pageSize]="pageSize" [maxSize]="5" [rotate]="true" [ellipses]="false" [boundaryLinks]="true" />
+    </div>
     </div>
   </div>
 
@@ -243,25 +228,30 @@
 
 
   <div>
-    <button (click)="stepDown()" class="btn btn-primary"><i class="bi bi-arrow-left"></i></button>
+    <button (click)="stepDown()" class="btn btn-primary" style="margin-left: 8%"><i class="bi bi-arrow-left"></i></button>
   </div>
 
-  <div class="dropdown">
-    <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-      Seleccione un profesor
-    </button>
-    <ul class="dropdown-menu">
-      @for (teacher of filteredTeachers; track teacher) {
-        <li><a class="dropdown-item" (click)="selectTeacher(teacher)">{{ teacher.name }}</a></li>
-      }
-    </ul>
+  <div style="padding-bottom: 1%; padding-top: 1%; margin-left: 8%;">
+    <h5 style="margin-bottom: 1%; margin-top: 1.5%">Seleccione el profesor que desee asociar al préstamo:</h5>
+    <div class="d-flex ">
+      <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        Seleccione un profesor
+      </button>
+      <ul class="dropdown-menu">
+        @for (teacher of filteredTeachers; track teacher) {
+          <li><a class="dropdown-item" (click)="selectTeacher(teacher)">{{ teacher.name }}</a></li>
+        }
+      </ul>
+    </div>
   </div>
 
 
 
-  <div class="form-group mt-3">
-    <label for="comments">Comentarios:</label>
-    <textarea id="comments" class="form-control" [(ngModel)]="comments" rows="3" placeholder="Escribe tus comentarios aquí..."></textarea>
+
+
+  <div class="form-group mt-3" style="margin-left: 8%;">
+    <label for="comments" style="margin-bottom: 1%">Comentarios:</label>
+    <textarea id="comments" class="form-control" style= "width: 90%;" [(ngModel)]="comments" rows="3" placeholder="Escribe tus comentarios aquí..."></textarea>
   </div>
 
 
