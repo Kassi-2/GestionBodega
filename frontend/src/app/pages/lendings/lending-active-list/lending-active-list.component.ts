@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
-import { LendingAddComponent } from '../../lending-add/lending-add/lending-add.component';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-lending-active-list',
   standalone: true,
-  imports: [LendingAddComponent],
+  imports: [RouterLink],
   templateUrl: './lending-active-list.component.html',
   styleUrl: './lending-active-list.component.css'
 })

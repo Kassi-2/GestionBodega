@@ -1,14 +1,15 @@
 export interface Lending {
-  id: number;
-  date: Date;
-  state: string;
+  id: number| null;
+  date: Date| null;
+  state: string| null;
   comments: string | null;
   borrowerId: number;
-  lendingProducts: productsLending[];
+  teacherId: number | null;
+  contains: Contains[];
 }
 
-export interface productsLending{
-  lendingId: number;
+export interface Contains{
+  lendingId: number | null;
   productId: number;
   amount: number;
 }
