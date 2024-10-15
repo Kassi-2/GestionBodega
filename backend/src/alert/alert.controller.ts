@@ -1,5 +1,13 @@
-import { Controller, Get, HttpCode, HttpStatus } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Post,
+} from '@nestjs/common';
 import { AlertService } from './alert.service';
+import { AlertCreateDTO } from './dto/alert-create.dto';
 
 @Controller('alerts')
 export class AlertController {
@@ -11,9 +19,15 @@ export class AlertController {
     return await this.alertService.getAllAlerts();
   }
 
-  @Get()
+  @Post()
   @HttpCode(HttpStatus.CREATED)
-  public async createAlert() {
-    return await this.createAlert();
+  public async createAlert(@Body() request: AlertCreateDTO) {
+    return await this.alertService.createAlert(request);
+  }
+
+  @Get('/hello')
+  @HttpCode(HttpStatus.OK)
+  public getHello() {
+    return 'hello world';
   }
 }

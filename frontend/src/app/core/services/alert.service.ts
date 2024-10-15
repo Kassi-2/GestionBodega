@@ -8,11 +8,19 @@ import { Alert } from '../models/alert.interface';
 })
 export class AlertService {
 
-  constructor(private http: HttpClient) { }
-  private apiUrl = 'http://localhost:3000/alert';
+  constructor(private http: HttpClient) {}
+  private apiUrl = 'http://localhost:3000/alerts';
 
-  public getDailyAlert(): Observable<Alert> {
-    return this.http.get<Alert>(`${this.apiUrl}/today`);
+  public createAlert(): Observable<Alert> {
+    const now = new Date();
+    console.log(now)
+    const alertData = {
+      name: 'Alerta diaria',
+      description: 'Alerta creada',
+      state: true,
+      date: new Date()
+    };
+    return this.http.post<Alert>(`${this.apiUrl}`, alertData);
   }
 
   public getAllAlert(): Observable<Alert[]> {

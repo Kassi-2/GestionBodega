@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { LendingState } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { AlertCreateDTO } from './dto/alert-create.dto';
 
 @Injectable()
 export class AlertService {
@@ -10,19 +11,23 @@ export class AlertService {
     return this.prismaService.alert.findMany();
   }
 
-  public async createAlert() {
-    const noReturned = this.prismaService.lending.findMany({
+  public async createAlert(newAlert: AlertCreateDTO) {
+    const activeLendings = await this.prismaService.lending.findMany({
       where: { state: LendingState.Active },
     });
-    const alert = this.prismaService.alert.create({
+    const createdAlert = this.prismaService.alert.create({
       data: {
-        date: new Date(2024, 10, 7),
-        name: 'Nombre de la alerta',
-        description: 'No se han devuelto x prestamos',
-        state: true,
-        lending: noReturned,
+        date: newAlert.date,
+        name: newAlert.name,
+        description: newAlert.description,
+        state: newAlert.state,
+        lendings: {
+          create: activeLendings.map((lending) => ({
+            lendingId: lending.id,
+          })),
+        },
       },
     });
-    return alert;
+    return createdAlert;
   }
 }

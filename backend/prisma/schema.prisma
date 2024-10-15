@@ -73,7 +73,7 @@ model Lending{
   comments String?
   BorrowerId Int
   borrower Borrower @relation(name:"make", fields:[BorrowerId], references: [id])
-  alert Alert? @relation(name: "produces")
+  alerts AlertLending[]
   teacherId  Int?
   teacher Teacher? @relation(name: "authorizes", fields: [teacherId], references: [id])
   lendingProducts LendingProduct[] @relation(name: "lendingProducts")
@@ -84,9 +84,17 @@ model Alert{
   date DateTime 
   name String
   description String
-  state Boolean
-  lendingId Int @unique
-  lending Lending @relation(name: "produces", fields:[lendingId], references: [id])
+  state Boolean @default(false)
+  lendings AlertLending[]
+}
+
+model AlertLending{
+  alert Alert @relation(fields: [alertId], references: [id])
+  alertId Int
+  lending Lending @relation(fields: [lendingId], references: [id])
+  lendingId Int
+
+  @@id([alertId, lendingId])
 }
 
 model LendingProduct {
