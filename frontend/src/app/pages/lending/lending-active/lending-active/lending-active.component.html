@@ -47,7 +47,10 @@
           data-bs-target="#exampleModal">
           <i class="bi bi-info-circle"></i>
           </button>
-          <button class="btn btn-outline-danger" (click)="finishLending(lending.id)">
+          <button class="btn btn-outline-danger"
+          (click)="openLendingDetails(lending)"
+          data-bs-toggle="modal"
+          data-bs-target="#modalFinishLending">
             <i class="bi bi-x-circle"></i> Finalizar
           </button>        </td>
       </tr>
@@ -137,4 +140,41 @@
     </div>
   </div>
 </div>
+
+<div class="modal fade" id="modalFinishLending" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true" aria-labelledby="exampleModalLabel">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header" style="background-color: #F79123;">
+        <h5 class="modal-title text-white" id="exampleModalLabel">Detalles del préstamo</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="resetChanges(); disableEditMode()"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <p><strong>Nombre del prestatario:</strong> <span class="text-muted"> {{ selectedLending?.borrowerName }}</span></p>
+          <p><strong>Fecha:</strong> <span class="text-muted"> {{ selectedLending?.date | date:'dd/MM/yyyy HH:mm' }}</span></p>
+          <p><strong>Profesor asignado:</strong>
+            @if (selectedLending?.teacherId != null) {
+                {{ selectedLending?.teacherName }}
+            }
+            @else {
+              No tiene un profesor asignado
+            }
+          </p>
+        </div>
+        <div class="mb-3">
+          <strong>Detalles del préstamo:</strong>
+          <textarea type="text" class="form-control" id="myText" name="myText" placeholder="Escribe aquí..." value="{{ selectedLending?.comments }}" ></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-success" (click)="finishLending(selectedLending?.id)">
+          <i class="bi bi-pencil-square"></i> Finalizar Préstamo
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 

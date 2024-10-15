@@ -111,9 +111,10 @@ export class LendingActiveComponent {
 
   openLendingDetails(lending: any) {
     this.resetLending = lending;
-    this.selectedLending = lending;
+    this.selectedLending = { ...lending };
     this.getAllTeachers();
   }
+
 
   increaseAmount(index: number, stock: number) {
     const product = this.selectedLending.lendingProducts[index];
@@ -132,6 +133,7 @@ export class LendingActiveComponent {
   }
 
   finishLending(idLending: number): void {
+    console.log(idLending)
     const swalWithBootstrapButtons = Swal.mixin({
       customClass: {
         confirmButton: "btn btn-success",
