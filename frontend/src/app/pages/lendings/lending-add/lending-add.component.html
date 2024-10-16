@@ -175,7 +175,7 @@
               <th scope="col">Código</th>
               <th scope="col">Nombre</th>
               <th scope="col">Stock</th>
-              <th scope="col" style="width: 150px;">Cantidad</th> <!-- Definir el ancho aquí -->
+              <th scope="col" style="width: 150px;">Cantidad</th>
             </tr>
           </thead>
           <tbody>
@@ -184,7 +184,7 @@
               <td>{{ product.id }}</td>
               <td>{{ product.name }}</td>
               <td>{{ product.stock }}</td>
-              <td style="width: 150px;"> <!-- Definir el ancho aquí también -->
+              <td style="width: 150px;">
                 <div class="d-flex align-items-center">
                   <button class="btn btn-outline-secondary rounded-circle"
                     (click)="decrementQuantity(product.id)"
@@ -195,7 +195,7 @@
                     (input)="onQuantityInput($event, product.id, product.stock)"
                     [min]="0"
                     [max]="product.stock"
-                    style="width: 60px;" /> <!-- Ajustar el ancho del input -->
+                    style="width: 60px;" />
 
                   <button class="btn btn-outline-secondary rounded-circle"
                     (click)="incrementQuantity(product.id, product.stock)"

@@ -19,6 +19,7 @@ import { FormsModule } from '@angular/forms';
 import { Product } from '../../../core/models/product.interface';
 import { Contains } from '../../../core/models/lending.interface';
 import { UserService } from '../../../core/services/user.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-lending-add',
@@ -276,12 +277,36 @@ export class LendingAddComponent implements OnInit {
 
     console.log(this.lending)
 
+    const swalWithBootstrapButtons = Swal.mixin({
+      customClass: {
+        confirmButton: 'btn btn-success',
+        cancelButton: 'btn btn-danger me-2',
+      },
+      buttonsStyling: false,
+    });
+
     this.LendingService.addLending(this.lending).subscribe({
       next: () => {
-        this.initializeLendingForm();
-      },
+        swalWithBootstrapButtons.fire({
+          title: '¡Préstamo creado!',
+          text: 'El préstamo ha sido creado con éxito.',
+          icon: 'success',
+          timer: 1500,
+          showConfirmButton: false,
+
+      })
+
+      this.initializeLendingForm();
+
+    },
       error: (error) => {
-        alert(error.error.message);
+        swalWithBootstrapButtons.fire({
+          title: 'Error',
+          text: 'El préstamo no se ha guardado, revise nuevamente la información ingresada o solicite ayuda.',
+          icon: 'error',
+          timer: 1500,
+          showConfirmButton: false,
+        });
       },
     });
   }
