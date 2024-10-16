@@ -3,7 +3,12 @@ import { Lending } from './../../../core/models/lending.interface';
 import { ProductService } from './../../../core/services/product.service';
 import { LendingService } from './../../../core/services/lending.service';
 import { Component, HostListener, OnInit } from '@angular/core';
-import { UserStudent, UserAssitant, UserTeacher, User } from '../../../core/models/user.interface';
+import {
+  UserStudent,
+  UserAssitant,
+  UserTeacher,
+  User,
+} from '../../../core/models/user.interface';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -15,69 +20,75 @@ import { Product } from '../../../core/models/product.interface';
 import { Contains } from '../../../core/models/lending.interface';
 import { UserService } from '../../../core/services/user.service';
 
-
-
 @Component({
   selector: 'app-lending-add',
   standalone: true,
-  imports: [HttpClientModule, RouterModule, NgbPagination, CommonModule, FormsModule],
+  imports: [
+    HttpClientModule,
+    RouterModule,
+    NgbPagination,
+    CommonModule,
+    FormsModule,
+  ],
   templateUrl: './lending-add.component.html',
-  styleUrls: ['./lending-add.component.css']
+  styleUrls: ['./lending-add.component.css'],
 })
-export class LendingAddComponent implements OnInit{
-
+export class LendingAddComponent implements OnInit {
   currentStep: number = 1;
-  public page = 1;
-  public pageSize = 15;
-  public selectedUserType: string = "student";
-  public selectedUser: User | null = null;
-  public user!: User;
-  public students!: UserStudent[];
-  public degrees!: Degree[];
-  public filteredStudents: UserStudent[] = [];
-  public filteredTeachers: UserTeacher[] = [];
-  public filteredAssistants: UserAssitant[] = [];
-  public teachers! : UserTeacher[];
-  public assistants! : UserAssitant[];
+  page = 1;
+  pageSize = 15;
+  selectedUserType: string = 'student';
+  selectedUser: User | null = null;
+  user!: User;
+  students!: UserStudent[];
+  degrees!: Degree[];
+  filteredStudents: UserStudent[] = [];
+  filteredTeachers: UserTeacher[] = [];
+  filteredAssistants: UserAssitant[] = [];
+  teachers!: UserTeacher[];
+  assistants!: UserAssitant[];
   searchTerm: string = '';
+  searchTermUser: string = '';
   products: Product[] = [];
-  public contains: Contains[] = [];
-  public selectedTeacher: User | null = null;
+  contains: Contains[] = [];
+  selectedTeacher: User | null = null;
   selectedTeacherId!: number;
-  public comments: string = '';
+  comments: string = '';
   lending!: Lending;
 
   private subscriptions: Subscription = new Subscription();
 
+  constructor(
+    private LendingService: LendingService,
+    private productService: ProductService,
+    private userService: UserService,
+    private searchService: SearchService
+  ) {}
 
-  constructor(private LendingService : LendingService, private productService: ProductService, private userService: UserService, private searchService: SearchService) { }
-
-  ngOnInit(): void  {
+  ngOnInit(): void {
     this.LendingService.getCurrentStep().subscribe((step: number) => {
       this.currentStep = step;
     });
 
-    this.LendingService.getSelectedUser().subscribe((savedUser: User | null) => {
-      if (!this.selectedUser && savedUser) {
-        this.selectedUser = savedUser;
-        console.log('Usuario recuperado:', this.selectedUser);
-      } else if (!savedUser) {
-        this.selectedUser = null;
-        console.log('No se encontró un usuario guardado.');
+    this.LendingService.getSelectedUser().subscribe(
+      (savedUser: User | null) => {
+        if (!this.selectedUser && savedUser) {
+          this.selectedUser = savedUser;
+        } else if (!savedUser) {
+          this.selectedUser = null;
+        }
       }
-    });
+    );
 
-
-
-    this.LendingService.getLending().subscribe((contains: Contains[] | null) => {
-      if (contains) {
-        this.contains = contains;
-        console.log('Contains recuperado:', this.contains);
-      } else {
-        this.contains = [];
-        console.log('No se encontraron productos guardados.');
+    this.LendingService.getLending().subscribe(
+      (contains: Contains[] | null) => {
+        if (contains) {
+          this.contains = contains;
+        } else {
+          this.contains = [];
+        }
       }
-    });
+    );
 
     this.subscriptions.add(this.getAllStudents());
     this.subscriptions.add(this.getAllTeachers());
@@ -85,7 +96,6 @@ export class LendingAddComponent implements OnInit{
     this.subscriptions.add(this.getAllDegrees());
     this.subscriptions.add(this.getProducts());
   }
-
 
   filteredList(): Product[] {
     const filteredProducts = this.products.filter(
@@ -97,65 +107,64 @@ export class LendingAddComponent implements OnInit{
   }
 
   getQuantity(productId: number): number {
-    const item = this.contains.find(c => c.productId === productId);
+    const item = this.contains.find((c) => c.productId === productId);
     return item ? item.amount : 0;
-}
+  }
 
-incrementQuantity(productId: number, stock: number) {
-  let productContains = this.contains.find(q => q.productId === productId);
+  incrementQuantity(productId: number, stock: number) {
+    let productContains = this.contains.find((q) => q.productId === productId);
 
-  // Si ya existe en el carrito y la cantidad seleccionada es menor que el stock disponible
-  if (productContains) {
-    if (productContains.amount < stock+productContains.amount) {
-      productContains.amount += 1;
-      this.updateVisualStock(productId, -1); // Reducir el stock visual
+    if (productContains) {
+      if (productContains.amount < stock + productContains.amount) {
+        productContains.amount += 1;
+        this.updateVisualStock(productId, -1);
+      }
+    } else {
+      if (stock > 0) {
+        this.contains.push({
+          lendingId: null,
+          productId: productId,
+          amount: 1,
+        });
+        this.updateVisualStock(productId, -1);
+      }
     }
-  } else {
-    // Si no está en el carrito y hay stock disponible
-    if (stock > 0) {
-      this.contains.push({ lendingId: null, productId: productId, amount: 1 });
-      this.updateVisualStock(productId, -1); // Reducir el stock visual
+
+    this.LendingService.setContains(this.contains);
+  }
+
+  decrementQuantity(productId: number) {
+    let productContains = this.contains.find((q) => q.productId === productId);
+
+    if (productContains && productContains.amount > 0) {
+      productContains.amount -= 1;
+      this.updateVisualStock(productId, 1);
     }
+
+    if (productContains?.amount === 0) {
+      this.contains = this.contains.filter((q) => q.productId !== productId);
+    }
+
+    this.LendingService.setContains(this.contains);
   }
-
-  this.LendingService.setContains(this.contains); // Guardar el estado del carrito
-}
-
-decrementQuantity(productId: number) {
-  let productContains = this.contains.find(q => q.productId === productId);
-
-  if (productContains && productContains.amount > 0) {
-    productContains.amount -= 1;
-    this.updateVisualStock(productId, 1); // Aumentar el stock visual
-  }
-
-  if (productContains?.amount === 0) {
-    this.contains = this.contains.filter(q => q.productId !== productId);
-  }
-
-  this.LendingService.setContains(this.contains);
-}
-
 
   updateVisualStock(productId: number, change: number) {
-    const product = this.products.find(p => p.id === productId);
+    const product = this.products.find((p) => p.id === productId);
     if (product) {
-      product.stock += change; // Modifica el stock visualmente
+      product.stock += change;
     }
   }
 
-
   decreaseStock(productId: number) {
-    const product = this.products.find(p => p.id === productId);
+    const product = this.products.find((p) => p.id === productId);
     if (product && product.stock > 0) {
       product.stock -= 1;
     }
   }
 
   hasSelectedProduct(): boolean {
-    return this.contains.some(item => item.amount >= 0);
+    return this.contains.some((item) => item.amount >= 0);
   }
-
 
   getProducts(): void {
     this.productService.getProducts().subscribe((products: Product[]) => {
@@ -166,28 +175,47 @@ decrementQuantity(productId: number) {
   selectUser(user: User) {
     this.selectedUser = user;
     this.LendingService.setSelectedUser(user);
-    console.log('Usuario seleccionado:', this.selectedUser);
   }
-
 
   selectTeacher(teacher: UserTeacher) {
     this.selectedTeacher = teacher;
-    console.log('Profesor seleccionado:', this.selectedTeacher);
   }
-
 
   selectUserType(type: string) {
     this.selectedUserType = type;
   }
 
-  public getDegree(code: string) {
+  onQuantityInput(event: Event, productId: number, stock: number): void {
+    const input = event.target as HTMLInputElement;
+    let newQuantity = parseInt(input.value, 10);
+
+    if (isNaN(newQuantity)) {
+      newQuantity = 0;
+    } else if (newQuantity < 0) {
+      newQuantity = 0;
+    } else if (newQuantity > stock) {
+      newQuantity = stock;
+    }
+
+    const productContains = this.contains.find(q => q.productId === productId);
+
+    if (productContains) {
+      productContains.amount = newQuantity;
+    } else {
+      this.contains.push({ lendingId: null, productId, amount: newQuantity });
+    }
+
+    this.LendingService.setContains(this.contains);
+  }
+
+
+  getDegree(code: string) {
     if (!this.degrees) {
-        return 'Desconocido';
+      return 'Desconocido';
     }
     const degree = this.degrees.find((d) => d.code === code);
     return degree?.name || 'Desconocido';
-}
-
+  }
 
   private getAllStudents() {
     this.userService.getAllStudents().subscribe((students: UserStudent[]) => {
@@ -204,10 +232,12 @@ decrementQuantity(productId: number) {
   }
 
   private getAllAssistants() {
-    this.userService.getAllAssistants().subscribe((assistants: UserAssitant[]) => {
-      this.assistants = assistants;
-      this.filteredAssistants = assistants;
-    });
+    this.userService
+      .getAllAssistants()
+      .subscribe((assistants: UserAssitant[]) => {
+        this.assistants = assistants;
+        this.filteredAssistants = assistants;
+      });
   }
 
   private getAllDegrees() {
@@ -216,12 +246,12 @@ decrementQuantity(productId: number) {
     });
   }
 
-  stepUp(){
+  stepUp() {
     this.currentStep++;
     this.LendingService.setCurrentStep(this.currentStep);
   }
 
-  stepDown(){
+  stepDown() {
     this.currentStep--;
     this.LendingService.setCurrentStep(this.currentStep);
   }
@@ -241,14 +271,13 @@ decrementQuantity(productId: number) {
       comments: this.comments || null,
       borrowerId: this.selectedUser?.id,
       teacherId: this.selectedTeacher?.id || null,
-      contains: this.contains
+      contains: this.contains,
     };
 
-    console.log(this.lending);
+    console.log(this.lending)
 
     this.LendingService.addLending(this.lending).subscribe({
       next: () => {
-        console.log(this.lending);
         this.initializeLendingForm();
       },
       error: (error) => {
@@ -257,15 +286,39 @@ decrementQuantity(productId: number) {
     });
   }
 
-
   onSearch() {
-    this.searchService.updateSearchTerm(this.searchTerm);
-  }
+    const searchTermLower = this.searchTerm.toLowerCase();
 
+    if (this.selectedUserType === 'student') {
+      this.filteredStudents = this.students.filter(
+        (student) =>
+          student.name.toLowerCase().includes(searchTermLower) ||
+          student.rut.toLowerCase().includes(searchTermLower)
+      );
+    }
+
+    if (this.selectedUserType === 'teacher') {
+      this.filteredTeachers = this.teachers.filter(
+        (teacher) =>
+          teacher.name.toLowerCase().includes(searchTermLower) ||
+          teacher.rut.toLowerCase().includes(searchTermLower)
+      );
+    }
+
+    if (this.selectedUserType === 'assistant') {
+      this.filteredAssistants = this.assistants.filter(
+        (assistant) =>
+          assistant.name.toLowerCase().includes(searchTermLower) ||
+          assistant.rut.toLowerCase().includes(searchTermLower)
+      );
+    }
+
+    this.page = 1;
+  }
 
   initializeLendingForm() {
     this.currentStep = 1;
-    this.comments = "";
+    this.comments = '';
     this.selectedUser = null;
     this.selectedTeacher = null;
     this.contains = [];
@@ -273,11 +326,8 @@ decrementQuantity(productId: number) {
     this.LendingService.setSelectedUser(null);
   }
 
-
-  cancel(){
+  cancel() {
     this.initializeLendingForm();
     this.LendingService.setCurrentStep(1);
   }
-
-
 }
