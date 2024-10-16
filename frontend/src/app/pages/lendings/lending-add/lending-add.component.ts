@@ -56,6 +56,8 @@ export class LendingAddComponent implements OnInit {
   selectedTeacherId!: number;
   comments: string = '';
   lending!: Lending;
+  stockExceeded: boolean = false;
+
 
   private subscriptions: Subscription = new Subscription();
 
@@ -209,6 +211,11 @@ export class LendingAddComponent implements OnInit {
     this.LendingService.setContains(this.contains);
   }
 
+  inputStockFilter(evento: any){
+    const query = evento.target.value.toLowerCase();
+    ////logica)
+  }
+
 
   getDegree(code: string) {
     if (!this.degrees) {
@@ -299,15 +306,17 @@ export class LendingAddComponent implements OnInit {
       this.initializeLendingForm();
 
     },
-      error: (error) => {
-        swalWithBootstrapButtons.fire({
-          title: 'Error',
-          text: 'El préstamo no se ha guardado, revise nuevamente la información ingresada o solicite ayuda.',
-          icon: 'error',
-          timer: 1500,
-          showConfirmButton: false,
-        });
-      },
+    error: (error) => {
+      swalWithBootstrapButtons.fire({
+        title: 'Error',
+        text: 'El préstamo no se ha guardado, revise nuevamente la información ingresada o solicite ayuda.',
+        icon: 'error',
+        timer: 1500,
+        showConfirmButton: false,
+      })
+
+    },
+
     });
   }
 
@@ -340,6 +349,14 @@ export class LendingAddComponent implements OnInit {
 
     this.page = 1;
   }
+
+
+  getProductById(productId: number): Product | undefined {
+    return this.products.find(product => product.id === productId);
+  }
+
+
+
 
   initializeLendingForm() {
     this.currentStep = 1;
