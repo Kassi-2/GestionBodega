@@ -1,4 +1,4 @@
-<h1 class = "titulo">Lista de prestamos finalizados</h1>
+<h1 class = "titulo">Lista de préstamos finalizados</h1>
 
 <app-lending-options></app-lending-options>
 <div class="custom_input" style="justify-content: center">
@@ -82,7 +82,6 @@
           <thead>
             <tr>
               <th scope="col" class="text-center">Producto</th>
-              <th scope="col" class="text-center">Stock disponible</th>
               <th scope="col" class="text-center">Cantidad</th>
             </tr>
           </thead>
@@ -90,7 +89,6 @@
             @for (lending of selectedLending?.lendingProducts; track lending; let i = $index) {
             <tr>
               <td class="text-center">{{ selectedLending?.lendingProducts[i].name}}</td>
-              <td class="text-center">{{ selectedLending?.lendingProducts[i].stock}}</td>
               <td class="text-center">{{selectedLending?.lendingProducts[i].amount}}</td>
             </tr>
             }
