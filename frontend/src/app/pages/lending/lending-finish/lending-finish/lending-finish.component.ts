@@ -24,6 +24,7 @@ export class LendingFinishComponent {
   lending: Lending[] = [];
   teachers: User[] = [];
   selectedDate: string = '';
+  inputValue: string = '';
   public page = 1;
   public pageSize = 10;
 
@@ -31,6 +32,21 @@ export class LendingFinishComponent {
 
   ngOnInit() {
     this.getLending();
+  }
+
+  onEnterPress() {
+    this.handleSubmit();
+  }
+
+  // Función que maneja la lógica de enviar
+  handleSubmit() {
+    if (this.inputValue.trim()) {
+      console.log('Texto enviado:', this.inputValue);
+      // Aquí puedes realizar la acción que desees con el valor del input
+      this.inputValue = ''; // Opcional: limpiar el input después de enviar
+    } else {
+      console.log('Por favor, ingresa un valor.');
+    }
   }
 
   filteredList(): Lending[] {

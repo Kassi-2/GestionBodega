@@ -71,65 +71,11 @@ export class LendingActiveComponent {
     this.selectedLending.teacherName = teacher.name;
   }
 
-  public editLending(): void {
-    if (!this.selectedLending) return;
-
-    const updatedLending: Lending = {
-      ...this.selectedLending,
-      lendingProducts: this.selectedLending.lendingProducts.map((product: any) => ({
-        lendingId: this.selectedLending.id,
-        ...product
-      }))
-    };
-
-    console.log(updatedLending);
-
-    this.lendingService.updateLending(updatedLending.id, updatedLending).subscribe({
-      next: (response) => {
-        console.log('Préstamo actualizado con éxito', response);
-        this.disableEditMode();
-        this.resetLending = null;
-      },
-      error: (err) => {
-        console.error('Error al actualizar el préstamo', err);
-      }
-    });
-  }
-
-
-  enableEditMode() {
-    this.isEditMode = true;
-  }
-
-  disableEditMode() {
-    this.isEditMode = false;
-  }
-
-  resetChanges() {
-    this.selectedLending = this.resetLending;
-  }
 
   openLendingDetails(lending: any) {
     this.resetLending = lending;
     this.selectedLending = { ...lending };
     this.getAllTeachers();
-  }
-
-
-  increaseAmount(index: number, stock: number) {
-    const product = this.selectedLending.lendingProducts[index];
-    if (product.amount < stock + product.amount) {
-      product.amount++;
-      product.stock--;
-    }
-  }
-
-  decreaseAmount(index: number) {
-    const product = this.selectedLending.lendingProducts[index];
-    if (product.amount > 0) {
-      product.amount--;
-      product.stock++;
-    }
   }
 
   finishLending(idLending: number): void {

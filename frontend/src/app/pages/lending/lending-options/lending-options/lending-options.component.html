@@ -1,9 +1,16 @@
-<ul class="nav justify-content-center mt-2">
-  <li class="nav-item">
-    <a class="nav-link link-dark" routerLink="/lendings/active" data-bs-dismiss="offcanvas" >Prestamos activos</a>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link link-dark" routerLink="/lendings/finish" data-bs-dismiss="offcanvas">Prestamos finalizados</a>
-  </li>
-  <a routerLink="/lendings/inactive" data-bs-dismiss="offcanvas">x</a>
-</ul>
+<div class="d-flex justify-content-center mt-2">
+  <ul class="nav mb-0">
+    <li class="nav-item">
+      <a class="nav-link link-dark" routerLink="/lendings/active" data-bs-dismiss="offcanvas">Préstamos activos</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link link-dark" routerLink="/lendings/finish" data-bs-dismiss="offcanvas">Préstamos finalizados</a>
+    </li>
+    <li class="nav-item">
+      <button class="btn btn-outline-secondary" routerLink="/lendings/inactive" data-bs-dismiss="offcanvas">
+        <i class="bi bi-archive"></i>
+      </button>
+    </li>
+  </ul>
+
+</div>

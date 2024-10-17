@@ -12,6 +12,17 @@
   <form>
     <input type="date" class="form-control" (change)="selectDate($event)">
   </form>
+  <div>
+    <input
+      type="text"
+      [(ngModel)]="inputValue"
+      (keyup.enter)="onEnterPress()"
+      placeholder="Ingresa un texto.."
+      class="input me-3"
+      style="min-width: 200px"
+    />
+    <button class="btn btn-outline-secondary" (click)="handleSubmit()">Enviar</button>
+  </div>
 
 </div>
 <div class="table-responsive-sm container-xl" style="margin-top: 20px;">

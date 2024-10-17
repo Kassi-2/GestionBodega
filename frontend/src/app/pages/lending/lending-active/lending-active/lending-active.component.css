@@ -126,13 +126,6 @@ input.form-controler:focus {
   box-shadow: 0 0 8px rgba(247, 145, 35, 0.5);
 }
 
-/* Clase adicional para el modo de edición */
-.rounded-input {
-  border-radius: 20px; /* Aumentar el radio para que sea más redondo */
-  transition: border-radius 0.3s ease; /* Transición suave al cambiar */
-}
-
-
 .btn-outline-secondary.rounded-circle:hover {
   background-color: #F79123;
   color: white;

@@ -62,44 +62,4 @@ export class LendingInactiveComponent {
     this.getAllTeachers();
   }
 
-  public deleteLending(idLending: number): void {
-    const swalWithBootstrapButtons = Swal.mixin({
-      customClass: {
-        confirmButton: "btn btn-success",
-        cancelButton: "btn btn-danger"
-      },
-      buttonsStyling: false
-    });
-    swalWithBootstrapButtons.fire({
-      title: "Estas seguro?",
-      text: "Estas a punto de eliminar un prestamo!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "Si, quiero eliminarlo!",
-      cancelButtonText: "No, no quiero eliminarlo",
-      reverseButtons: true
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.lending = this.lending.filter(lending => lending.id !== idLending);
-        swalWithBootstrapButtons.fire({
-          title: "Eliminado!",
-          text: "El prestamo fue eliminado.",
-          icon: "success",
-          timer: 1500,
-          showConfirmButton: false,
-        });
-      } else if (
-        result.dismiss === Swal.DismissReason.cancel
-      ) {
-        swalWithBootstrapButtons.fire({
-          title: "Cancelado",
-          text: "El prestamo no fue eliminado",
-          icon: "error",
-          timer: 1500,
-          showConfirmButton: false,
-        });
-      }
-    });
-  }
-
 }
