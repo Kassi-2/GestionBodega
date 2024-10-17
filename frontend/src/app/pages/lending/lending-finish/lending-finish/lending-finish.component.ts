@@ -38,15 +38,8 @@ export class LendingFinishComponent {
     this.handleSubmit();
   }
 
-  // Función que maneja la lógica de enviar
   handleSubmit() {
-    if (this.inputValue.trim()) {
-      console.log('Texto enviado:', this.inputValue);
-      // Aquí puedes realizar la acción que desees con el valor del input
-      this.inputValue = ''; // Opcional: limpiar el input después de enviar
-    } else {
-      console.log('Por favor, ingresa un valor.');
-    }
+    this.selectedLending = this.lending
   }
 
   filteredList(): Lending[] {
