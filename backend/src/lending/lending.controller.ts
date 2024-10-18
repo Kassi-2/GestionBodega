@@ -1,7 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, ValidationPipe } from '@nestjs/common';
 import { LendingService } from './lending.service';
 import { LendingCreateDTO } from './dto/lending-create.dto';
-import { LendingUpdateDTO } from './dto/lending-update.dto';
 
 @Controller('lending')
 export class LendingController {
@@ -10,6 +9,16 @@ export class LendingController {
     @Get("lending-id/:id")
     async getLendingById(@Param('id') id: string){
         return this.lendingService.getLendingById(Number(id))
+    }
+
+    @Get("lending-create-date/:date")
+    async getLendingByCreateDate(@Param('date') date: Date) {
+        return this.lendingService.getLendingByCreateDate(date);
+    }
+
+    @Get("lending-finalize-date/:date")
+    async getLendingByFinalizeDate(@Param('fianlizeDate') finalizeDate: Date) {
+        return this.lendingService.getLendingByFinalizeDate(finalizeDate);
     }
     
     @Get("/active-lending")
@@ -27,6 +36,17 @@ export class LendingController {
         return this.lendingService.getFinalizedLendings()
     }
 
+    @Get("/finalized-lending-max")
+    async getFinalizedMax(){
+        return this.lendingService.getFinalizedLendingsMax()
+    }
+
+    @Get("/eliminated-lending")
+    async getEliminated(){
+        return this.lendingService.getEliminatedLendings()
+    }
+
+
     @Put("/active-pending/:id")
     async updateFinalizeLending(@Param('id') id: string){
         return this.lendingService.updateActivePending(Number(id))
@@ -43,13 +63,9 @@ export class LendingController {
     }
 
     @Delete(':id')
-    async deletePending(@Param('id') id: string) {
-        return this.lendingService.deletePending(Number(id));
+    async deleteLending(@Param('id') id: string) {
+        return this.lendingService.deleteLending(Number(id));
     }
 
-    @Put("/update/:id")
-    async updateLending( @Param('id') id: string, @Body(ValidationPipe) data: LendingUpdateDTO){
-        return this.lendingService.updateLending(Number(id), data)
-    }
 }
 

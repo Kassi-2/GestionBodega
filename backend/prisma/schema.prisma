@@ -71,6 +71,8 @@ model Lending{
   id        Int @id @default(autoincrement())
   state     LendingState @default(Active)
   date DateTime @default(now())
+  finalizeDate DateTime?
+  eliminateDate DateTime?
   comments String?
   BorrowerId Int
   borrower Borrower @relation(name:"make", fields:[BorrowerId], references: [id])
