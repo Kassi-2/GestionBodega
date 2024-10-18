@@ -36,8 +36,11 @@ import Swal from 'sweetalert2';
 })
 export class LendingAddComponent implements OnInit {
   currentStep: number = 1;
-  page = 1;
-  pageSize = 15;
+  public pageTeachers = 1;
+  public pageAssistants = 1;
+  public pageStudents = 1;
+  public pageProducts = 1
+  public pageSize = 15;
   selectedUserType: string = 'student';
   selectedUser: User | null = null;
   user!: User;
@@ -194,26 +197,38 @@ export class LendingAddComponent implements OnInit {
 
     if (isNaN(newQuantity)) {
       newQuantity = 0;
-    } else if (newQuantity < 0) {
+    } else if (newQuantity < 0){
       newQuantity = 0;
-    } else if (newQuantity > stock) {
-      newQuantity = stock;
+    }
+     else if (newQuantity > stock) {
+      Swal.fire({
+        title: 'Error',
+        text: 'La cantidad ingresada excede el stock disponible.',
+        icon: 'error',
+        timer: 1500,
+        showConfirmButton: false
+      });
+
+      newQuantity = 0;
+      input.value = '0';
     }
 
     const productContains = this.contains.find(q => q.productId === productId);
 
+    const product = this.products.find((p) => p.id === productId);
+    if (product) {
+      product.stock -= newQuantity;
+    }
+
     if (productContains) {
       productContains.amount = newQuantity;
-    } else {
+
+    } if (productContains?.amount != 0) {
       this.contains.push({ lendingId: null, productId, amount: newQuantity });
     }
 
-    this.LendingService.setContains(this.contains);
-  }
 
-  inputStockFilter(evento: any){
-    const query = evento.target.value.toLowerCase();
-    ////logica)
+    this.LendingService.setContains(this.contains);
   }
 
 
@@ -347,7 +362,9 @@ export class LendingAddComponent implements OnInit {
       );
     }
 
-    this.page = 1;
+    this.pageAssistants = 1;
+    this.pageStudents = 1;
+    this.pageTeachers = 1;
   }
 
 
