@@ -45,5 +45,25 @@
   height: 18px;
 }
 
+.custom-margin-left {
+  margin-left: 100px;
+}
+
+.btn-custom {
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.btn-custom:hover {
+  background-color: #F79123; /* Color de fondo al hacer hover */
+  color: white; /* Color del texto al hacer hover */
+}
+.custom-button {
+  padding: 0.25rem 0.5rem; /* Ajusta el padding según sea necesario */
+  max-width: 150px; /* Ajusta el ancho máximo según sea necesario */
+  font-size: 0.875rem; /* Ajusta el tamaño de la fuente */
+  white-space: nowrap; /* Evita que el texto se divida en varias líneas */
+  overflow: hidden; /* Oculta el texto que exceda el ancho */
+  text-overflow: ellipsis; /* Agrega "..." si el texto es demasiado largo */
+}
 
 

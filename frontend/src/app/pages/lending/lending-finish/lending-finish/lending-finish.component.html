@@ -1,6 +1,23 @@
-<h1 class = "titulo">Lista de préstamos finalizados</h1>
+<h1 class="titulo">Lista de préstamos finalizados</h1>
+<div class="d-flex align-items-center justify-content-end">
+  <div class="container-xl">
+    <div class="d-flex justify-content-end">
+      <app-lending-options class="me-5"></app-lending-options>
 
-<app-lending-options></app-lending-options>
+      <button type="button" class="btn btn-outline-secondary custom-margin-left btn-custom rounded-pill custom-button"
+        (click)="openLendingDetails(lending)"
+        data-bs-toggle="modal"
+        data-bs-target="#modalSearch">
+        <i class="bi bi-search ms-2"></i> Buscar préstamos antiguos
+</button>
+
+    </div>
+  </div>
+</div>
+
+
+
+
 <div class="custom_input" style="justify-content: center">
   <svg xmlns="http://www.w3.org/2000/svg" class="svg_icon bi-search" viewBox="0 0 16 16">
     <path
@@ -13,12 +30,7 @@
     <input type="date" class="form-control" (change)="selectDate($event)">
   </form>
   <div>
-    <button type="button" class="btn btn-outline-success me-2"
-    (click)="openLendingDetails(lending)"
-    data-bs-toggle="modal"
-    data-bs-target="#modalSearch">
-    <i class="bi bi-info-circle"></i>
-    </button>
+
   </div>
 
 </div>

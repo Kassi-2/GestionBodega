@@ -39,7 +39,12 @@ export class LendingFinishComponent {
   }
 
   handleSubmit() {
-    this.selectedLending = this.lending
+    if (this.inputValue.trim()) {
+      console.log('Texto enviado:', this.inputValue);
+      this.inputValue = '';
+    } else {
+      console.log('Por favor, ingresa un valor.');
+    }
   }
 
   filteredList(): Lending[] {
@@ -48,6 +53,14 @@ export class LendingFinishComponent {
         lending.borrowerName.toLowerCase().includes(this.searchTerm.toLowerCase())
     );
     return filteredLendings;
+  }
+
+  finishList(): Lending[] {
+    const lendingFinish = this.lending.filter(
+      (lending) =>
+        lending.borrowerName.toLowerCase().includes(this.searchTerm.toLowerCase())
+    );
+    return lendingFinish;
   }
 
   selectDate(event: Event): void {
