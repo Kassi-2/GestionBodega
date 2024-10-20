@@ -106,82 +106,65 @@ async getLendingById(id: number): Promise<Lending> {
   }
 
   //obtiene los préstamos de acuerdo a una fecha en la que se creó un préstamo
-  async getLendingByCreateDate(date: Date): Promise<Lending[]> {
-    return this.prisma.lending.findMany({
-      where: {
-        date,
-      },
-      include: {
-        lendingProducts: {  
-          select: {       
-            amount: true, 
-            product: {
-              select: {
-                id: true,   
-                name: true, 
-                stock: true,
-              },
+  //sin importar la hora
+  async getLendingByCreateDate(date: string): Promise<Lending[]> {
+    const startDate = new Date(date);
+    const endDate = new Date(startDate);
+    endDate.setDate(endDate.getDate() + 1);
+
+    const lendings = await this.prisma.lending.findMany({
+        where: {
+            date: {
+                gte: startDate, 
+                lt: endDate,   
             },
-          },
         },
-        borrower: {  
-          select: {
-            name: true,
-            rut: true,
-          },
-        },
-        teacher:{
-            select: {
-                BorrowerId: {
-                  select: {
-                    name: true,
-                    rut: true,
-                  },
+        include: {
+            lendingProducts: {
+                include: {
+                    product: true,
                 },
-            }
-        }
-      },
+            },
+        },
     });
-  }
+
+    if (!lendings || lendings.length === 0) {
+        throw new NotFoundException(`No se encontraron préstamos en ${date}`);
+    }
+
+    return lendings;
+}
 
   //obtiene los préstamos de acuerdo a una fecha en la que finalizó un préstamo
-  async getLendingByFinalizeDate(finalizeDate: Date): Promise<Lending[]> {
-    return this.prisma.lending.findMany({
-      where: {
-        finalizeDate,
-      },
-      include: {
-        lendingProducts: {  
-          select: {       
-            amount: true, 
-            product: {
-              select: {
-                id: true,   
-                name: true, 
-                stock: true,
-              },
+  //sin imortar la hora del día
+  async getLendingByFinalizeDate(finalizeDate: string): Promise<Lending[]> {
+    const startDate = new Date(finalizeDate);
+    const endDate = new Date(startDate);
+    endDate.setDate(endDate.getDate() + 1);
+
+    const lendings = await this.prisma.lending.findMany({
+        where: {
+            finalizeDate: {
+                gte: startDate, 
+                lt: endDate,   
             },
-          },
         },
-        borrower: {  
-          select: {
-            name: true,
-            rut: true,
-          },
-        },
-        teacher:{
-            select: {
-                BorrowerId: {
-                  select: {
-                    name: true,
-                    rut: true,
-                  },
+        include: {
+            lendingProducts: {
+                include: {
+                    product: true,
                 },
-            }
-        }
-      },
+            },
+        },
     });
-  }
+
+    if (!lendings || lendings.length === 0) {
+        throw new NotFoundException(`No se encontraron préstamos finalizados en ${finalizeDate}`);
+    }
+
+    return lendings;
+}
+
   
 
 
@@ -239,7 +222,7 @@ async getLendingById(id: number): Promise<Lending> {
             orderBy: {
                 date: "desc",
             },
-            take: 20,
+            take: 1,
         });
       }
 
@@ -387,7 +370,7 @@ async getLendingById(id: number): Promise<Lending> {
             where: { id: lendingId },
             data: { state: LendingState.Finalized,
                 finalizeDate: new Date(),
-                comments: comments || undefined,
+                comments: comments !== undefined ? comments : lending.comments,
              },
         });
     
@@ -405,33 +388,53 @@ async getLendingById(id: number): Promise<Lending> {
                 });
             }
         }
-    
+
         return updatedLending;
     }
 
-    //función que cambia el estado de un préstamo a Inactive, además agrega la fecha
-    //en la que se eliminó, verifica que sea un préstamo finalizado
+    //función que cambia el estado de un préstamo a Inactive, además agrega la fecha 
+    //en la que se eliminó, devuelve el stock del producto si no es fungible
     async deleteLending(lendingId: number):Promise<Lending>{
-        const lending = await this.prisma.lending.findUnique({
-            where: { id: lendingId },
-        });
-        if (!lending) {
-            throw new NotFoundException("Ese préstamo no existe");
-        }
-        if (lending.state != LendingState.Finalized ) {
-            throw new NotFoundException("El préstamo debe estar finalizado");
-        }
-        const updateLending = await this.prisma.lending.update({
-            where: {id: lendingId},
-            data: {
-                state: LendingState.Inactive,
-                eliminateDate: new Date(),
+      const lending = await this.prisma.lending.findUnique({
+        where: { id: lendingId },
+        include: {
+            lendingProducts: {
+                include: {
+                    product: true,
+                },
             },
-        });
-        return updateLending;
-      }
-       
+        },
+    });
 
+    if (!lending) {
+        throw new NotFoundException("Préstamo no encontrado");
+    }
+
+    const updatedLending = await this.prisma.lending.update({
+        where: { id: lendingId },
+        data: { state: LendingState.Inactive,
+            eliminateDate: new Date(),
+         },
+    });
+
+    for (const lendingProduct of lending.lendingProducts) {
+        const product = lendingProduct.product;
+
+        if (!product.fungible) { 
+            await this.prisma.product.update({
+                where: { id: product.id },
+                data: {
+                    stock: {
+                        increment: lendingProduct.amount, 
+                    },
+                },
+            });
+        }
+    }
+
+    return updatedLending;   
+
+    }
     }
     
 

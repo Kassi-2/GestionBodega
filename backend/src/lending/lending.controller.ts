@@ -1,6 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, ValidationPipe } from '@nestjs/common';
 import { LendingService } from './lending.service';
 import { LendingCreateDTO } from './dto/lending-create.dto';
+import { LendingFinalizeDTO } from './dto/lending-finalize.dto';
 
 @Controller('lending')
 export class LendingController {
@@ -12,12 +13,12 @@ export class LendingController {
     }
 
     @Get("lending-create-date/:date")
-    async getLendingByCreateDate(@Param('date') date: Date) {
+    async getLendingByCreateDate(@Param('date') date: string) {
         return this.lendingService.getLendingByCreateDate(date);
     }
 
-    @Get("lending-finalize-date/:date")
-    async getLendingByFinalizeDate(@Param('fianlizeDate') finalizeDate: Date) {
+    @Get("lending-finalize-date/:finalizeDate")
+    async getLendingByFinalizeDate(@Param('finalizeDate') finalizeDate: string) {
         return this.lendingService.getLendingByFinalizeDate(finalizeDate);
     }
     
@@ -58,9 +59,10 @@ export class LendingController {
     }
 
     @Put("/finalize-lending/:id")
-    async finalizeLending(@Param('id') id: string){
-        return this.lendingService.finalizeLending(Number(id))
-    }
+    async finalizeLending(@Param('id') id: number, @Body() LendingFinalizeDTO: LendingFinalizeDTO){
+            const { comments } = LendingFinalizeDTO;
+            return this.lendingService.finalizeLending(Number(id), comments);
+        }
 
     @Delete(':id')
     async deleteLending(@Param('id') id: string) {
