@@ -51,16 +51,13 @@ export class LendingAddComponent implements OnInit {
   filteredAssistants: UserAssitant[] = [];
   teachers!: UserTeacher[];
   assistants!: UserAssitant[];
-  searchTerm: string = '';
-  searchTermUser: string = '';
+  searchTermUsers: string = '';
+  searchTermProducts: string = '';
   products: Product[] = [];
   contains: Contains[] = [];
   selectedTeacher: User | null = null;
-  selectedTeacherId!: number;
   comments: string = '';
   lending!: Lending;
-  stockExceeded: boolean = false;
-
 
   private subscriptions: Subscription = new Subscription();
 
@@ -68,7 +65,6 @@ export class LendingAddComponent implements OnInit {
     private LendingService: LendingService,
     private productService: ProductService,
     private userService: UserService,
-    private searchService: SearchService
   ) {}
 
   ngOnInit(): void {
@@ -106,8 +102,8 @@ export class LendingAddComponent implements OnInit {
   filteredList(): Product[] {
     const filteredProducts = this.products.filter(
       (product) =>
-        product.name.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-        product.id.toString().includes(this.searchTerm.toLowerCase())
+        product.name.toLowerCase().includes(this.searchTermProducts.toLowerCase()) ||
+        product.id.toString().includes(this.searchTermProducts.toLowerCase())
     );
     return filteredProducts;
   }
@@ -193,14 +189,13 @@ export class LendingAddComponent implements OnInit {
 
   onQuantityInput(event: Event, productId: number, stock: number): void {
     const input = event.target as HTMLInputElement;
-    let newQuantity = parseInt(input.value, 10);
+    let newQuantity = input.valueAsNumber;
 
     if (isNaN(newQuantity)) {
       newQuantity = 0;
-    } else if (newQuantity < 0){
+    } else if (newQuantity < 0) {
       newQuantity = 0;
-    }
-     else if (newQuantity > stock) {
+    } else if (newQuantity > stock) {
       Swal.fire({
         title: 'Error',
         text: 'La cantidad ingresada excede el stock disponible.',
@@ -208,29 +203,37 @@ export class LendingAddComponent implements OnInit {
         timer: 1500,
         showConfirmButton: false
       });
-
-      newQuantity = 0;
-      input.value = '0';
+      newQuantity = stock;
+      input.value = stock.toString();
     }
 
     const productContains = this.contains.find(q => q.productId === productId);
 
-    const product = this.products.find((p) => p.id === productId);
-    if (product) {
-      product.stock -= newQuantity;
-    }
-
     if (productContains) {
-      productContains.amount = newQuantity;
+      const previousQuantity = productContains.amount;
+      const quantityChange = newQuantity - previousQuantity;
 
-    } if (productContains?.amount != 0) {
-      this.contains.push({ lendingId: null, productId, amount: newQuantity });
+      if (newQuantity <= stock) {
+        productContains.amount = newQuantity;
+
+        const product = this.products.find((p) => p.id === productId);
+        if (product) {
+          product.stock -= quantityChange;
+        }
+      }
+    } else {
+      if (newQuantity <= stock) {
+        this.contains.push({ lendingId: null, productId, amount: newQuantity });
+
+        const product = this.products.find((p) => p.id === productId);
+        if (product) {
+          product.stock -= newQuantity;
+        }
+      }
     }
-
 
     this.LendingService.setContains(this.contains);
   }
-
 
   getDegree(code: string) {
     if (!this.degrees) {
@@ -271,6 +274,8 @@ export class LendingAddComponent implements OnInit {
 
   stepUp() {
     this.currentStep++;
+    this.searchTermProducts = ''
+    this.searchTermUsers = ''
     this.LendingService.setCurrentStep(this.currentStep);
   }
 
@@ -336,7 +341,7 @@ export class LendingAddComponent implements OnInit {
   }
 
   onSearch() {
-    const searchTermLower = this.searchTerm.toLowerCase();
+    const searchTermLower = this.searchTermUsers.toLowerCase();
 
     if (this.selectedUserType === 'student') {
       this.filteredStudents = this.students.filter(

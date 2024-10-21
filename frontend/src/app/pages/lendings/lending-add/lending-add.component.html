@@ -29,226 +29,238 @@
 
 @if (currentStep == 1){
 
-<h5 style="margin-left: 15.5%; margin-top: 2%; margin-bottom: 1%">Seleccione el
-  usuario que desee asociar al préstamo:</h5>
 
-<div class="d-flex justify-content-center">
-  <nav class="navbar bg-body-tertiary justify-content-center d-inline-block"
-    style=" border-radius: 10px;">
-    <ul class="nav justify-content-center mt-2" style="cursor: pointer;">
-      <li class="nav-item" style="margin-left: 10px; margin-bottom: 3%">
-        <a class="nav-link link-dark"
-          (click)="selectUserType('student')">Estudiantes</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link link-dark"
-          (click)="selectUserType('teacher')">Profesores</a>
-      </li>
-      <li class="nav-item" style="margin-right: 10px;">
-        <a class="nav-link link-dark"
-          (click)="selectUserType('assistant')">Asistentes</a>
-      </li>
-    </ul>
-  </nav>
-</div>
 
-<div
-  style="display: flex; justify-content: center; align-items: center; margin-top: 1%; margin-bottom: 1%">
-  <div class="custom_input"
-    style="position: relative; width: 40%; display: flex; align-items: center;">
-    <input type="text" [(ngModel)]="searchTerm" (input)="onSearch()"
-      placeholder="Buscar..." class="input"
-      style="padding-left: 40px; width: 100%;" />
+<div class = "container mb-4 justify-content-center"style = "margin-left: 16% ">
 
-    <svg xmlns="http://www.w3.org/2000/svg" class="svg_icon bi-search"
-      viewBox="0 0 16 16"
-      style="position: absolute; left: 20px; top: 50%; transform: translateY(-50%); pointer-events: none;">
-      <path
-        d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z">
-      </path>
-    </svg>
+  <h5 style="margin-top: 2%; margin-bottom: 1%">Seleccione el
+    usuario que desee asociar al préstamo:</h5>
+
+  <div class="d-flex justify-content-center">
+    <nav class="navbar bg-body-tertiary justify-content-center d-inline-block"
+      style=" border-radius: 10px;">
+      <ul class="nav justify-content-center mt-2" style="cursor: pointer;">
+        <li class="nav-item" style="margin-left: 10px; margin-bottom: 3%">
+          <a class="nav-link link-dark"
+            (click)="selectUserType('student')">Estudiantes</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link link-dark"
+            (click)="selectUserType('teacher')">Profesores</a>
+        </li>
+        <li class="nav-item" style="margin-right: 10px;">
+          <a class="nav-link link-dark"
+            (click)="selectUserType('assistant')">Asistentes</a>
+        </li>
+      </ul>
+    </nav>
   </div>
-</div>
 
-<div class="list-group container-xl" style="margin-top: 10px;">
-  @if (selectedUserType == "student") {
-  @for (student of filteredStudents | slice: (pageStudents-1) * pageSize : pageStudents *
-  pageSize; track $index) {
-  <div class="list-group-item list-group-item-action custom-active-border"
-    [ngClass]="{'active': selectedUser === student}"
-    [style.backgroundColor]="selectedUser === student ? 'orange' : 'inherit'"
-    (click)="selectUser(student)">
-    <div class="d-flex justify-content-between" style="cursor: pointer">
-      <div>
-        <strong>{{ student.name }}</strong>
-        <p> <b>Rut:</b> {{ student.rut }} - <b>Carrera:
-          </b>{{getDegree(student.student.codeDegree)}}</p>
-      </div>
+  <div
+    style="display: flex; justify-content: center; align-items: center; margin-top: 1%; margin-bottom: 1%">
+    <div class="custom_input"
+      style="position: relative; width: 40%; display: flex; align-items: center;">
+      <input type="text" [(ngModel)]="searchTermUsers" (input)="onSearch()"
+        placeholder="Buscar..." class="input"
+        style="padding-left: 40px; width: 100%;" />
+
+      <svg xmlns="http://www.w3.org/2000/svg" class="svg_icon bi-search"
+        viewBox="0 0 16 16"
+        style="position: absolute; left: 20px; top: 50%; transform: translateY(-50%); pointer-events: none;">
+        <path
+          d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z">
+        </path>
+      </svg>
     </div>
   </div>
+
+  <div class="list-group container-xl" style="margin-top: 10px;">
+    @if (selectedUserType == "student") {
+    @for (student of filteredStudents | slice: (pageStudents-1) * pageSize : pageStudents *
+    pageSize; track $index) {
+    <div class="list-group-item list-group-item-action custom-active-border"
+      [ngClass]="{'active': selectedUser === student}"
+      [style.backgroundColor]="selectedUser === student ? 'orange' : 'inherit'"
+      (click)="selectUser(student)">
+      <div class="d-flex justify-content-between" style="cursor: pointer">
+        <div>
+          <strong>{{ student.name }}</strong>
+          <p> <b>Rut:</b> {{ student.rut }} - <b>Carrera:
+            </b>{{getDegree(student.student.codeDegree)}}</p>
+        </div>
+      </div>
+    </div>
+    }
+    <div class="d-flex justify-content-center mt-3">
+      <ngb-pagination [(page)]="pageStudents" [pageSize]="pageSize"
+        [collectionSize]="filteredStudents.length" [maxSize]="5"
+        [rotate]="true" [ellipses]="false" [boundaryLinks]="true">
+      </ngb-pagination>
+    </div>
   }
-  <div class="d-flex justify-content-center mt-3">
-    <ngb-pagination [(page)]="pageStudents" [pageSize]="pageSize"
-      [collectionSize]="filteredStudents.length" [maxSize]="5"
-      [rotate]="true" [ellipses]="false" [boundaryLinks]="true">
-    </ngb-pagination>
-  </div>
-}
 
-  @if (selectedUserType == "teacher") {
-  @for (teacher of filteredTeachers | slice: (pageTeachers - 1) * pageSize : pageTeachers *
-  pageSize; track $index) {
-  <div class="list-group-item list-group-item-action"
-    [class.active]="selectedUser === teacher"
-    [style.backgroundColor]="selectedUser === teacher ? 'orange' : 'inherit'"
-    (click)="selectUser(teacher)">
-    <div class="d-flex justify-content-between" style="cursor: pointer">
-      <div>
-        <strong>{{ teacher.name }}</strong>
-        <p> <b>Rut:</b> {{ teacher.rut }}</p>
+    @if (selectedUserType == "teacher") {
+    @for (teacher of filteredTeachers | slice: (pageTeachers - 1) * pageSize : pageTeachers *
+    pageSize; track $index) {
+    <div class="list-group-item list-group-item-action"
+      [class.active]="selectedUser === teacher"
+      [style.backgroundColor]="selectedUser === teacher ? 'orange' : 'inherit'"
+      (click)="selectUser(teacher)">
+      <div class="d-flex justify-content-between" style="cursor: pointer">
+        <div>
+          <strong>{{ teacher.name }}</strong>
+          <p> <b>Rut:</b> {{ teacher.rut }}</p>
+        </div>
       </div>
     </div>
-  </div>
+    }
+    <div class="d-flex justify-content-center mt-3">
+      <ngb-pagination [(page)]="pageTeachers" [pageSize]="pageSize"
+        [collectionSize]="filteredTeachers.length" [maxSize]="5"
+        [rotate]="true" [ellipses]="false" [boundaryLinks]="true">
+      </ngb-pagination>
+    </div>
   }
-  <div class="d-flex justify-content-center mt-3">
-    <ngb-pagination [(page)]="pageTeachers" [pageSize]="pageSize"
-      [collectionSize]="filteredTeachers.length" [maxSize]="5"
-      [rotate]="true" [ellipses]="false" [boundaryLinks]="true">
-    </ngb-pagination>
-  </div>
-}
 
-  @if (selectedUserType == "assistant") {
-  @for (assistant of filteredAssistants | slice: (pageAssistants - 1) * pageSize : pageAssistants *
-  pageSize; track $index) {
-  <div class="list-group-item list-group-item-action"
-    [class.active]="selectedUser === assistant"
-    [style.backgroundColor]="selectedUser === assistant ? 'orange' : 'inherit'"
-    (click)="selectUser(assistant)">
-    <div class="d-flex justify-content-between" style="cursor: pointer">
-      <div>
-        <strong>{{ assistant.name }}</strong>
-        <p> <b>Rut:</b> {{ assistant.rut }} - <b>Cargo:</b>
-          {{assistant.assistant.role}} </p>
+    @if (selectedUserType == "assistant") {
+    @for (assistant of filteredAssistants | slice: (pageAssistants - 1) * pageSize : pageAssistants *
+    pageSize; track $index) {
+    <div class="list-group-item list-group-item-action"
+      [class.active]="selectedUser === assistant"
+      [style.backgroundColor]="selectedUser === assistant ? 'orange' : 'inherit'"
+      (click)="selectUser(assistant)">
+      <div class="d-flex justify-content-between" style="cursor: pointer">
+        <div>
+          <strong>{{ assistant.name }}</strong>
+          <p> <b>Rut:</b> {{ assistant.rut }} - <b>Cargo:</b>
+            {{assistant.assistant.role}} </p>
+        </div>
       </div>
     </div>
+    <div class="d-flex justify-content-center mt-3">
+      <ngb-pagination [(page)]="pageAssistants" [pageSize]="pageSize"
+        [collectionSize]="filteredAssistants.length" [maxSize]="5"
+        [rotate]="true" [ellipses]="false" [boundaryLinks]="true">
+      </ngb-pagination>
+    </div>
+    }}
   </div>
-  <div class="d-flex justify-content-center mt-3">
-    <ngb-pagination [(page)]="pageAssistants" [pageSize]="pageSize"
-      [collectionSize]="filteredAssistants.length" [maxSize]="5"
-      [rotate]="true" [ellipses]="false" [boundaryLinks]="true">
-    </ngb-pagination>
+
+
+  <div class="d-flex justify-content-center"
+    style="margin-top: 20px; margin-bottom: 40px;">
+    <button routerLink="/lending" (click)="cancel()" class="btn btn-secondary"
+      style="margin-right: 20px">Cancelar</button>
+    <button [disabled]="!selectedUser" (click)="stepUp()"
+      class="btn btn-primary">Confirmar selección</button>
   </div>
-  }}
 </div>
 
 
-<div class="d-flex justify-content-center"
-  style="margin-top: 20px; margin-bottom: 40px;">
-  <button routerLink="/lending" (click)="cancel()" class="btn btn-secondary"
-    style="margin-right: 20px">Cancelar</button>
-  <button [disabled]="!selectedUser" (click)="stepUp()"
-    class="btn btn-primary">Confirmar selección</button>
-</div>
 
 }
 
 @if (currentStep == 2){
 
-<div>
-  <button (click)="stepDown()" class="btn btn-primary"
-    style="margin-left: 16.5%"><i class="bi bi-arrow-left"></i></button>
-</div>
-
-<div class="container">
-  <div class="accordion" id="accordionExample">
-
-    <div
-      style="display: flex; justify-content: center; align-items: center; margin-bottom: 20px">
-      <div class="custom_input"
-        style="position: relative; width: 40%; display: flex; align-items: center;">
-        <svg xmlns="http://www.w3.org/2000/svg" class="svg_icon"
-          viewBox="0 0 16 16"
-          style="position: absolute; left: 18px; width: 16px; height: 16px;">
-          <path
-            d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z">
-          </path>
-        </svg>
-        <input style="width: 100%; padding-left: 30px;" [(ngModel)]="searchTerm"
-          placeholder="Buscar..."
-          class="input" />
-      </div>
+  <div class = "container mb-4 justify-content-center"style = "margin-left: 15% ">
+    <div>
+      <button (click)="stepDown()" class="btn btn-primary"
+        style="margin-left: 2%"><i class="bi bi-arrow-left"></i></button>
     </div>
 
     <div class="container">
-      <div>
+      <div class="accordion" id="accordionExample">
 
-        <table class="table table-striped table-bordered">
-          <thead class="table-light">
-            <tr>
-              <th scope="col">Código</th>
-              <th scope="col">Nombre</th>
-              <th scope="col">Stock</th>
-              <th scope="col" style="width: 150px;">Cantidad</th>
-            </tr>
-          </thead>
-          <tbody>
-            @for (product of filteredList() | slice: (pageProducts-1) * pageSize : pageProducts * pageSize; track product; let i = $index) {
-            <tr>
-              <td>{{ product.id }}</td>
-              <td>{{ product.name }}</td>
-              <td>{{ product.stock }}</td>
-              <td style="width: 150px;">
-                <div class="d-flex align-items-center">
-                  <button class="btn btn-outline-secondary rounded-circle"
-                    (click)="decrementQuantity(product.id)"
-                    [disabled]="getQuantity(product.id) === 0">-</button>
+        <div
+          style="display: flex; justify-content: center; align-items: center; margin-bottom: 20px">
+          <div class="custom_input"
+            style="position: relative; width: 40%; display: flex; align-items: center;">
+            <svg xmlns="http://www.w3.org/2000/svg" class="svg_icon"
+              viewBox="0 0 16 16"
+              style="position: absolute; left: 18px; width: 16px; height: 16px;">
+              <path
+                d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z">
+              </path>
+            </svg>
+            <input style="width: 100%; padding-left: 30px;" [(ngModel)]="searchTermProducts"
+              placeholder="Buscar..."
+              class="input" />
+          </div>
+        </div>
 
-                    <input
-                      class="form-control mx-1 text-center"
-                      type="number"
-                      [value]="getQuantity(product.id)"
-                      (input)="onQuantityInput($event, product.id, product.stock)"
-                      min="0"
-                      [max]="product.stock"
-                    />
+        <div class="container">
+          <div>
 
-                  <button class="btn btn-outline-secondary rounded-circle"
-                    (click)="incrementQuantity(product.id, product.stock)"
-                    [disabled]="product.stock === 0">+</button>
-                </div>
-              </td>
-            </tr>
-            }
-          </tbody>
-        </table>
+            <table class="table table-striped table-bordered">
+              <thead class="table-light">
+                <tr>
+                  <th scope="col">Código</th>
+                  <th scope="col">Nombre</th>
+                  <th scope="col">Stock</th>
+                  <th scope="col" style="width: 150px;">Cantidad</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (product of filteredList() | slice: (pageProducts-1) * pageSize : pageProducts * pageSize; track product; let i = $index) {
+                <tr>
+                  <td>{{ product.id }}</td>
+                  <td>{{ product.name }}</td>
+                  <td>{{ product.stock }}</td>
+                  <td style="width: 150px;">
+                    <div class="d-flex align-items-center">
+                      <button class="btn btn-outline-secondary rounded-circle"
+                        (click)="decrementQuantity(product.id)"
+                        [disabled]="getQuantity(product.id) === 0">-</button>
+
+                        <input
+                          class="form-control mx-1 text-center"
+                          type="number"
+                          [value]="getQuantity(product.id)"
+                          (input)="onQuantityInput($event, product.id, product.stock)"
+                          min="0"
+                          [max]="product.stock"
+                        />
+
+
+                      <button class="btn btn-outline-secondary rounded-circle"
+                        (click)="incrementQuantity(product.id, product.stock)"
+                        [disabled]="product.stock === 0">+</button>
+                    </div>
+                  </td>
+                </tr>
+                }
+              </tbody>
+            </table>
+
+          </div>
+        </div>
+
+        <div class="d-flex justify-content-center"
+          style="margin-top: 20px; margin-bottom: 20px;">
+          <ngb-pagination [collectionSize]="products.length" [(page)]="pageProducts"
+            [pageSize]="pageSize" [maxSize]="5"
+            [rotate]="true" [ellipses]="false" [boundaryLinks]="true" />
+        </div>
 
       </div>
     </div>
 
     <div class="d-flex justify-content-center"
-      style="margin-top: 20px; margin-bottom: 20px;">
-      <ngb-pagination [collectionSize]="products.length" [(page)]="pageProducts"
-        [pageSize]="pageSize" [maxSize]="5"
-        [rotate]="true" [ellipses]="false" [boundaryLinks]="true" />
+      style="margin-top: 20px; margin-bottom: 40px;">
+      <button routerLink="/lending" (click)="cancel()" class="btn btn-secondary"
+        style="margin-right: 20px">Cancelar</button>
+      @if (hasSelectedProduct()){
+      <button (click)="stepUp()" class="btn btn-primary">Confirmar
+        selección</button>
+      }
+      @else {
+      <button disabled (click)="stepUp()" class="btn btn-primary">Confirmar
+        selección</button>
+      }
     </div>
-
   </div>
-</div>
 
-<div class="d-flex justify-content-center"
-  style="margin-top: 20px; margin-bottom: 40px;">
-  <button routerLink="/lending" (click)="cancel()" class="btn btn-secondary"
-    style="margin-right: 20px">Cancelar</button>
-  @if (hasSelectedProduct()){
-  <button (click)="stepUp()" class="btn btn-primary">Confirmar
-    selección</button>
-  }
-  @else {
-  <button disabled (click)="stepUp()" class="btn btn-primary">Confirmar
-    selección</button>
-  }
-</div>
+
 
 }
 
