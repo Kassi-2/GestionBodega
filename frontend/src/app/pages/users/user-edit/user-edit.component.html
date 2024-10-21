@@ -7,7 +7,7 @@
         </div>
         @if (user) {
         <div class="modal-body">
-  
+
           <div class="mb-3">
             <div>
               <label for="formGroupExampleInput" class="form-label">Rut</label>
@@ -21,7 +21,7 @@
             <small class="text-danger">Ingrese un rut.</small>
             }
           </div>
-  
+
           <div class="mb-3">
             <label [class.is-invalid]='notValidName' for="formGroupExampleInput" class="form-label">Nombre
               Completo</label>
@@ -31,16 +31,17 @@
               <small class="text-danger">Ingrese un nombre.</small>
             }
           </div>
-  
+
           <div class="mb-3">
             <label for="formGroupExampleInput" class="form-label">Tipo de Usuario</label>
             <select class="form-control form-select" formControlName="type" aria-label="Large select example">
               <option value="Student">Alumno</option>
               <option value="Teacher">Profesor</option>
               <option value="Assistant">Asistente</option>
+
             </select>
           </div>
-  
+
           @if (this.userForm.get('type')?.value == "Student") {
           <div class="mb-3">
             <label for="formGroupExampleInput" class="form-label">Carrera</label>
@@ -58,20 +59,24 @@
               [class.is-invalid]='notValidRole'>
               <option value="Secretaria">Secretaria</option>
               <option value="Auxiliar">Auxiliar</option>
+              <option value="Asistente de laboratorio">Asistente de laboratorio</option>
+              <option value="Funcionario administrativo">Funcionario administrativo</option>
+              <option value="Técnicos">Técnicos</option>
+              <option value="Profesionales">Profesionales</option>
+              <option value="otros..">otros..</option>
             </select>
             @if (notValidRole) {
               <small class="text-danger">Ingrese un cargo.</small>
             }
           </div>
           }
-  
-  
+
           <div class="mb-3">
             <label for="formGroupExampleInput" class="form-label">Correo Electrónico</label>
             <input type="text" class="form-control" id="formGroupExampleInput2" formControlName="mail"
               placeholder="ejemplo@ejemplo.com">
           </div>
-  
+
           <div class="mb-3">
             <label for="formGroupExampleInput" class="form-label">Número de celular</label>
             <div class="input-group">
@@ -80,9 +85,9 @@
                 pattern="[0-9]{9}" placeholder="">
             </div>
           </div>
-  
+
         </div>
-  
+
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
           <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalConfirmationEdit"
@@ -92,8 +97,8 @@
       </div>
     </div>
   </div>
-  
-  
+
+
   <div class="modal fade" id="modalConfirmationEdit" aria-hidden="true" aria-labelledby="exampleModalToggleLabel2"
     tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
