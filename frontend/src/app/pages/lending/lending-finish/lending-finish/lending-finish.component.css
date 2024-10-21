@@ -39,14 +39,14 @@
 
 .svg_icon {
   position: absolute;
-  left: 33.8%;
+  left: 35.5%;
   fill: #f79123;
   width: 18px;
   height: 18px;
 }
 
 .custom-margin-left {
-  margin-left: 100px;
+  margin-left: 200px;
 }
 
 .btn-custom {
@@ -54,16 +54,17 @@
 }
 
 .btn-custom:hover {
-  background-color: #F79123; /* Color de fondo al hacer hover */
-  color: white; /* Color del texto al hacer hover */
+  background-color: #F79123;
+  color: white;
 }
 .custom-button {
-  padding: 0.25rem 0.5rem; /* Ajusta el padding según sea necesario */
-  max-width: 150px; /* Ajusta el ancho máximo según sea necesario */
-  font-size: 0.875rem; /* Ajusta el tamaño de la fuente */
-  white-space: nowrap; /* Evita que el texto se divida en varias líneas */
-  overflow: hidden; /* Oculta el texto que exceda el ancho */
-  text-overflow: ellipsis; /* Agrega "..." si el texto es demasiado largo */
+  padding: 0.25rem 0.5rem;
+  max-width: 250px;
+  height: 35px;
+  font-size: 0.875rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 

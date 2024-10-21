@@ -123,12 +123,13 @@
   </div>
 </div>
 
-<div class="modal fade" id="modalSearch" abindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+
+<div class="modal fade" id="modalSearch" abindex="-1" data-bs-backdrop="static" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
   <div class="modal-content">
       <div class="modal-header text-white" style="background-color: #F79123;">
         <h1 class="modal-title fs-5" id="exampleModalLabel">Lista de préstamos finalizados</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="closeLendingList()" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <div class="d-flex justify-content-center">
@@ -142,7 +143,8 @@
       />
       <button class="btn btn-outline-secondary" (click)="handleSubmit()">Enviar</button>
       </div>
-      <!-- <table class="table table-striped">
+      @if (showList) {
+      <table class="table table-striped">
         <thead class="table-light">
           <tr>
             <th scope="col" class="text-center">Id</th>
@@ -153,7 +155,7 @@
           </tr>
         </thead>
         <tbody>
-          @for (lending of filteredList()| slice: (page-1) * pageSize : page * pageSize;track lending;let i = $index) {
+          @for (lending of lending| slice: (pageLending-1) * pageSizeLending : pageLending * pageSizeLending; track lending; let i = $index) {
           <tr>
             <th scope="row" class="text-center">{{lending.id}}</th>
             <td class="text-center">{{lending.borrowerName}}</td>
@@ -180,15 +182,15 @@
         </tbody>
       </table>
       <div class="d-flex justify-content-center mt-4">
-        <ngb-pagination [collectionSize]="filteredList().length" [(page)]="page" [pageSize]="pageSize" [maxSize]="5" [rotate]="true" [ellipses]="false" [boundaryLinks]="true"></ngb-pagination>
-      </div> -->
-
-
-
+        <ngb-pagination [collectionSize]="lending.length" [(page)]="pageLending" [pageSize]="pageSizeLending" [maxSize]="5" [rotate]="true" [ellipses]="false" [boundaryLinks]="true"></ngb-pagination>
+      </div>
+    }
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+      <button type="button" class="btn btn-secondary" (click)="closeLendingList()" data-bs-dismiss="modal">Cerrar</button>
     </div>
   </div>
 </div>
+</div>
+
 

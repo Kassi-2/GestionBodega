@@ -20,18 +20,27 @@ import { NgbPagination } from '@ng-bootstrap/ng-bootstrap';
 
 export class LendingFinishComponent {
   selectedLending: any;
+  finishLending: any;
   searchTerm: string = '';
   lending: Lending[] = [];
   teachers: User[] = [];
   selectedDate: string = '';
   inputValue: string = '';
+  showList: boolean = false
   public page = 1;
   public pageSize = 10;
+  public pageLending = 1;
+  public pageSizeLending = 10;
+
 
   constructor(private lendingService: LendingService, private userService: UserService) {}
 
   ngOnInit() {
     this.getLending();
+  }
+
+  closeLendingList() {
+    this.showList = false;
   }
 
   onEnterPress() {
@@ -41,11 +50,21 @@ export class LendingFinishComponent {
   handleSubmit() {
     if (this.inputValue.trim()) {
       console.log('Texto enviado:', this.inputValue);
+      this.lendingService.getFilteredLendings(this.inputValue).subscribe(
+        (lending: Lending[]) => {
+          this.lending = lending;
+          this.showList = true;
+        },
+        (error) => {
+          console.error('Error al obtener los préstamos filtrados:', error);
+        }
+      );
       this.inputValue = '';
     } else {
       console.log('Por favor, ingresa un valor.');
     }
   }
+
 
   filteredList(): Lending[] {
     const filteredLendings = this.lending.filter(
@@ -55,17 +74,10 @@ export class LendingFinishComponent {
     return filteredLendings;
   }
 
-  finishList(): Lending[] {
-    const lendingFinish = this.lending.filter(
-      (lending) =>
-        lending.borrowerName.toLowerCase().includes(this.searchTerm.toLowerCase())
-    );
-    return lendingFinish;
-  }
-
   selectDate(event: Event): void {
     const input = event.target as HTMLInputElement;
     this.selectedDate = input.value;
+    console.log(this.selectedDate)
   }
 
   private getLending(): void {
@@ -103,13 +115,15 @@ export class LendingFinishComponent {
       reverseButtons: true
     }).then((result) => {
       if (result.isConfirmed) {
-        this.lending = this.lending.filter(lending => lending.id !== idLending);
-        swalWithBootstrapButtons.fire({
-          title: "Eliminado!",
-          text: "El prestamo fue eliminado.",
-          icon: "success",
-          timer: 1500,
-          showConfirmButton: false,
+        this.lendingService.deleteLending(idLending).subscribe(() => {
+          this.lending = this.lending.filter(lending => lending.id !== idLending);
+          swalWithBootstrapButtons.fire({
+            title: "Eliminado!",
+            text: "El prestamo fue eliminado.",
+            icon: "success",
+            timer: 1500,
+            showConfirmButton: false,
+          });
         });
       } else if (
         result.dismiss === Swal.DismissReason.cancel

@@ -40,4 +40,11 @@ export class LendingService {
     return this.http.get<UserTeacher[]>(`${this.apiUrl}/teachers`);
   }
 
+  public deleteLending(id:number): Observable<UserTeacher[]> {
+    return this.http.get<UserTeacher[]>(`${this.apiUrl}/teachers`);
+}
+
+  public getFilteredLendings(lending: string): Observable<Lending[]> {
+    return of(this.activeLendings);
+}
 }
