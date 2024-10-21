@@ -149,12 +149,17 @@
         </div>
         <div class="mb-3">
           <strong>¿Desea agregar algún comentario? </strong>
-          <textarea type="text" class="form-control" id="myText" name="myText" placeholder="Escribe aquí..." value="{{ selectedLending?.comments }}" ></textarea>
+          <textarea
+            #commentText
+            class="form-control"
+            id="myText"
+            name="myText"
+            placeholder="Escribe aquí...">{{ selectedLending?.comments }}</textarea>
         </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
-        <button type="button" class="btn btn-outline-danger" (click)="finishLending(selectedLending?.id)"
+        <button type="button" class="btn btn-outline-danger" (click)="finishLending(selectedLending?.id, commentText.value)"
         data-bs-toggle="modal"
         data-bs-target="#modalFinishLending">
           <i class="bi bi-x-circle"></i> Finalizar Préstamo

@@ -28,7 +28,7 @@ export class LendingService {
   constructor(private http: HttpClient) { }
   private apiUrl = 'http://localhost:3000/users';
 
-  getLending(): Observable<Lending[]> {
+  public getLending(): Observable<Lending[]> {
     return of(this.activeLendings);
   }
 
@@ -47,4 +47,13 @@ export class LendingService {
   public getFilteredLendings(lending: string): Observable<Lending[]> {
     return of(this.activeLendings);
 }
+
+  public lendingForDate(): Observable<Lending[]> {
+    return of(this.activeLendings);
+}
+
+  public lendingFinish(id: number, comment: string): Observable<Lending[]> {
+    return of(this.activeLendings);
+  }
+
 }

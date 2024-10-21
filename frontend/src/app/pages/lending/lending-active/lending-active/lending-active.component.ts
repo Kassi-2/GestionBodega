@@ -78,8 +78,9 @@ export class LendingActiveComponent {
     this.getAllTeachers();
   }
 
-  finishLending(idLending: number): void {
+  finishLending(idLending: number, comment: string): void {
     console.log(idLending)
+    console.log(comment)
     const swalWithBootstrapButtons = Swal.mixin({
       customClass: {
         confirmButton: "btn btn-success",
@@ -97,6 +98,7 @@ export class LendingActiveComponent {
       reverseButtons: true
     }).then((result) => {
       if (result.isConfirmed) {
+        this.lendingService.lendingFinish(idLending, comment).subscribe(() => {
         this.lending = this.lending.filter(lending => lending.id !== idLending);
         swalWithBootstrapButtons.fire({
           title: "Finalizado!",
@@ -105,6 +107,8 @@ export class LendingActiveComponent {
           timer: 1500,
           showConfirmButton: false,
         });
+        this.getLending()
+      });
       } else if (
         result.dismiss === Swal.DismissReason.cancel
       ) {

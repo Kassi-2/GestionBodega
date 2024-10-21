@@ -75,9 +75,11 @@ export class LendingFinishComponent {
   }
 
   selectDate(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    this.selectedDate = input.value;
-    console.log(this.selectedDate)
+    this.lendingService.lendingForDate().subscribe((lending: Lending[]) => {
+      const input = event.target as HTMLInputElement;
+      this.selectedDate = input.value;
+      console.log(this.selectedDate)
+    });
   }
 
   private getLending(): void {
@@ -124,6 +126,7 @@ export class LendingFinishComponent {
             timer: 1500,
             showConfirmButton: false,
           });
+          this.getLending()
         });
       } else if (
         result.dismiss === Swal.DismissReason.cancel
