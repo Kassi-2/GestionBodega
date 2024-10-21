@@ -105,6 +105,7 @@ async getLendingById(id: number): Promise<Lending> {
     });
   }
 
+
   //obtiene los préstamos de acuerdo a una fecha en la que se creó un préstamo
   //sin importar la hora
   async getLendingByCreateDate(date: string): Promise<Lending[]> {
@@ -222,7 +223,7 @@ async getLendingById(id: number): Promise<Lending> {
             orderBy: {
                 date: "desc",
             },
-            take: 1,
+            take: 50,
         });
       }
 

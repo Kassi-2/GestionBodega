@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, ValidationPipe } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Delete, Get, Param, Post, Put, Query, ValidationPipe } from '@nestjs/common';
 import { LendingService } from './lending.service';
 import { LendingCreateDTO } from './dto/lending-create.dto';
 import { LendingFinalizeDTO } from './dto/lending-finalize.dto';
@@ -11,6 +11,7 @@ export class LendingController {
     async getLendingById(@Param('id') id: string){
         return this.lendingService.getLendingById(Number(id))
     }
+
 
     @Get("lending-create-date/:date")
     async getLendingByCreateDate(@Param('date') date: string) {
