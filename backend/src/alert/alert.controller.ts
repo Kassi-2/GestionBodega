@@ -1,10 +1,14 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   HttpStatus,
+  Param,
+  ParseIntPipe,
   Post,
+  Put,
 } from '@nestjs/common';
 import { AlertService } from './alert.service';
 import { AlertCreateDTO } from './dto/alert-create.dto';
@@ -25,9 +29,15 @@ export class AlertController {
     return await this.alertService.createAlert(request);
   }
 
-  @Get('/hello')
+  @Put('/:id')
   @HttpCode(HttpStatus.OK)
-  public getHello() {
-    return 'hello world';
+  public async markAlertAsViewed(@Param('id', ParseIntPipe) id: number) {
+    return await this.alertService.markAlertAsViewed(id);
+  }
+
+  @Delete('/:id')
+  @HttpCode(HttpStatus.OK)
+  public async deleteAlert(@Param('id', ParseIntPipe) id: number) {
+    return await this.alertService.deleteAlert(id);
   }
 }

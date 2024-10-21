@@ -37,7 +37,7 @@ export class UserAssistantListComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {}
 
   public user!: User;
-  public assistants!: UserAssitant[];
+  public assistants: UserAssitant[] = [];
   public filteredAssistant: UserAssitant[] = [];
   public page = 1;
   public pageSize = 15;

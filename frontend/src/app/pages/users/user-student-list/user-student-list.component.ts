@@ -52,7 +52,7 @@ export class UserStudentListComponent implements OnInit, OnDestroy {
   public selectedUserId!: number;
   public user!: User;
   private subscriptions: Subscription = new Subscription();
-  public students!: UserStudent[];
+  public students: UserStudent[] = [];
   public degrees!: Degree[];
   public filteredStudents: UserStudent[] = [];
   /**

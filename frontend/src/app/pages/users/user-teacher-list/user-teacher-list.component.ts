@@ -36,7 +36,7 @@ export class UserTeacherListComponent implements OnInit, OnDestroy {
   public page = 1;
   public pageSize = 15;
   public user!: User;
-  public teachers!: UserTeacher[];
+  public teachers: UserTeacher[] = [];
   public filteredTeacher: UserTeacher[] = [];
   /**
    *Función que recibe el id de un usuario de tipo Profesor, dentro crea el aviso de confirmación de eliminación y envía al servicio el id del usuario a eliminar.

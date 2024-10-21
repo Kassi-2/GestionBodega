@@ -9,11 +9,14 @@ import {
   NotFoundException,
   ValidationPipe,
   BadRequestException,
+  UseGuards,
 } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { ProductCreateDTO } from './dto/product-create.dto';
 import { ProductUpdateDTO } from './dto/product-update.dto';
+import { AuthGuard } from 'src/auth/guards/auth.guard';
 
+@UseGuards(AuthGuard)
 @Controller('products')
 export class ProductController {
   constructor(private readonly productService: ProductService) {}

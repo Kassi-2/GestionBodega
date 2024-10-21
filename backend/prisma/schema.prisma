@@ -89,7 +89,7 @@ model Alert{
 }
 
 model AlertLending{
-  alert Alert @relation(fields: [alertId], references: [id])
+  alert Alert @relation(fields: [alertId], references: [id], onDelete: Cascade)
   alertId Int
   lending Lending @relation(fields: [lendingId], references: [id])
   lendingId Int
@@ -110,4 +110,10 @@ model LendingProduct {
 enum LendingState {
   Active
   Finalized
+}
+
+model User {
+  mail String @id
+  username String @unique
+  password String
 }

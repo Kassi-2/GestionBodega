@@ -25,7 +25,10 @@ export class UserService {
    * @memberof UserService
    */
   public register(user: UserRegister) {
-    return this.http.post(`${this.apiUrl}`, user);
+    return this.http.post(`${this.apiUrl}`, user,{headers: {
+      'Content-type': 'application/json',
+      Authorization: `Bearer ${sessionStorage.getItem('token')}`,
+    }});
   }
   /**
    *Función que devuelve una lista de tipo Estudiante de todos los usuarios de ese tipo registrados en la base de datos.
@@ -34,7 +37,10 @@ export class UserService {
    * @memberof UserService
    */
   public getAllStudents(): Observable<UserStudent[]> {
-    return this.http.get<UserStudent[]>(`${this.apiUrl}/students`);
+    return this.http.get<UserStudent[]>(`${this.apiUrl}/students`, {headers: {
+      'Content-type': 'application/json',
+      Authorization: `Bearer ${sessionStorage.getItem('token')}`,
+    }});
   }
   /**
    *Función que devuelve una lsita de tipo Profesor de todos los usuarios de ese tipo registrados en la base de datos.
@@ -43,7 +49,10 @@ export class UserService {
    * @memberof UserService
    */
   public getAllTeachers(): Observable<UserTeacher[]> {
-    return this.http.get<UserTeacher[]>(`${this.apiUrl}/teachers`);
+    return this.http.get<UserTeacher[]>(`${this.apiUrl}/teachers`, {headers: {
+      'Content-type': 'application/json',
+      Authorization: `Bearer ${sessionStorage.getItem('token')}`,
+    }});
   }
   /**
    *Función que recibe una lista de tipo Asistente de todos los usuarios de ese tipo registrados en la base de datos.
@@ -52,7 +61,10 @@ export class UserService {
    * @memberof UserService
    */
   public getAllAssistants(): Observable<UserAssitant[]> {
-    return this.http.get<UserAssitant[]>(`${this.apiUrl}/assistants`);
+    return this.http.get<UserAssitant[]>(`${this.apiUrl}/assistants`, {headers: {
+      'Content-type': 'application/json',
+      Authorization: `Bearer ${sessionStorage.getItem('token')}`,
+    }});
   }
   /**
    *Función que recibe todas las carreras registradas en la base de datos.
@@ -61,7 +73,10 @@ export class UserService {
    * @memberof UserService
    */
   public getAllDegrees(): Observable<Degree[]> {
-    const response = this.http.get<Degree[]>(`${this.apiUrl}/degrees`);
+    const response = this.http.get<Degree[]>(`${this.apiUrl}/degrees`, {headers: {
+      'Content-type': 'application/json',
+      Authorization: `Bearer ${sessionStorage.getItem('token')}`,
+    }});
     return response;
   }
   /**
@@ -72,7 +87,10 @@ export class UserService {
    * @memberof UserService
    */
   public getUserById(id: number): Observable<User> {
-    return this.http.get<User>(`${this.apiUrl}/user/${id}`);
+    return this.http.get<User>(`${this.apiUrl}/user/${id}`, {headers: {
+      'Content-type': 'application/json',
+      Authorization: `Bearer ${sessionStorage.getItem('token')}`,
+    }});
   }
   /**
    *Función que recibe el id y la información actualizada de un usuario para actualizarlo en la base de datos.
@@ -83,7 +101,10 @@ export class UserService {
    * @memberof UserService
    */
   public updateUser(id: number, user: UserEdit): Observable<User> {
-    return this.http.put<User>(`${this.apiUrl}/${id}`, user);
+    return this.http.put<User>(`${this.apiUrl}/${id}`, user, {headers: {
+      'Content-type': 'application/json',
+      Authorization: `Bearer ${sessionStorage.getItem('token')}`,
+    }});
   }
   /**
    *Función que recibe un id de un usuario y lo elimina de la base de datos.
@@ -93,7 +114,10 @@ export class UserService {
    * @memberof UserService
    */
   public deleteUser(id: number) {
-    return this.http.delete(`${this.apiUrl}/${id}`);
+    return this.http.delete(`${this.apiUrl}/${id}`, {headers: {
+      'Content-type': 'application/json',
+      Authorization: `Bearer ${sessionStorage.getItem('token')}`,
+    }});
   }
   /**
    *Función que recibe la información de los usuarios a importar y los agrega masivamente en la base de datos.
@@ -103,6 +127,9 @@ export class UserService {
    * @memberof UserService
    */
   public importUsers(data: FormData) {
-    return this.http.post(`${this.apiUrl}/import`, data);
+    return this.http.post(`${this.apiUrl}/import`, data, {headers: {
+      'Content-type': 'application/json',
+      Authorization: `Bearer ${sessionStorage.getItem('token')}`,
+    }});
   }
 }

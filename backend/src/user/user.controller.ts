@@ -11,13 +11,16 @@ import {
   ParseIntPipe,
   UseInterceptors,
   UploadedFile,
+  UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UserCreateDTO } from './dto/user-create.dto';
 import { UserUpdateDTO } from './dto/user-update.dto';
 import { UserImportDTO } from './dto/user-import.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { AuthGuard } from 'src/auth/guards/auth.guard';
 
+@UseGuards(AuthGuard)
 @Controller('users')
 export class UserController {
   constructor(private userService: UserService) {}

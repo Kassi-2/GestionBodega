@@ -13,17 +13,25 @@ export class AlertService {
 
   public createAlert(): Observable<Alert> {
     const now = new Date();
-    console.log(now)
+    const date = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 17, 0, 0);
     const alertData = {
-      name: 'Alerta diaria',
-      description: 'Alerta creada',
-      state: true,
-      date: new Date()
+      name: `Alerta ${now.getDate()}-${now.getMonth() + 1}-${now.getFullYear()}`,
+      description: '',
+      state: false,
+      date: date,
     };
     return this.http.post<Alert>(`${this.apiUrl}`, alertData);
   }
 
   public getAllAlert(): Observable<Alert[]> {
     return this.http.get<Alert[]>(`${this.apiUrl}`);
+  }
+
+  public markAlertAsViewed(alertId: number): Observable<Alert> {
+    return this.http.put<Alert>(`${this.apiUrl}/${alertId}`, {});
+  }
+
+  public deleteAlert(alertId: number): Observable<Alert> {
+    return this.http.delete<Alert>(`${this.apiUrl}/${alertId}`);
   }
 }
