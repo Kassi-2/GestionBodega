@@ -6,6 +6,7 @@ import { ViewProductsComponent } from './pages/products/view-products/view-produ
 import { LendingActiveComponent } from './pages/lending/lending-active/lending-active/lending-active.component';
 import { LendingFinishComponent } from './pages/lending/lending-finish/lending-finish/lending-finish.component';
 import { LendingInactiveComponent } from './pages/lending/lending-inactive/lending-inactive.component';
+import { LendingAddComponent } from './pages/lendings/lending-add/lending-add.component';
 
 
 export const routes: Routes = [
@@ -16,4 +17,6 @@ export const routes: Routes = [
   { path: 'lendings/active', component: LendingActiveComponent},
   { path: 'lendings/finish', component: LendingFinishComponent},
   { path: 'lendings/inactive', component:LendingInactiveComponent}
+  { path: 'lending-add', component: LendingAddComponent },
+
 ];
