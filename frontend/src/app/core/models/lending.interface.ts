@@ -2,11 +2,11 @@ export interface Lending {
   id: number;
   date: Date;
   state: string;
-  comments: string | null;
+  comments?: string;
   borrowerId: number;
   borrowerName: string
-  teacherId: number | null;
-  teacherName: string | null;
+  teacherId?: number;
+  teacherName?: string;
   lendingProducts: lendingProducts[];
 }
 
@@ -17,4 +17,18 @@ export interface lendingProducts{
   stock: number;
   amount: number;
 }
+
+export interface newLending {
+  comments?: string;
+  borrowerId: number;
+  teacherId?: number;
+  teacherName?: string;
+  lendingProducts: contains[];
+}
+
+export interface contains {
+  productId: number;
+  amount: number;
+}
+
 

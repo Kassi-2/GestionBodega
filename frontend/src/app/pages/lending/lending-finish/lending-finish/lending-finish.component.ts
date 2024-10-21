@@ -74,13 +74,15 @@ export class LendingFinishComponent {
     return filteredLendings;
   }
 
-  selectDate(event: Event): void {
-    this.lendingService.lendingForDate().subscribe((lending: Lending[]) => {
-      const input = event.target as HTMLInputElement;
-      this.selectedDate = input.value;
-      console.log(this.selectedDate)
-    });
-  }
+  // selectDate(event: Event): void {
+
+  //   const input = event.target as HTMLInputElement;
+  //   this.selectedDate = input.value;
+
+  //   this.lendingService.lendingForDate(input).subscribe((lending: Lending[]) => {
+  //     console.log(this.selectedDate)
+  //   });
+  // }
 
   private getLending(): void {
     this.lendingService.getLending().subscribe((lending: Lending[]) => {

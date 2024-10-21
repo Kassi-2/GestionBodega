@@ -1,4 +1,4 @@
-import { Lending, lendingProducts } from './../models/lending.interface';
+import { contains, Lending, lendingProducts, newLending } from './../models/lending.interface';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
@@ -47,13 +47,13 @@ export class LendingService {
     return this.http.put<Lending>(`${this.apiUrl}/finalize-lending/${id}`, comment);
   }
 
-  public addLending(Lending: Lending) {
-    return this.http.post(`${this.apiUrl}`, Lending);
+  public addLending(lending: newLending) {
+    return this.http.post(`${this.apiUrl}`, lending);
   }
 
-  setContains(contains: lendingProducts[] | null) {
-    this.containsSubject.next(contains);
-  }
+  // setContains(Contains: contains[] | null) {
+  //   this.containsSubject.next(Contains);
+  // }
 
 
   setCurrentStep(step: number) {

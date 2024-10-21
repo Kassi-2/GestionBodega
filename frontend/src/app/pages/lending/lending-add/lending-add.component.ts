@@ -1,5 +1,5 @@
 import { SearchService } from './../../../core/services/search.service';
-import { Lending } from './../../../core/models/lending.interface';
+import { contains, Lending, lendingProducts, newLending } from './../../../core/models/lending.interface';
 import { ProductService } from './../../../core/services/product.service';
 import { LendingService } from './../../../core/services/lending.service';
 import { Component, HostListener, OnInit } from '@angular/core';
@@ -17,7 +17,6 @@ import { NgbPagination } from '@ng-bootstrap/ng-bootstrap';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Product } from '../../../core/models/product.interface';
-import { Contains } from '../../../core/models/lending.interface';
 import { UserService } from '../../../core/services/user.service';
 import Swal from 'sweetalert2';
 
@@ -54,10 +53,10 @@ export class LendingAddComponent implements OnInit {
   searchTermUsers: string = '';
   searchTermProducts: string = '';
   products: Product[] = [];
-  contains: Contains[] = [];
+  contains: contains[] = [];
   selectedTeacher: User | null = null;
   comments: string = '';
-  lending!: Lending;
+  lending!: newLending;
 
   private subscriptions: Subscription = new Subscription();
 
@@ -82,15 +81,15 @@ export class LendingAddComponent implements OnInit {
       }
     );
 
-    this.LendingService.getLending().subscribe(
-      (contains: Contains[] | null) => {
-        if (contains) {
-          this.contains = contains;
-        } else {
-          this.contains = [];
-        }
-      }
-    );
+    // this.LendingService.getLending().subscribe(
+    //   (contains: lendingProducts[] | null) => {
+    //     if (contains) {
+    //       this.contains = contains;
+    //     } else {
+    //       this.contains = [];
+    //     }
+    //   }
+    // );
 
     this.subscriptions.add(this.getAllStudents());
     this.subscriptions.add(this.getAllTeachers());
@@ -124,7 +123,6 @@ export class LendingAddComponent implements OnInit {
     } else {
       if (stock > 0) {
         this.contains.push({
-          lendingId: null,
           productId: productId,
           amount: 1,
         });
@@ -132,7 +130,7 @@ export class LendingAddComponent implements OnInit {
       }
     }
 
-    this.LendingService.setContains(this.contains);
+    // this.LendingService.setContains(this.contains);
   }
 
   decrementQuantity(productId: number) {
@@ -147,7 +145,7 @@ export class LendingAddComponent implements OnInit {
       this.contains = this.contains.filter((q) => q.productId !== productId);
     }
 
-    this.LendingService.setContains(this.contains);
+    // this.LendingService.setContains(this.contains);
   }
 
   updateVisualStock(productId: number, change: number) {
@@ -223,7 +221,7 @@ export class LendingAddComponent implements OnInit {
       }
     } else {
       if (newQuantity <= stock) {
-        this.contains.push({ lendingId: null, productId, amount: newQuantity });
+        this.contains.push({ productId, amount: newQuantity });
 
         const product = this.products.find((p) => p.id === productId);
         if (product) {
@@ -232,7 +230,7 @@ export class LendingAddComponent implements OnInit {
       }
     }
 
-    this.LendingService.setContains(this.contains);
+    // this.LendingService.setContains(this.contains);
   }
 
   getDegree(code: string) {
@@ -293,13 +291,10 @@ export class LendingAddComponent implements OnInit {
     this.currentStep = 1;
 
     this.lending = {
-      id: null,
-      date: null,
-      state: null,
-      comments: this.comments || null,
+      comments: this.comments,
       borrowerId: this.selectedUser?.id,
-      teacherId: this.selectedTeacher?.id || null,
-      contains: this.contains,
+      teacherId: this.selectedTeacher?.id,
+      lendingProducts: this.contains,
     };
 
     console.log(this.lending)
@@ -386,7 +381,7 @@ export class LendingAddComponent implements OnInit {
     this.selectedUser = null;
     this.selectedTeacher = null;
     this.contains = [];
-    this.LendingService.setContains(null);
+    // this.LendingService.setContains(null);
     this.LendingService.setSelectedUser(null);
   }
 
