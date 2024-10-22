@@ -6,24 +6,24 @@ import { Router } from '@angular/router';
 import { jwtDecode } from 'jwt-decode';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
-
-  constructor(private http: HttpClient) {
-  }
+  constructor(private http: HttpClient) {}
   private apiUrl = 'http://localhost:3000/auth';
 
   public login(user: UserLogin) {
-    return this.http.post<any>(`${this.apiUrl}/login`, user).pipe(tap((response) => {
-      localStorage.setItem('token', response.access_token);
-    }));
-  };
+    return this.http.post<any>(`${this.apiUrl}/login`, user).pipe(
+      tap((response) => {
+        localStorage.setItem('token', response.access_token);
+      })
+    );
+  }
 
   public isLoggedIn(): boolean {
     const token = localStorage.getItem('token');
     if (!token) {
-      return false
+      return false;
     }
 
     const isExpired = this.isTokenExpired(token);
@@ -46,5 +46,10 @@ export class AuthService {
     const decodedToken: any = jwtDecode(token);
     const currentTime = Math.floor(Date.now() / 1000); // Obtener tiempo actual en segundos
     return decodedToken.exp < currentTime;
+  }
+
+  public getToken() {
+    const token = localStorage.getItem('token');
+    return token;
   }
 }

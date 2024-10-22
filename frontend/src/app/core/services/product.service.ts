@@ -16,12 +16,7 @@ export class ProductService {
    * @memberof ProductService
    */
   getProducts(): Observable<Product[]> {
-    return this.http.get<Product[]>(`${this.apiUrl}/active-name-asc`, {
-      headers: {
-        'Content-type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
-      },
-    });
+    return this.http.get<Product[]>(`${this.apiUrl}/active-name-asc`);
   }
   /**
    *Función que recibe un producto y actualiza los cambios realizados en la base de datos.
@@ -32,12 +27,7 @@ export class ProductService {
    * @memberof ProductService
    */
   updateProduct(id: number, updatedProduct: Product): Observable<Product> {
-    return this.http.put<Product>(`${this.apiUrl}/${id}`, updatedProduct, {
-      headers: {
-        'Content-type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
-      },
-    });
+    return this.http.put<Product>(`${this.apiUrl}/${id}`, updatedProduct);
   }
   /**
    *Función que recibe el id de un producto para luego eliminarlo de la base de datos.
@@ -47,12 +37,7 @@ export class ProductService {
    * @memberof ProductService
    */
   deleteProduct(idProduct: number) {
-    return this.http.delete(`${this.apiUrl}/${idProduct}`, {
-      headers: {
-        'Content-type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
-      },
-    });
+    return this.http.delete(`${this.apiUrl}/${idProduct}`);
   }
   /**
    *Función que recibe el id de un producto y devuelve la información del mismo para poder editarlo.
@@ -62,12 +47,7 @@ export class ProductService {
    * @memberof ProductService
    */
   getProductForEdit(idProduct: number): Observable<Product> {
-    return this.http.get<Product>(`${this.apiUrl}/product/${idProduct}`, {
-      headers: {
-        'Content-type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
-      },
-    });
+    return this.http.get<Product>(`${this.apiUrl}/product/${idProduct}`);
   }
   /**
    *Función que recibe un producto y que lo agrega en la base de datos.
@@ -77,12 +57,7 @@ export class ProductService {
    * @memberof ProductService
    */
   addProduct(product: NewProduct) {
-    return this.http.post(`${this.apiUrl}`, product, {
-      headers: {
-        'Content-type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
-      },
-    });
+    return this.http.post(`${this.apiUrl}`, product);
   }
   /**
    *Función que recibe un tipo de ordenamiento y devuelve un listado de los productos acorde al ordenamiento solicitado.
@@ -93,40 +68,15 @@ export class ProductService {
    */
   filterListProduct(option: string): Observable<Product[]> {
     if (option === 'A-Z') {
-      return this.http.get<Product[]>(`${this.apiUrl}/active-name-asc`, {
-        headers: {
-          'Content-type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-      });
+      return this.http.get<Product[]>(`${this.apiUrl}/active-name-asc`);
     } else if (option === 'Z-A') {
-      return this.http.get<Product[]>(`${this.apiUrl}/active-name-desc`, {
-        headers: {
-          'Content-type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-      });
+      return this.http.get<Product[]>(`${this.apiUrl}/active-name-desc`);
     } else if (option === 'De mayor a menor stock') {
-      return this.http.get<Product[]>(`${this.apiUrl}/active-stock-desc`, {
-        headers: {
-          'Content-type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-      });
+      return this.http.get<Product[]>(`${this.apiUrl}/active-stock-desc`);
     } else if (option === 'De menor a mayor stock') {
-      return this.http.get<Product[]>(`${this.apiUrl}/active-stock-asc`, {
-        headers: {
-          'Content-type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-      });
+      return this.http.get<Product[]>(`${this.apiUrl}/active-stock-asc`);
     } else {
-      return this.http.get<Product[]>(`${this.apiUrl}/active-name-asc`, {
-        headers: {
-          'Content-type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-      });
+      return this.http.get<Product[]>(`${this.apiUrl}/active-name-asc`);
     }
   }
 }

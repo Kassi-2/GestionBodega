@@ -1,8 +1,10 @@
-import { BadRequestException, Body, Controller, Delete, Get, Param, Post, Put, Query, ValidationPipe } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards, ValidationPipe } from '@nestjs/common';
 import { LendingService } from './lending.service';
 import { LendingCreateDTO } from './dto/lending-create.dto';
 import { LendingFinalizeDTO } from './dto/lending-finalize.dto';
+import { AuthGuard } from 'src/auth/guards/auth.guard';
 
+@UseGuards(AuthGuard)
 @Controller('lending')
 export class LendingController {
     constructor(private readonly lendingService: LendingService){}

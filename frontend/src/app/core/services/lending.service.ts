@@ -2,7 +2,6 @@ import { contains, Lending, lendingProducts, newLending } from './../models/lend
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { UserTeacher } from '../models/user.interface';
 import { BehaviorSubject } from 'rxjs';
 import { User } from '../models/user.interface';
 

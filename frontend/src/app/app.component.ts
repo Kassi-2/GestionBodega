@@ -10,16 +10,4 @@ import { HttpClientModule } from '@angular/common/http';
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })
-export class AppComponent {
-  showSidebar: boolean = true;
-
-  constructor(private router: Router) {
-    this.router.events.subscribe((event: any) => {
-      if (this.router.url === '/auth/login') {
-        this.showSidebar = false;
-      } else {
-        this.showSidebar = true;
-      }
-    });
-  }
-}
+export class AppComponent {}
