@@ -17,7 +17,7 @@ export class LendingService {
   private apiUrl = 'http://localhost:3000/lending';
   private currentStep = new BehaviorSubject<number>(1);
   private selectedUser = new BehaviorSubject<User | null>(null);
-  private containsSubject = new BehaviorSubject<lendingProducts[] | null>(null);
+  private containsSubject = new BehaviorSubject<contains[] | null>(null);
 
   public getLending(): Observable<Lending[]> {
     return this.http.get<Lending[]>(`${this.apiUrl}/active-lending`);
@@ -48,13 +48,17 @@ export class LendingService {
   }
 
   public addLending(lending: newLending) {
+    this.currentStep = new BehaviorSubject<number>(1);
     return this.http.post(`${this.apiUrl}`, lending);
   }
 
-  // setContains(Contains: contains[] | null) {
-  //   this.containsSubject.next(Contains);
-  // }
+  setContains(Contains: contains[] | null) {
+    this.containsSubject.next(Contains);
+  }
 
+  getLastLending() {
+    return this.containsSubject.asObservable();
+  }
 
   setCurrentStep(step: number) {
     this.currentStep.next(step);

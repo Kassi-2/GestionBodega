@@ -20,10 +20,9 @@ export interface lendingProducts{
 
 export interface newLending {
   comments?: string;
-  borrowerId: number;
-  teacherId?: number;
-  teacherName?: string;
-  lendingProducts: contains[];
+  BorrowerId: number;
+  teacherId: number | null;
+  products: contains[];
 }
 
 export interface contains {

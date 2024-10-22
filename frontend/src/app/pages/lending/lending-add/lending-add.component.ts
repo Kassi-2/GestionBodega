@@ -81,15 +81,16 @@ export class LendingAddComponent implements OnInit {
       }
     );
 
-    // this.LendingService.getLending().subscribe(
-    //   (contains: lendingProducts[] | null) => {
-    //     if (contains) {
-    //       this.contains = contains;
-    //     } else {
-    //       this.contains = [];
-    //     }
-    //   }
-    // );
+    this.LendingService.getLastLending().subscribe(
+      (value: contains[] | null) => {
+        if (value) {
+          this.contains = value;
+        } else {
+          this.contains = [];
+        }
+      }
+    );
+
 
     this.subscriptions.add(this.getAllStudents());
     this.subscriptions.add(this.getAllTeachers());
@@ -130,7 +131,7 @@ export class LendingAddComponent implements OnInit {
       }
     }
 
-    // this.LendingService.setContains(this.contains);
+     this.LendingService.setContains(this.contains);
   }
 
   decrementQuantity(productId: number) {
@@ -145,7 +146,7 @@ export class LendingAddComponent implements OnInit {
       this.contains = this.contains.filter((q) => q.productId !== productId);
     }
 
-    // this.LendingService.setContains(this.contains);
+    this.LendingService.setContains(this.contains);
   }
 
   updateVisualStock(productId: number, change: number) {
@@ -230,7 +231,7 @@ export class LendingAddComponent implements OnInit {
       }
     }
 
-    // this.LendingService.setContains(this.contains);
+    this.LendingService.setContains(this.contains);
   }
 
   getDegree(code: string) {
@@ -288,14 +289,25 @@ export class LendingAddComponent implements OnInit {
       return;
     }
 
-    this.currentStep = 1;
+    if (this.selectedTeacher != undefined) {
+      this.lending = {
+        comments: this.comments,
+        BorrowerId: this.selectedUser.id,
+        teacherId: this.selectedTeacher?.id,
+        products: this.contains,
+      };
+    }
 
-    this.lending = {
-      comments: this.comments,
-      borrowerId: this.selectedUser?.id,
-      teacherId: this.selectedTeacher?.id,
-      lendingProducts: this.contains,
-    };
+    else {
+      this.lending = {
+        comments: this.comments,
+        BorrowerId: this.selectedUser.id,
+        teacherId: null,
+        products: this.contains,
+      };
+    }
+
+    this.currentStep = 1;
 
     console.log(this.lending)
 
@@ -329,6 +341,8 @@ export class LendingAddComponent implements OnInit {
         timer: 1500,
         showConfirmButton: false,
       })
+
+      console.log(error)
 
     },
 
@@ -373,15 +387,13 @@ export class LendingAddComponent implements OnInit {
   }
 
 
-
-
   initializeLendingForm() {
     this.currentStep = 1;
     this.comments = '';
     this.selectedUser = null;
     this.selectedTeacher = null;
     this.contains = [];
-    // this.LendingService.setContains(null);
+    this.LendingService.setContains(null);
     this.LendingService.setSelectedUser(null);
   }
 

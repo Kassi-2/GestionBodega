@@ -41,7 +41,10 @@ export class LendingActiveComponent {
 
   selectDate(event: Event): void {
     const input = event.target as HTMLInputElement;
-    this.selectedDate = input.value;
+    const selectedDate = new Date(input.value);
+    this.lendingService.lendingForDate(selectedDate).subscribe((lending: Lending[]) => {
+      this.getLending()
+    });
   }
 
   getLending(): void {
