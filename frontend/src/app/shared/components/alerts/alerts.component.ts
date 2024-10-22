@@ -11,47 +11,43 @@ import { NgbToastModule } from '@ng-bootstrap/ng-bootstrap';
   imports: [HttpClientModule, CommonModule, NgbToastModule],
   templateUrl: './alerts.component.html',
   styleUrl: './alerts.component.css',
-  providers: [AlertService]
+  providers: [AlertService],
 })
 export class AlertsComponent implements OnInit, OnDestroy {
-
   constructor(private alertService: AlertService) {}
 
-   ngOnInit(): void {
+  ngOnInit(): void {
     this.getAllAlerts();
     this.scheduleDailyAlert();
-   }
-   ngOnDestroy(): void {
-   }
-   
-   public alerts: Alert[] = [];
-   private hasAlertBeenSentToday: boolean = false;
-   public show = false;
-   public alert: Alert = {
-     id: 0,
-     state: false,
-     date: new Date(),
-     name: '',
-     description: ''
-   };
-   
-   private getAllAlerts() {
+  }
+  ngOnDestroy(): void {}
+
+  public alerts: Alert[] = [];
+  private hasAlertBeenSentToday: boolean = false;
+  public show = false;
+  public alert: Alert = {
+    id: 0,
+    state: false,
+    date: new Date(),
+    name: '',
+    description: '',
+  };
+
+  private getAllAlerts() {
     this.alertService.getAllAlert().subscribe((alerts: Alert[]) => {
       this.alerts = alerts;
-      console.log(alerts);
     });
-   }
+  }
 
-   private scheduleDailyAlert() {
+  private scheduleDailyAlert() {
     const checkTime = () => {
       const now = new Date();
       const currentHour = now.getHours();
-      console.log(now, this.hasAlertBeenSentToday);
-      if (currentHour >= 3 && !this.hasAlertBeenSentToday) {
+      if (currentHour >= 17 && !this.hasAlertBeenSentToday) {
         this.sendAlert();
       }
     };
-    setInterval(checkTime, 1000);
+    setInterval(checkTime, 60000);
   }
 
   private sendAlert() {
@@ -60,22 +56,24 @@ export class AlertsComponent implements OnInit, OnDestroy {
         this.hasAlertBeenSentToday = true;
         this.alert = result;
         const toastLiveExample = document.getElementById('toast');
-        if (result.state == false){
-          const toastBootstrap = (window as any).bootstrap.Toast.getOrCreateInstance(toastLiveExample);
-          toastBootstrap.show()
+        if (result.state == false) {
+          const toastBootstrap = (
+            window as any
+          ).bootstrap.Toast.getOrCreateInstance(toastLiveExample);
+          toastBootstrap.show();
         }
         this.resetDailyFlagAtMidnight();
       },
       error: (error) => {
         console.error('Error al crear la alerta:', error);
         return;
-      }
+      },
     });
   }
 
   private resetDailyFlagAtMidnight() {
     const now = new Date();
-    const timeUntilMidnight = (24 - now.getHours()) * 60 * 60 * 1000; 
+    const timeUntilMidnight = (24 - now.getHours()) * 60 * 60 * 1000;
     setTimeout(() => {
       this.hasAlertBeenSentToday = false;
     }, timeUntilMidnight);
@@ -85,9 +83,11 @@ export class AlertsComponent implements OnInit, OnDestroy {
     const now = new Date();
     const alertDateTime = new Date(alertDate).getTime();
     const nowTime = now.getTime();
-  
+
     const differenceInMilliseconds = nowTime - alertDateTime;
-    const differenceInDays = Math.floor(differenceInMilliseconds / (1000 * 60 * 60 * 24));
+    const differenceInDays = Math.floor(
+      differenceInMilliseconds / (1000 * 60 * 60 * 24)
+    );
     if (differenceInDays === 0) {
       return 'Hoy';
     } else if (differenceInDays === 1) {
@@ -99,11 +99,10 @@ export class AlertsComponent implements OnInit, OnDestroy {
 
   public markAsViewed(alertId: number) {
     this.alertService.markAlertAsViewed(alertId).subscribe({
-      next: (response) => {
-      },
+      next: (response) => {},
       error: (error) => {
         alert(error);
-      }
+      },
     });
   }
 
@@ -114,7 +113,7 @@ export class AlertsComponent implements OnInit, OnDestroy {
       },
       error: (error) => {
         alert(error);
-      }
+      },
     });
   }
 }
