@@ -20,18 +20,30 @@ export class AlertService {
       state: false,
       date: date,
     };
-    return this.http.post<Alert>(`${this.apiUrl}`, alertData);
+    return this.http.post<Alert>(`${this.apiUrl}`, alertData, {headers: {
+      'Content-type': 'application/json',
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+    }});
   }
 
   public getAllAlert(): Observable<Alert[]> {
-    return this.http.get<Alert[]>(`${this.apiUrl}`);
+    return this.http.get<Alert[]>(`${this.apiUrl}`, {headers: {
+      'Content-type': 'application/json',
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+    }});
   }
 
   public markAlertAsViewed(alertId: number): Observable<Alert> {
-    return this.http.put<Alert>(`${this.apiUrl}/${alertId}`, {});
+    return this.http.put<Alert>(`${this.apiUrl}/${alertId}`, {}, {headers: {
+      'Content-type': 'application/json',
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+    }});
   }
 
   public deleteAlert(alertId: number): Observable<Alert> {
-    return this.http.delete<Alert>(`${this.apiUrl}/${alertId}`);
+    return this.http.delete<Alert>(`${this.apiUrl}/${alertId}`, {headers: {
+      'Content-type': 'application/json',
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+    }});
   }
 }

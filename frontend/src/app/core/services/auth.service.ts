@@ -10,56 +10,41 @@ import { jwtDecode } from 'jwt-decode';
 })
 export class AuthService {
 
-  constructor(private http: HttpClient, private router: Router,) {
-    this.checkTokenExpiration();
+  constructor(private http: HttpClient) {
   }
   private apiUrl = 'http://localhost:3000/auth';
 
   public login(user: UserLogin) {
     return this.http.post<any>(`${this.apiUrl}/login`, user).pipe(tap((response) => {
-      sessionStorage.setItem('token', response.access_token);
+      localStorage.setItem('token', response.access_token);
     }));
   };
 
-  public isAuth(): Observable<boolean> {
-    let token = sessionStorage.getItem('token');
-    if (token) {
-      return of(true);
-    }
-    console.log("aqui deberia redirigir")
-    this.router.navigateByUrl('/auth/login');
-    return of(false);
-  }
-
-  public isLoggedIn(): Observable<boolean> {
-    let token = sessionStorage.getItem('token');
+  public isLoggedIn(): boolean {
+    const token = localStorage.getItem('token');
     if (!token) {
-      console.log('entre a falso');
-      this.router.navigateByUrl('/auth/login');
-      return of(false);
+      return false
     }
-    return of(true);
-  }
 
-  private checkTokenExpiration() {
-    const token = sessionStorage.getItem('token');
-    if (token) {
-      const decodedToken: any = jwtDecode(token);
-      const expirationTimeInSeconds: number = decodedToken.exp;
-      const currentTimeInSeconds: number = Math.floor(Date.now() / 1000);
-
-      if (currentTimeInSeconds > expirationTimeInSeconds) {
-        this.logout();
-        this.router.navigateByUrl('login');
-      }
+    const isExpired = this.isTokenExpired(token);
+    if (isExpired) {
+      this.logout();
+      return false;
     }
+    return true;
   }
 
   public logout(): boolean {
-    if (sessionStorage.getItem('token')) {
-      sessionStorage.removeItem('token');
+    if (localStorage.getItem('token')) {
+      localStorage.removeItem('token');
       return true;
     }
     return false;
+  }
+
+  private isTokenExpired(token: string): boolean {
+    const decodedToken: any = jwtDecode(token);
+    const currentTime = Math.floor(Date.now() / 1000); // Obtener tiempo actual en segundos
+    return decodedToken.exp < currentTime;
   }
 }

@@ -7,9 +7,10 @@ import { LoginComponent } from './pages/auth/login/login.component';
 import { authGuard, loginGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
-  { path: 'auth/login', component: LoginComponent, canActivate: [loginGuard] },
+  { path: 'auth/login', component: LoginComponent, canActivate: [loginGuard], },
   { path: 'users/students', component: UserStudentListComponent, canActivate: [authGuard], },
   { path: 'users/teachers', component: UserTeacherListComponent, canActivate: [authGuard], },
   { path: 'users/assistants', component: UserAssistantListComponent, canActivate: [authGuard], },
   { path: 'inventory', component: ViewProductsComponent, canActivate: [authGuard], },
+  { path: '**', redirectTo: 'users/students' },
 ];

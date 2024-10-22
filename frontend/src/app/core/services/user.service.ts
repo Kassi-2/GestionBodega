@@ -27,7 +27,7 @@ export class UserService {
   public register(user: UserRegister) {
     return this.http.post(`${this.apiUrl}`, user,{headers: {
       'Content-type': 'application/json',
-      Authorization: `Bearer ${sessionStorage.getItem('token')}`,
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
     }});
   }
   /**
@@ -39,7 +39,7 @@ export class UserService {
   public getAllStudents(): Observable<UserStudent[]> {
     return this.http.get<UserStudent[]>(`${this.apiUrl}/students`, {headers: {
       'Content-type': 'application/json',
-      Authorization: `Bearer ${sessionStorage.getItem('token')}`,
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
     }});
   }
   /**
@@ -51,7 +51,7 @@ export class UserService {
   public getAllTeachers(): Observable<UserTeacher[]> {
     return this.http.get<UserTeacher[]>(`${this.apiUrl}/teachers`, {headers: {
       'Content-type': 'application/json',
-      Authorization: `Bearer ${sessionStorage.getItem('token')}`,
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
     }});
   }
   /**
@@ -63,7 +63,7 @@ export class UserService {
   public getAllAssistants(): Observable<UserAssitant[]> {
     return this.http.get<UserAssitant[]>(`${this.apiUrl}/assistants`, {headers: {
       'Content-type': 'application/json',
-      Authorization: `Bearer ${sessionStorage.getItem('token')}`,
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
     }});
   }
   /**
@@ -75,7 +75,7 @@ export class UserService {
   public getAllDegrees(): Observable<Degree[]> {
     const response = this.http.get<Degree[]>(`${this.apiUrl}/degrees`, {headers: {
       'Content-type': 'application/json',
-      Authorization: `Bearer ${sessionStorage.getItem('token')}`,
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
     }});
     return response;
   }
@@ -89,7 +89,7 @@ export class UserService {
   public getUserById(id: number): Observable<User> {
     return this.http.get<User>(`${this.apiUrl}/user/${id}`, {headers: {
       'Content-type': 'application/json',
-      Authorization: `Bearer ${sessionStorage.getItem('token')}`,
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
     }});
   }
   /**
@@ -103,7 +103,7 @@ export class UserService {
   public updateUser(id: number, user: UserEdit): Observable<User> {
     return this.http.put<User>(`${this.apiUrl}/${id}`, user, {headers: {
       'Content-type': 'application/json',
-      Authorization: `Bearer ${sessionStorage.getItem('token')}`,
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
     }});
   }
   /**
@@ -116,7 +116,7 @@ export class UserService {
   public deleteUser(id: number) {
     return this.http.delete(`${this.apiUrl}/${id}`, {headers: {
       'Content-type': 'application/json',
-      Authorization: `Bearer ${sessionStorage.getItem('token')}`,
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
     }});
   }
   /**
@@ -129,7 +129,7 @@ export class UserService {
   public importUsers(data: FormData) {
     return this.http.post(`${this.apiUrl}/import`, data, {headers: {
       'Content-type': 'application/json',
-      Authorization: `Bearer ${sessionStorage.getItem('token')}`,
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
     }});
   }
 }

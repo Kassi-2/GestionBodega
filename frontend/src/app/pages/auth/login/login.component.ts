@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../../core/services/auth.service';
 import { HttpClientModule } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -17,7 +18,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
   }
   
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
   public loginForm: FormGroup = new FormGroup({
     username: new FormControl('', [Validators.required]),
@@ -28,6 +29,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.authService.login(this.loginForm.value).subscribe({
       next: (result) => {
         alert('Inicio de sesion correctamente');
+        this.router.navigateByUrl('users/students');
       },
       error: (error) =>{
         alert(error.message);

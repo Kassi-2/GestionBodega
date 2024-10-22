@@ -9,10 +9,13 @@ import {
   ParseIntPipe,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { AlertService } from './alert.service';
 import { AlertCreateDTO } from './dto/alert-create.dto';
+import { AuthGuard } from 'src/auth/guards/auth.guard';
 
+@UseGuards(AuthGuard)
 @Controller('alerts')
 export class AlertController {
   constructor(private alertService: AlertService) {}
