@@ -17,10 +17,10 @@ export const routes: Routes = [
   { path: 'users/teachers', component: UserTeacherListComponent, canActivate: [authGuard], },
   { path: 'users/assistants', component: UserAssistantListComponent, canActivate: [authGuard], },
   { path: 'inventory', component: ViewProductsComponent, canActivate: [authGuard], },
-  { path: '**', redirectTo: 'users/students' },
   { path: 'lendings/active', component: LendingActiveComponent},
   { path: 'lendings/finish', component: LendingFinishComponent},
   { path: 'lendings/inactive', component:LendingInactiveComponent},
   { path: 'lending-add', component: LendingAddComponent },
+  { path: '**', redirectTo: 'users/students' },
 
 ];
