@@ -5,9 +5,12 @@
         <span class="navbar-toggler-icon"></span>
       </button>
       <a class="navbar-brand"></a>
-      <div class="d-flex flex-row-reverse">
+      <div class="flex-row-reverse">
+        <div class="dropdown" style="display:inline-block;">
+          <button class="btn navbar-brand" type="button" data-bs-toggle="dropdown" aria-expanded="false"> <i class="bi bi-bell"></i></button>
+          <app-alerts></app-alerts>
+        </div>
         <button class="btn navbar-brand" type="button"><i class="bi bi-person-circle "></i></button>
-        <button class="btn navbar-brand" type="button"><i class="bi bi-bell"></i></button>
       </div>
 
 

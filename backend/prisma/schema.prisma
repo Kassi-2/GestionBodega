@@ -82,16 +82,6 @@ model Lending{
   lendingProducts LendingProduct[] @relation(name: "lendingProducts")
 }
 
-model Alert{
-  id Int @id @default(autoincrement())
-  date DateTime 
-  name String
-  description String
-  state Boolean
-  lendingId Int @unique
-  lending Lending @relation(name: "produces", fields:[lendingId], references: [id])
-}
-
 model LendingProduct {
   lendingId Int
   productId Int
@@ -109,3 +99,28 @@ enum LendingState {
   Inactive
 }
 
+
+model Alert{
+  id Int @id @default(autoincrement())
+  date DateTime 
+  name String
+  description String
+  state Boolean @default(false)
+  lendings AlertLending[]
+}
+
+model AlertLending{
+  alert Alert @relation(fields: [alertId], references: [id], onDelete: Cascade)
+  alertId Int
+  lending Lending @relation(fields: [lendingId], references: [id])
+  lendingId Int
+
+  @@id([alertId, lendingId])
+}
+
+
+model User {
+  mail String @id
+  username String @unique
+  password String
+}

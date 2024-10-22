@@ -79,3 +79,8 @@ export enum UserType {
   Teacher = 'Teacher',
   Assistant = 'Assistant',
 }
+
+export interface UserLogin {
+  username: String;
+  password: String;
+}
