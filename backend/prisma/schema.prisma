@@ -76,7 +76,7 @@ model Lending{
   comments String?
   BorrowerId Int
   borrower Borrower @relation(name:"make", fields:[BorrowerId], references: [id])
-  alert Alert? @relation(name: "produces")
+  alerts AlertLending[]
   teacherId  Int?
   teacher Teacher? @relation(name: "authorizes", fields: [teacherId], references: [id])
   lendingProducts LendingProduct[] @relation(name: "lendingProducts")
