@@ -4,11 +4,20 @@ export interface Lending {
   state: string;
   comments?: string;
   borrowerId: number;
-  borrowerName: string
+  borrower: Borrower;
+  teacher: Teacher;
   teacherId?: number;
-  teacherName?: string;
   lendingProducts: lendingProducts[];
 }
+
+export interface Borrower{
+  name: string;
+}
+
+export interface Teacher{
+  BorrowerId: Borrower;
+}
+
 
 export interface lendingProducts{
   lendingId: number;

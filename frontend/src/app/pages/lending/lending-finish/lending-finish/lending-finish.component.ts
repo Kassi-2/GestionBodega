@@ -65,11 +65,10 @@ export class LendingFinishComponent {
     }
   }
 
-
   filteredList(): Lending[] {
     const filteredLendings = this.lending.filter(
       (lending) =>
-        lending.borrowerName.toLowerCase().includes(this.searchTerm.toLowerCase())
+        lending.borrower.name.toLowerCase().includes(this.searchTerm.toLowerCase())
     );
     return filteredLendings;
   }
@@ -78,12 +77,12 @@ export class LendingFinishComponent {
     const input = event.target as HTMLInputElement;
     const selectedDate = new Date(input.value);
     this.lendingService.lendingForDate(selectedDate).subscribe((lending: Lending[]) => {
-      this.getLending()
+      this.lending = lending;
     });
   }
 
   private getLending(): void {
-    this.lendingService.getLending().subscribe((lending: Lending[]) => {
+    this.lendingService.getLendingFinish().subscribe((lending: Lending[]) => {
       this.lending = lending
     });
   }
@@ -126,7 +125,6 @@ export class LendingFinishComponent {
             timer: 1500,
             showConfirmButton: false,
           });
-          this.getLending()
         });
       } else if (
         result.dismiss === Swal.DismissReason.cancel

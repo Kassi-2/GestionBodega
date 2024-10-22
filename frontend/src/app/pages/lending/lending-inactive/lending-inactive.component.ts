@@ -35,7 +35,7 @@ export class LendingInactiveComponent {
   filteredList(): Lending[] {
     const filteredLendings = this.lending.filter(
       (lending) =>
-        lending.borrowerName.toLowerCase().includes(this.searchTerm.toLowerCase())
+        lending.borrower.name.toLowerCase().includes(this.searchTerm.toLowerCase())
     );
     return filteredLendings;
   }
@@ -49,7 +49,7 @@ export class LendingInactiveComponent {
   }
 
   private getLending(): void {
-    this.lendingService.getLending().subscribe((lending: Lending[]) => {
+    this.lendingService.getLendingInactive().subscribe((lending: Lending[]) => {
       this.lending = lending
     });
   }

@@ -43,14 +43,15 @@ export class LendingActiveComponent {
     const input = event.target as HTMLInputElement;
     const selectedDate = new Date(input.value);
     this.lendingService.lendingForDate(selectedDate).subscribe((lending: Lending[]) => {
-      this.getLending()
+      this.lending = lending;
     });
   }
 
   getLending(): void {
     this.lendingService.getLending().subscribe((lending: Lending[]) => {
-      this.lending = lending
+      this.lending = lending;
       console.log(this.lending)
+      console.log("este es el getLending")
     });
   }
 
@@ -64,7 +65,7 @@ export class LendingActiveComponent {
   filteredList(): Lending[] {
     const filteredLendings = this.lending.filter(
       (lending) =>
-        lending.borrowerName.toLowerCase().includes(this.searchTerm.toLowerCase())
+        lending.borrower.name.toLowerCase().includes(this.searchTerm.toLowerCase())
     );
     return filteredLendings;
   }

@@ -23,8 +23,8 @@ export class LendingService {
     return this.http.get<Lending[]>(`${this.apiUrl}/active-lending`);
   }
 
-  public deleteLending(id:number): Observable<Lending> {
-    return this.http.delete<Lending>(`${this.apiUrl}/lending/${id}`);
+  public deleteLending(id: number): Observable<Lending> {
+    return this.http.delete<Lending>(`${this.apiUrl}/${id}`);
 }
 
   public getFilteredLendings(lending: string): Observable<Lending[]> {

@@ -26,9 +26,9 @@
   </svg>
   <input type="text" [(ngModel)]="searchTerm" placeholder="Buscar..." class="input me-3" style="min-width: 300px" />
 
-  <!-- <form>
+  <form>
     <input type="date" class="form-control" (change)="selectDate($event)">
-  </form> -->
+  </form>
   <div>
 
   </div>
@@ -49,11 +49,11 @@
       @for (lending of filteredList()| slice: (page-1) * pageSize : page * pageSize;track lending;let i = $index) {
       <tr>
         <th scope="row" class="text-center">{{lending.id}}</th>
-        <td class="text-center">{{lending.borrowerName}}</td>
+        <td class="text-center">{{lending.borrower.name}}</td>
         <td class="text-center">{{ lending.date | date:'dd/MM/yyyy HH:mm' }}</td>
         <td class="text-center">
           @if (lending.teacherId != null) {
-            {{lending.teacherName}}
+            {{lending.teacher.BorrowerId.name}}
           }
           @else {
             -
@@ -158,11 +158,11 @@
           @for (lending of lending| slice: (pageLending-1) * pageSizeLending : pageLending * pageSizeLending; track lending; let i = $index) {
           <tr>
             <th scope="row" class="text-center">{{lending.id}}</th>
-            <td class="text-center">{{lending.borrowerName}}</td>
+            <td class="text-center">{{lending.borrower.name}}</td>
             <td class="text-center">{{ lending.date | date:'dd/MM/yyyy HH:mm' }}</td>
             <td class="text-center">
               @if (lending.teacherId != null) {
-                {{lending.teacherName}}
+                {{lending.teacher.BorrowerId.name}}
               }
               @else {
                 -

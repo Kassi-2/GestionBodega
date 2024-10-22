@@ -310,7 +310,7 @@ async getLendingById(id: number): Promise<Lending> {
             }
         }
 
-        const lendingState = data.teacherId ? LendingState.Pending : LendingState.Active;
+        const lendingState = LendingState.Active;
 
     const lending = await this.prisma.lending.create({
         data: {
