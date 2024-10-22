@@ -30,10 +30,10 @@
 @if (currentStep == 1){
 
 
+  <div class="container mb-4">
+    <div class=" align-items-center justify-content-between">
 
-<div class = "container mb-4 justify-content-center"style = "margin-left: 16% ">
-
-  <h5 style="margin-top: 2%; margin-bottom: 1%">Seleccione el
+    <h5 style="margin-top: 2%; margin-bottom: 1%">Seleccione el
     usuario que desee asociar al préstamo:</h5>
 
   <div class="d-flex justify-content-center">
@@ -72,6 +72,8 @@
         </path>
       </svg>
     </div>
+  </div>
+  </div>
   </div>
 
   <div class="list-group container-xl" style="margin-top: 10px;">
@@ -154,7 +156,6 @@
     <button [disabled]="!selectedUser" (click)="stepUp()"
       class="btn btn-primary">Confirmar selección</button>
   </div>
-</div>
 
 
 
@@ -162,11 +163,14 @@
 
 @if (currentStep == 2){
 
-  <div class = "container mb-4 justify-content-center"style = "margin-left: 15% ">
-    <div>
+
+
+  <div class="container mb-4">
+    <div class=" align-items-center justify-content-between">
+
       <button (click)="stepDown()" class="btn btn-primary"
-        style="margin-left: 2%"><i class="bi bi-arrow-left"></i></button>
-    </div>
+       ><i class="bi bi-arrow-left"></i></button>
+
 
     <div class="container">
       <div class="accordion" id="accordionExample">
@@ -202,32 +206,35 @@
               </thead>
               <tbody>
                 @for (product of filteredList() | slice: (pageProducts-1) * pageSize : pageProducts * pageSize; track product; let i = $index) {
-                <tr>
-                  <td>{{ product.id }}</td>
-                  <td>{{ product.name }}</td>
-                  <td>{{ product.stock }}</td>
-                  <td style="width: 150px;">
-                    <div class="d-flex align-items-center">
-                      <button class="btn btn-outline-secondary rounded-circle"
-                        (click)="decrementQuantity(product.id)"
-                        [disabled]="getQuantity(product.id) === 0">-</button>
+                  @if (product.stock != 0) {
+                    <tr>
+                      <td>{{ product.id }}</td>
+                      <td>{{ product.name }}</td>
+                      <td>{{ product.stock }}</td>
+                      <td style="width: 150px;">
+                        <div class="d-flex align-items-center">
+                          <button class="btn btn-outline-secondary rounded-circle"
+                            (click)="decrementQuantity(product.id)"
+                            [disabled]="getQuantity(product.id) === 0">-</button>
 
-                        <input
-                          class="form-control mx-1 text-center"
-                          type="number"
-                          [value]="getQuantity(product.id)"
-                          (input)="onQuantityInput($event, product.id, product.stock)"
-                          min="0"
-                          [max]="product.stock"
-                        />
+                            <input
+                              class="form-control mx-1 text-center"
+                              type="number"
+                              [value]="getQuantity(product.id)"
+                              (input)="onQuantityInput($event, product.id, product.stock)"
+                              min="0"
+                              [max]="product.stock"
+                            />
 
 
-                      <button class="btn btn-outline-secondary rounded-circle"
-                        (click)="incrementQuantity(product.id, product.stock)"
-                        [disabled]="product.stock === 0">+</button>
-                    </div>
-                  </td>
-                </tr>
+                          <button class="btn btn-outline-secondary rounded-circle"
+                            (click)="incrementQuantity(product.id, product.stock)"
+                            [disabled]="product.stock === 0">+</button>
+                        </div>
+                      </td>
+                    </tr>
+                  }
+
                 }
               </tbody>
             </table>
@@ -259,6 +266,7 @@
       }
     </div>
   </div>
+  </div>
 
 
 
@@ -267,6 +275,7 @@
 @if (currentStep == 3) {
 
 <div>
+
   <button (click)="stepDown()" class="btn btn-primary"
     style="margin-left: 8%"><i class="bi bi-arrow-left"></i></button>
 </div>
