@@ -18,13 +18,15 @@ export interface Teacher{
   BorrowerId: Borrower;
 }
 
-
 export interface lendingProducts{
-  lendingId: number;
-  productId: number;
+  amount: number;
+  product: product;
+}
+
+export interface product{
+  id: number;
   name: string;
   stock: number;
-  amount: number;
 }
 
 export interface newLending {

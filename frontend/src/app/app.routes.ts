@@ -59,6 +59,8 @@ export const routes: Routes = [
       },
     ],
   },
+
   { path: 'auth/login', component: LoginComponent, canActivate: [loginGuard] },
   { path: '**', redirectTo: 'users/students' },
+
 ];

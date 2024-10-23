@@ -87,11 +87,11 @@
       </div>
       <div class="modal-body">
         <p><strong>ID:</strong> {{ selectedLending?.id }}</p>
-        <p><strong>Nombre del prestatario:</strong> {{ selectedLending?.borrowerName }}</p>
+        <p><strong>Nombre del prestatario:</strong> {{ selectedLending?.borrower.name }}</p>
         <p><strong>Fecha:</strong> {{ selectedLending?.date | date:'dd/MM/yyyy HH:mm' }}</p>
         <p><strong>Profesor asignado:</strong>
           @if (selectedLending?.teacherId != null) {
-              {{ selectedLending?.teacherName }}
+              {{ selectedLending?.teacher.BorrowerId.name }}
           }
           @else {
             No existe un profesor asignado

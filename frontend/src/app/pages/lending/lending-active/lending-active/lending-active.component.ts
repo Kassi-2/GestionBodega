@@ -51,6 +51,10 @@ export class LendingActiveComponent {
     this.lendingService.getLending().subscribe((lending: Lending[]) => {
       this.lending = lending;
       console.log(this.lending)
+      this.lending.forEach(l => {
+        console.log(`Préstamo ID: ${l.id}, Productos prestados:`);
+        console.log(l.lendingProducts); // Aquí deberías ver los productos asociados al préstamo
+      });
       console.log("este es el getLending")
     });
   }
