@@ -1,4 +1,4 @@
-import { contains, Lending, lendingProducts, newLending } from './../models/lending.interface';
+import { contains, Lending, LendingProduct, newLending } from './../models/lending.interface';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
@@ -22,6 +22,10 @@ export class LendingService {
     return this.http.get<Lending[]>(`${this.apiUrl}/active-lending`);
   }
 
+  public getLendingForEdit(id: number): Observable<Lending[]> {
+    return this.http.get<Lending[]>(`${this.apiUrl}/lending-id/${id}`);
+  }
+
   public deleteLending(id: number): Observable<Lending> {
     return this.http.delete<Lending>(`${this.apiUrl}/${id}`);
 }
@@ -38,12 +42,12 @@ export class LendingService {
     return this.http.get<Lending[]>(`${this.apiUrl}/eliminated-lending`);
   }
 
-  public lendingForDate(date:Date): Observable<Lending[]> {
+  public lendingForDate(date: string): Observable<Lending[]> {
     return this.http.get<Lending[]>(`${this.apiUrl}/lending-create-date/${date}`);
-}
+  }
 
-  public lendingFinish(id: number, comment: string): Observable<Lending> {
-    return this.http.put<Lending>(`${this.apiUrl}/finalize-lending/${id}`, comment);
+  public lendingFinish(id: number, comments: string): Observable<Lending> {
+    return this.http.put<Lending>(`${this.apiUrl}/finalize-lending/${id}`, {comments: comments});
   }
 
   public addLending(lending: newLending) {

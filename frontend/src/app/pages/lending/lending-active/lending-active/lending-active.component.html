@@ -42,13 +42,13 @@
         </td>
         <td class="text-center">
           <button type="button" class="btn btn-outline-success me-2"
-          (click)="openLendingDetails(lending)"
+          (click)="openLendingDetails(lending.id)"
           data-bs-toggle="modal"
           data-bs-target="#exampleModal">
           <i class="bi bi-info-circle"></i>
           </button>
           <button class="btn btn-outline-danger"
-          (click)="openLendingDetails(lending)"
+          (click)="openLendingDetails(lending.id)"
           data-bs-toggle="modal"
           data-bs-target="#modalFinishLending">
             <i class="bi bi-x-circle"></i> Finalizar
@@ -94,7 +94,7 @@
           <tbody>
             @for (lending of selectedLending?.lendingProducts; track lending; let i = $index) {
             <tr>
-              <td class="text-center">{{selectedLending?.lendingProducts[i].name}}</td>
+              <td class="text-center">{{selectedLending?.lendingProducts[i].product.name}}</td>
               <td class="text-center">{{selectedLending?.lendingProducts[i].amount}}</td>
             </tr>
             }
@@ -140,7 +140,7 @@
             <tbody>
               @for (lending of selectedLending?.lendingProducts; track lending; let i = $index) {
               <tr class="align-middle">
-                <td class="text-center">{{ selectedLending?.lendingProducts[i].name}}</td>
+                <td class="text-center">{{ selectedLending?.lendingProducts[i].product.name}}</td>
                 <td class="text-center">{{ selectedLending?.lendingProducts[i].amount}}</td>
               </tr>
               }

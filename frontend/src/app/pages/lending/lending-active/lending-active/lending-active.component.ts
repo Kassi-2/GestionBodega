@@ -42,7 +42,8 @@ export class LendingActiveComponent {
   selectDate(event: Event): void {
     const input = event.target as HTMLInputElement;
     const selectedDate = new Date(input.value);
-    this.lendingService.lendingForDate(selectedDate).subscribe((lending: Lending[]) => {
+    const date = `${selectedDate.getFullYear()}-${selectedDate.getMonth()+1}-${selectedDate.getDate()}`
+    this.lendingService.lendingForDate(date).subscribe((lending: Lending[]) => {
       this.lending = lending;
     });
   }
@@ -50,12 +51,6 @@ export class LendingActiveComponent {
   getLending(): void {
     this.lendingService.getLending().subscribe((lending: Lending[]) => {
       this.lending = lending;
-      console.log(this.lending)
-      this.lending.forEach(l => {
-        console.log(`Préstamo ID: ${l.id}, Productos prestados:`);
-        console.log(l.lendingProducts); // Aquí deberías ver los productos asociados al préstamo
-      });
-      console.log("este es el getLending")
     });
   }
 
@@ -80,15 +75,18 @@ export class LendingActiveComponent {
   }
 
 
-  openLendingDetails(lending: any) {
-    this.resetLending = lending;
-    this.selectedLending = { ...lending };
-    this.getAllTeachers();
+  openLendingDetails(id: number) {
+    this.lendingService.getLendingForEdit(id).subscribe((lending: Lending[]) => {
+      this.resetLending = lending;
+      this.selectedLending = { ...lending };
+      this.getAllTeachers();
+      console.log(this.selectedLending)
+    });
   }
 
-  finishLending(idLending: number, comment: string): void {
+  finishLending(idLending: number, comments: string): void {
     console.log(idLending)
-    console.log(comment)
+    console.log(comments)
     const swalWithBootstrapButtons = Swal.mixin({
       customClass: {
         confirmButton: "btn btn-success",
@@ -106,7 +104,7 @@ export class LendingActiveComponent {
       reverseButtons: true
     }).then((result) => {
       if (result.isConfirmed) {
-        this.lendingService.lendingFinish(idLending, comment).subscribe(() => {
+        this.lendingService.lendingFinish(idLending, comments).subscribe(() => {
         this.lending = this.lending.filter(lending => lending.id !== idLending);
         swalWithBootstrapButtons.fire({
           title: "Finalizado!",

@@ -1,5 +1,5 @@
 import { SearchService } from './../../../core/services/search.service';
-import { contains, Lending, lendingProducts, newLending } from './../../../core/models/lending.interface';
+import { contains, Lending, LendingProduct, newLending } from './../../../core/models/lending.interface';
 import { ProductService } from './../../../core/services/product.service';
 import { LendingService } from './../../../core/services/lending.service';
 import { Component, HostListener, OnInit } from '@angular/core';

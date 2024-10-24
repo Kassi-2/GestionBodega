@@ -43,8 +43,9 @@ export class LendingInactiveComponent {
   selectDate(event: Event): void {
     const input = event.target as HTMLInputElement;
     const selectedDate = new Date(input.value);
-    this.lendingService.lendingForDate(selectedDate).subscribe((lending: Lending[]) => {
-      this.getLending()
+    const date = `${selectedDate.getFullYear()}-${selectedDate.getMonth()}-${selectedDate.getDate()}`
+    this.lendingService.lendingForDate(date).subscribe((lending: Lending[]) => {
+      this.lending = lending;
     });
   }
 
@@ -60,9 +61,11 @@ export class LendingInactiveComponent {
     });
   }
 
-  public openLendingDetails(lending: any) {
-    this.selectedLending = lending;
-    this.getAllTeachers();
+  openLendingDetails(id: number) {
+    this.lendingService.getLendingForEdit(id).subscribe((lending: Lending[]) => {
+      this.selectedLending = { ...lending };
+      this.getAllTeachers();
+    });
   }
 
 }

@@ -7,7 +7,7 @@ export interface Lending {
   borrower: Borrower;
   teacher: Teacher;
   teacherId?: number;
-  lendingProducts: lendingProducts[];
+  lendingProducts: LendingProduct[];
 }
 
 export interface Borrower{
@@ -18,7 +18,7 @@ export interface Teacher{
   BorrowerId: Borrower;
 }
 
-export interface lendingProducts{
+export interface LendingProduct{
   amount: number;
   product: product;
 }
