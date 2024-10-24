@@ -44,7 +44,7 @@ export class AuthService {
 
   private isTokenExpired(token: string): boolean {
     const decodedToken: any = jwtDecode(token);
-    const currentTime = Math.floor(Date.now() / 1000); // Obtener tiempo actual en segundos
+    const currentTime = Math.floor(Date.now() / 1000);
     return decodedToken.exp < currentTime;
   }
 

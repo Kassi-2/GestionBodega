@@ -62,6 +62,9 @@ export class AlertsComponent implements OnInit, OnDestroy {
           ).bootstrap.Toast.getOrCreateInstance(toastLiveExample);
           toastBootstrap.show();
         }
+        setTimeout(() => {
+          window.location.reload();
+        }, 10000);
         this.resetDailyFlagAtMidnight();
       },
       error: (error) => {

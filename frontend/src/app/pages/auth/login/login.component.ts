@@ -29,7 +29,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.authService.login(this.loginForm.value).subscribe({
       next: (result) => {
         alert('Inicio de sesion correctamente');
-        this.router.navigateByUrl('users/students');
+        this.router.navigateByUrl('lendings/active');
       },
       error: (error) =>{
         alert(error.message);

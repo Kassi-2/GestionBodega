@@ -15,6 +15,11 @@ import { MainLayoutComponent } from './pages/layouts/main-layout/main-layout.com
 export const routes: Routes = [
   {
     path: '',
+    redirectTo: 'lendings/active',
+    pathMatch: 'full',
+  },
+  {
+    path: '',
     component: MainLayoutComponent,
     children: [
       {
@@ -58,9 +63,9 @@ export const routes: Routes = [
         canActivate: [authGuard],
       },
     ],
+    canActivate: [authGuard]
   },
 
   { path: 'auth/login', component: LoginComponent, canActivate: [loginGuard] },
-  { path: '**', redirectTo: 'users/students' },
-
+  { path: '**', redirectTo: 'lendings/active' },
 ];

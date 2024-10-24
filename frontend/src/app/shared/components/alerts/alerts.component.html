@@ -4,7 +4,7 @@
     <div class="overflow-auto" style="max-height: 350px;">
 @for (alert of alerts; track $index) {
     <li>
-        <a href="/inventory" class="d-flex p-2 my-2 text-decoration-none text-body-secondary rounded" [ngStyle]="{'background-color': alert.state ? '' : '#aaaaaa'}" (click)="markAsViewed(alert.id)">
+        <a href="/lendings/active" class="d-flex p-2 my-2 text-decoration-none text-body-secondary rounded" [ngStyle]="{'background-color': alert.state ? '' : '#aaaaaa'}" (click)="markAsViewed(alert.id)">
             <div>
                 <div class="d-flex justify-content-between">
                     <h6>{{alert.name}}</h6>
