@@ -206,7 +206,6 @@
               </thead>
               <tbody>
                 @for (product of filteredList() | slice: (pageProducts-1) * pageSize : pageProducts * pageSize; track product; let i = $index) {
-                  @if (product.stock != 0) {
                     <tr>
                       <td>{{ product.id }}</td>
                       <td>{{ product.name }}</td>
@@ -235,7 +234,7 @@
                     </tr>
                   }
 
-                }
+
               </tbody>
             </table>
 

@@ -215,7 +215,7 @@ export class ViewProductsComponent implements OnInit {
           Swal.fire({
             position: 'center',
             icon: 'success',
-            title: 'El producto se actualizo con exito!',
+            title: '¡El producto se actualizó con éxito!',
             showConfirmButton: false,
             timer: 1500,
           });

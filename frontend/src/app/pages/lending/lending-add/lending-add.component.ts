@@ -168,7 +168,7 @@ export class LendingAddComponent implements OnInit {
   }
 
   getProducts(): void {
-    this.productService.getProducts().subscribe((products: Product[]) => {
+    this.productService.getAvailableProducts().subscribe((products: Product[]) => {
       this.products = products;
     });
   }

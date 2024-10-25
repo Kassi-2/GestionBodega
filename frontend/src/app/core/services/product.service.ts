@@ -18,6 +18,10 @@ export class ProductService {
   getProducts(): Observable<Product[]> {
     return this.http.get<Product[]>(`${this.apiUrl}/active-name-asc`);
   }
+
+  getAvailableProducts(): Observable<Product[]> {
+    return this.http.get<Product[]>(`${this.apiUrl}/available`);
+  }
   /**
    *Función que recibe un producto y actualiza los cambios realizados en la base de datos.
    *
@@ -59,6 +63,8 @@ export class ProductService {
   addProduct(product: NewProduct) {
     return this.http.post(`${this.apiUrl}`, product);
   }
+
+
   /**
    *Función que recibe un tipo de ordenamiento y devuelve un listado de los productos acorde al ordenamiento solicitado.
    *
