@@ -1,5 +1,10 @@
 import { SearchService } from './../../../core/services/search.service';
-import { contains, Lending, LendingProduct, newLending } from './../../../core/models/lending.interface';
+import {
+  contains,
+  Lending,
+  LendingProduct,
+  newLending,
+} from './../../../core/models/lending.interface';
 import { ProductService } from './../../../core/services/product.service';
 import { LendingService } from './../../../core/services/lending.service';
 import { Component, HostListener, OnInit } from '@angular/core';
@@ -38,7 +43,7 @@ export class LendingAddComponent implements OnInit {
   public pageTeachers = 1;
   public pageAssistants = 1;
   public pageStudents = 1;
-  public pageProducts = 1
+  public pageProducts = 1;
   public pageSize = 15;
   selectedUserType: string = 'student';
   selectedUser: User | null = null;
@@ -63,7 +68,7 @@ export class LendingAddComponent implements OnInit {
   constructor(
     private LendingService: LendingService,
     private productService: ProductService,
-    private userService: UserService,
+    private userService: UserService
   ) {}
 
   ngOnInit(): void {
@@ -91,28 +96,46 @@ export class LendingAddComponent implements OnInit {
       }
     );
 
-
     this.subscriptions.add(this.getAllStudents());
     this.subscriptions.add(this.getAllTeachers());
     this.subscriptions.add(this.getAllAssistants());
     this.subscriptions.add(this.getAllDegrees());
     this.subscriptions.add(this.getProducts());
   }
-
+  /**
+   * Función para obtener los productos almacenados.
+   *
+   * @return {*}  {Product[]}
+   * @memberof LendingAddComponent
+   */
   filteredList(): Product[] {
     const filteredProducts = this.products.filter(
       (product) =>
-        product.name.toLowerCase().includes(this.searchTermProducts.toLowerCase()) ||
+        product.name
+          .toLowerCase()
+          .includes(this.searchTermProducts.toLowerCase()) ||
         product.id.toString().includes(this.searchTermProducts.toLowerCase())
     );
     return filteredProducts;
   }
-
+  /**
+   * Función para buscar el stock de un producto según su ID.
+   *
+   * @param {number} productId
+   * @return {*}  {number}
+   * @memberof LendingAddComponent
+   */
   getQuantity(productId: number): number {
     const item = this.contains.find((c) => c.productId === productId);
     return item ? item.amount : 0;
   }
-
+  /**
+   * Función que incrementa el valor del stock de un producto en específico.
+   *
+   * @param {number} productId
+   * @param {number} stock
+   * @memberof LendingAddComponent
+   */
   incrementQuantity(productId: number, stock: number) {
     let productContains = this.contains.find((q) => q.productId === productId);
 
@@ -131,9 +154,14 @@ export class LendingAddComponent implements OnInit {
       }
     }
 
-     this.LendingService.setContains(this.contains);
+    this.LendingService.setContains(this.contains);
   }
-
+  /**
+   * Función que decrementa el stock de un producto en específico.
+   *
+   * @param {number} productId
+   * @memberof LendingAddComponent
+   */
   decrementQuantity(productId: number) {
     let productContains = this.contains.find((q) => q.productId === productId);
 
@@ -148,44 +176,76 @@ export class LendingAddComponent implements OnInit {
 
     this.LendingService.setContains(this.contains);
   }
-
+  /**
+   * Función para actualizar el stock visual del producto.
+   *
+   * @param {number} productId
+   * @param {number} change
+   * @memberof LendingAddComponent
+   */
   updateVisualStock(productId: number, change: number) {
     const product = this.products.find((p) => p.id === productId);
     if (product) {
       product.stock += change;
     }
   }
-
-  decreaseStock(productId: number) {
-    const product = this.products.find((p) => p.id === productId);
-    if (product && product.stock > 0) {
-      product.stock -= 1;
-    }
-  }
-
+  /**
+   * Función para verificar si el usuario ha seleccionado productos para poder seguir al siguiente paso en la creación del préstamo.
+   *
+   * @return {*}  {boolean}
+   * @memberof LendingAddComponent
+   */
   hasSelectedProduct(): boolean {
     return this.contains.some((item) => item.amount >= 0);
   }
-
+  /**
+   * Función para obtener los productos registrados en la base de datos.
+   *
+   * @memberof LendingAddComponent
+   */
   getProducts(): void {
-    this.productService.getAvailableProducts().subscribe((products: Product[]) => {
-      this.products = products;
-    });
+    this.productService
+      .getAvailableProducts()
+      .subscribe((products: Product[]) => {
+        this.products = products;
+      });
   }
-
+  /**
+   * Función para almacenar el usuario seleccionado.
+   *
+   * @param {User} user
+   * @memberof LendingAddComponent
+   */
   selectUser(user: User) {
     this.selectedUser = user;
     this.LendingService.setSelectedUser(user);
   }
-
+  /**
+   * Función para almacenar el profesor seleccionado.
+   *
+   * @param {UserTeacher} teacher
+   * @memberof LendingAddComponent
+   */
   selectTeacher(teacher: UserTeacher) {
     this.selectedTeacher = teacher;
   }
-
+  /**
+   * Función para almacenar el tipo de usuario seleccionado.
+   *
+   * @param {string} type
+   * @memberof LendingAddComponent
+   */
   selectUserType(type: string) {
     this.selectedUserType = type;
   }
-
+  /**
+   * Función que verifica que el stock ingresado manualmente esté dentro de lo permitido. Luego, lo almacena.
+   *
+   * @param {Event} event
+   * @param {number} productId
+   * @param {number} stock
+   * @memberof LendingAddComponent
+   */
   onQuantityInput(event: Event, productId: number, stock: number): void {
     const input = event.target as HTMLInputElement;
     let newQuantity = input.valueAsNumber;
@@ -200,13 +260,15 @@ export class LendingAddComponent implements OnInit {
         text: 'La cantidad ingresada excede el stock disponible.',
         icon: 'error',
         timer: 1500,
-        showConfirmButton: false
+        showConfirmButton: false,
       });
       newQuantity = stock;
       input.value = stock.toString();
     }
 
-    const productContains = this.contains.find(q => q.productId === productId);
+    const productContains = this.contains.find(
+      (q) => q.productId === productId
+    );
 
     if (productContains) {
       const previousQuantity = productContains.amount;
@@ -233,7 +295,13 @@ export class LendingAddComponent implements OnInit {
 
     this.LendingService.setContains(this.contains);
   }
-
+  /**
+   * Función que obtiene la carrera según el código.
+   *
+   * @param {string} code
+   * @return {*}
+   * @memberof LendingAddComponent
+   */
   getDegree(code: string) {
     if (!this.degrees) {
       return 'Desconocido';
@@ -241,21 +309,36 @@ export class LendingAddComponent implements OnInit {
     const degree = this.degrees.find((d) => d.code === code);
     return degree?.name || 'Desconocido';
   }
-
+  /**
+   * Función que almacena todos los usuarios registrados de tipo estudiante.
+   *
+   * @private
+   * @memberof LendingAddComponent
+   */
   private getAllStudents() {
     this.userService.getAllStudents().subscribe((students: UserStudent[]) => {
       this.students = students;
       this.filteredStudents = students;
     });
   }
-
+  /**
+   * Función que almacena todos los usuarios registrados de tipo profesor.
+   *
+   * @private
+   * @memberof LendingAddComponent
+   */
   private getAllTeachers() {
     this.userService.getAllTeachers().subscribe((teachers: UserTeacher[]) => {
       this.teachers = teachers;
       this.filteredTeachers = teachers;
     });
   }
-
+  /**
+   * Función que almacena todos los usuarios registrados de tipo asistente.
+   *
+   * @private
+   * @memberof LendingAddComponent
+   */
   private getAllAssistants() {
     this.userService
       .getAllAssistants()
@@ -264,25 +347,43 @@ export class LendingAddComponent implements OnInit {
         this.filteredAssistants = assistants;
       });
   }
-
+  /**
+   * Función para obtener todas las carreras registradas.
+   *
+   * @private
+   * @memberof LendingAddComponent
+   */
   private getAllDegrees() {
     this.userService.getAllDegrees().subscribe((degrees: Degree[]) => {
       this.degrees = degrees;
     });
   }
-
+  /**
+   * Función para avanzar un paso en la creación de un préstamo.
+   *
+   * @memberof LendingAddComponent
+   */
   stepUp() {
     this.currentStep++;
-    this.searchTermProducts = ''
-    this.searchTermUsers = ''
+    this.searchTermProducts = '';
+    this.searchTermUsers = '';
     this.LendingService.setCurrentStep(this.currentStep);
   }
-
+  /**
+   * Función para retroceder un paso en la creación de un préstamo.
+   *
+   * @memberof LendingAddComponent
+   */
   stepDown() {
     this.currentStep--;
     this.LendingService.setCurrentStep(this.currentStep);
   }
-
+  /**
+   * Función para verificar la creación del préstamo y lo envía al backend para almacenarlo en la base de datos mediante el servicio.
+   *
+   * @return {*}
+   * @memberof LendingAddComponent
+   */
   endAddLending() {
     if (!this.selectedUser) {
       console.error('No user selected.');
@@ -296,9 +397,7 @@ export class LendingAddComponent implements OnInit {
         teacherId: this.selectedTeacher?.id,
         products: this.contains,
       };
-    }
-
-    else {
+    } else {
       this.lending = {
         comments: this.comments,
         BorrowerId: this.selectedUser.id,
@@ -309,7 +408,7 @@ export class LendingAddComponent implements OnInit {
 
     this.currentStep = 1;
 
-    console.log(this.lending)
+    console.log(this.lending);
 
     const swalWithBootstrapButtons = Swal.mixin({
       customClass: {
@@ -327,28 +426,28 @@ export class LendingAddComponent implements OnInit {
           icon: 'success',
           timer: 1500,
           showConfirmButton: false,
+        });
 
-      })
+        this.initializeLendingForm();
+      },
+      error: (error) => {
+        swalWithBootstrapButtons.fire({
+          title: 'Error',
+          text: 'El préstamo no se ha guardado, revise nuevamente la información ingresada o solicite ayuda.',
+          icon: 'error',
+          timer: 1500,
+          showConfirmButton: false,
+        });
 
-      this.initializeLendingForm();
-
-    },
-    error: (error) => {
-      swalWithBootstrapButtons.fire({
-        title: 'Error',
-        text: 'El préstamo no se ha guardado, revise nuevamente la información ingresada o solicite ayuda.',
-        icon: 'error',
-        timer: 1500,
-        showConfirmButton: false,
-      })
-
-      console.log(error)
-
-    },
-
+        console.log(error);
+      },
     });
   }
-
+  /**
+   * Función para buscar según el tipo de usuario en la lista de usuarios.
+   *
+   * @memberof LendingAddComponent
+   */
   onSearch() {
     const searchTermLower = this.searchTermUsers.toLowerCase();
 
@@ -381,12 +480,22 @@ export class LendingAddComponent implements OnInit {
     this.pageTeachers = 1;
   }
 
-
+  /**
+   * Función para obtener la información de un producto mediante su ID.
+   *
+   * @param {number} productId
+   * @return {*}  {(Product | undefined)}
+   * @memberof LendingAddComponent
+   */
   getProductById(productId: number): Product | undefined {
-    return this.products.find(product => product.id === productId);
+    return this.products.find((product) => product.id === productId);
   }
 
-
+  /**
+   * Función para resetear las variables usadas.
+   *
+   * @memberof LendingAddComponent
+   */
   initializeLendingForm() {
     this.currentStep = 1;
     this.comments = '';
@@ -396,7 +505,11 @@ export class LendingAddComponent implements OnInit {
     this.LendingService.setContains(null);
     this.LendingService.setSelectedUser(null);
   }
-
+  /**
+   * Función para cancelar el proceso de creación del préstamo y reiniciar las variables.
+   *
+   * @memberof LendingAddComponent
+   */
   cancel() {
     this.initializeLendingForm();
     this.LendingService.setCurrentStep(1);
