@@ -32,6 +32,7 @@ export class LendingInactiveComponent {
     this.getLending();
   }
 
+  // Función para poder ver los prestamos eliminados filtrados por nombre
   filteredList(): Lending[] {
     const filteredLendings = this.lending.filter(
       (lending) =>
@@ -40,6 +41,7 @@ export class LendingInactiveComponent {
     return filteredLendings;
   }
 
+  // Funcion para poder mostrar prestamos eliminados por fecha
   selectDate(event: Event): void {
     const input = event.target as HTMLInputElement;
     const selectedDate = new Date(input.value);
@@ -49,18 +51,21 @@ export class LendingInactiveComponent {
     });
   }
 
+  // Funcion para poder mostrar todos los prestamos eliminados
   private getLending(): void {
     this.lendingService.getLendingInactive().subscribe((lending: Lending[]) => {
       this.lending = lending
     });
   }
 
+  // Función para poder mostrar todos los profesores
   private getAllTeachers() {
     this.userService.getAllTeachers().subscribe((teachers: UserTeacher[]) => {
       this.teachers = teachers;
     });
   }
 
+  // Función para mostrar los detalles del prestamo
   openLendingDetails(id: number) {
     this.lendingService.getLendingForEdit(id).subscribe((lending: Lending[]) => {
       this.selectedLending = { ...lending };

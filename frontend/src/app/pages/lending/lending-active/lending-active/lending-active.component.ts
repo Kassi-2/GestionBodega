@@ -39,6 +39,7 @@ export class LendingActiveComponent {
 
   }
 
+  // Funcion para poder mostrar prestamos activos por fecha
   selectDate(event: Event): void {
     const input = event.target as HTMLInputElement;
     const selectedDate = new Date(input.value);
@@ -48,12 +49,14 @@ export class LendingActiveComponent {
     });
   }
 
+  // Funcion para poder mostrar todos los prestamos activos
   getLending(): void {
     this.lendingService.getLending().subscribe((lending: Lending[]) => {
       this.lending = lending;
     });
   }
 
+  // Función para poder mostrar todos los profesores
   private getAllTeachers() {
     this.userService.getAllTeachers().subscribe((teachers: UserTeacher[]) => {
       this.teachers = teachers;
@@ -61,6 +64,7 @@ export class LendingActiveComponent {
     });
   }
 
+  // Función para poder ver los prestamos activos filtrados por nombre
   filteredList(): Lending[] {
     const filteredLendings = this.lending.filter(
       (lending) =>
@@ -69,12 +73,13 @@ export class LendingActiveComponent {
     return filteredLendings;
   }
 
+  // Función para obtener el profesor asignado a un prestamos
   selectTeacher(teacher: any) {
     this.selectedLending.teacherId = teacher.rut;
     this.selectedLending.teacherName = teacher.name;
   }
 
-
+  // Función para mostrar los detalles del prestamos
   openLendingDetails(id: number) {
     this.lendingService.getLendingForEdit(id).subscribe((lending: Lending[]) => {
       this.resetLending = lending;
@@ -84,6 +89,7 @@ export class LendingActiveComponent {
     });
   }
 
+  // Función para poder finalizar un prestamo activo
   finishLending(idLending: number, comments: string): void {
     console.log(idLending)
     console.log(comments)

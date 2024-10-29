@@ -39,14 +39,17 @@ export class LendingFinishComponent {
     this.getLending();
   }
 
+  // Función para poder ocultar los prestamos finalizados
   closeLendingList() {
     this.showList = false;
   }
 
+  // Función para poder mandar la informacion del input a la funcion handleSubmit
   onEnterPress() {
     this.handleSubmit();
   }
 
+  // Función para poder ver prestamos finalizados por una busqueda profunda
   handleSubmit() {
     if (this.inputValue.trim()) {
       console.log('Texto enviado:', this.inputValue);
@@ -65,6 +68,7 @@ export class LendingFinishComponent {
     }
   }
 
+  // Función para poder ver los prestamos finalizados filtrados por nombre
   filteredList(): Lending[] {
     const filteredLendings = this.lending.filter(
       (lending) =>
@@ -73,6 +77,7 @@ export class LendingFinishComponent {
     return filteredLendings;
   }
 
+  // Funcion para poder mostrar prestamos finalizados por fecha
   selectDate(event: Event): void {
     const input = event.target as HTMLInputElement;
     const selectedDate = new Date(input.value);
@@ -82,6 +87,7 @@ export class LendingFinishComponent {
     });
   }
 
+  // Funcion para poder mostrar todos los prestamos finalizados
   private getLending(): void {
     this.lendingService.getLendingFinish().subscribe((lending: Lending[]) => {
       this.lending = lending
@@ -89,12 +95,14 @@ export class LendingFinishComponent {
     });
   }
 
+  // Función para poder mostrar todos los profesores
   private getAllTeachers() {
     this.userService.getAllTeachers().subscribe((teachers: UserTeacher[]) => {
       this.teachers = teachers;
     });
   }
 
+  // Función para mostrar los detalles del prestamo
   openLendingDetails(id: number) {
     this.lendingService.getLendingForEdit(id).subscribe((lending: Lending[]) => {
       this.selectedLending = { ...lending };
@@ -103,6 +111,7 @@ export class LendingFinishComponent {
     });
   }
 
+  // Función para poder eliminar un prestamo finalizado
   public deleteLending(idLending: number): void {
     const swalWithBootstrapButtons = Swal.mixin({
       customClass: {
