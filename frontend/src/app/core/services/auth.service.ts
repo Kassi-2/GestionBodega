@@ -12,6 +12,15 @@ export class AuthService {
   constructor(private http: HttpClient) {}
   private apiUrl = 'http://localhost:3000/auth';
 
+  /**
+   * Inicia sesión para un usuario.
+   * Envía una solicitud POST al servidor con las credenciales del usuario.
+   * Almacena el token de acceso en el almacenamiento local si la autenticación es exitosa.
+   *
+   * @param {UserLogin} user - Objeto con las credenciales de inicio de sesión.
+   * @return {*}  {Observable<any>}
+   * @memberof AuthService
+   */
   public login(user: UserLogin) {
     return this.http.post<any>(`${this.apiUrl}/login`, user).pipe(
       tap((response) => {
@@ -20,6 +29,14 @@ export class AuthService {
     );
   }
 
+  /**
+   * Verifica si el usuario ha iniciado sesión.
+   * Comprueba si hay un token en el almacenamiento local y si no ha expirado.
+   * Si el token ha expirado, se elimina automáticamente.
+   *
+   * @return {*}  {boolean} - `true` si el usuario está autenticado y el token es válido; de lo contrario, `false`.
+   * @memberof AuthService
+   */
   public isLoggedIn(): boolean {
     const token = localStorage.getItem('token');
     if (!token) {
@@ -34,6 +51,13 @@ export class AuthService {
     return true;
   }
 
+  /**
+   * Cierra la sesión del usuario.
+   * Elimina el token de autenticación del almacenamiento local.
+   *
+   * @return {*}  {boolean} - `true` si el token existía y fue eliminado; `false` si no había token.
+   * @memberof AuthService
+   */
   public logout(): boolean {
     if (localStorage.getItem('token')) {
       localStorage.removeItem('token');
@@ -42,12 +66,28 @@ export class AuthService {
     return false;
   }
 
+  /**
+   * Verifica si el token de autenticación ha expirado.
+   * Decodifica el token y compara el tiempo actual con el tiempo de expiración del token.
+   *
+   * @private
+   * @param {string} token - El token JWT a verificar.
+   * @return {*}  {boolean} - `true` si el token ha expirado; `false` si el token es válido.
+   * @memberof AuthService
+   */
   private isTokenExpired(token: string): boolean {
     const decodedToken: any = jwtDecode(token);
     const currentTime = Math.floor(Date.now() / 1000);
     return decodedToken.exp < currentTime;
   }
 
+  /**
+   * Obtiene el token de autenticación almacenado.
+   * Recupera el token JWT del almacenamiento local si está presente.
+   *
+   * @return {*}  {(string | null)} - El token JWT si está presente; `null` si no hay token almacenado.
+   * @memberof AuthService
+   */
   public getToken() {
     const token = localStorage.getItem('token');
     return token;

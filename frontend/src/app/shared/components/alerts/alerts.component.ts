@@ -33,12 +33,25 @@ export class AlertsComponent implements OnInit, OnDestroy {
     description: '',
   };
 
+  /**
+   * Obtiene todas las alertas a través del servicio AlertService y las asigna al arreglo `alerts`.
+   *
+   * @private
+   * @memberof AlertsComponent
+   */
   private getAllAlerts() {
     this.alertService.getAllAlert().subscribe((alerts: Alert[]) => {
       this.alerts = alerts;
     });
   }
 
+  /**
+   * Configura un temporizador para enviar una alerta automáticamente cada día a las 17:00.
+   * Realiza una verificación cada minuto para comprobar si es necesario enviar la alerta.
+   *
+   * @private
+   * @memberof AlertsComponent
+   */
   private scheduleDailyAlert() {
     const checkTime = () => {
       const now = new Date();
@@ -50,6 +63,13 @@ export class AlertsComponent implements OnInit, OnDestroy {
     setInterval(checkTime, 60000);
   }
 
+  /**
+   * Envía una alerta usando el servicio AlertService y muestra un toast de notificación.
+   * Establece `hasAlertBeenSentToday` en `true` y recarga la página después de 10 segundos.
+   *
+   * @private
+   * @memberof AlertsComponent
+   */
   private sendAlert() {
     this.alertService.createAlert().subscribe({
       next: (result) => {
@@ -74,6 +94,12 @@ export class AlertsComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Restablece el indicador `hasAlertBeenSentToday` a medianoche para permitir una nueva alerta al día siguiente.
+   *
+   * @private
+   * @memberof AlertsComponent
+   */
   private resetDailyFlagAtMidnight() {
     const now = new Date();
     const timeUntilMidnight = (24 - now.getHours()) * 60 * 60 * 1000;
@@ -82,6 +108,14 @@ export class AlertsComponent implements OnInit, OnDestroy {
     }, timeUntilMidnight);
   }
 
+  /**
+   * Calcula el número de días transcurridos desde la fecha de una alerta dada.
+   * Devuelve una cadena indicando "Hoy", "Hace 1 día" o "Hace n días".
+   *
+   * @param {Date} alertDate - Fecha de la alerta.
+   * @return {string} - Cadena con la cantidad de días desde la alerta.
+   * @memberof AlertsComponent
+   */
   public getDaysAgo(alertDate: Date): string {
     const now = new Date();
     const alertDateTime = new Date(alertDate).getTime();
@@ -100,6 +134,12 @@ export class AlertsComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Marca una alerta como vista usando el servicio AlertService.
+   *
+   * @param {number} alertId - ID de la alerta que se va a marcar como vista.
+   * @memberof AlertsComponent
+   */
   public markAsViewed(alertId: number) {
     this.alertService.markAlertAsViewed(alertId).subscribe({
       next: (response) => {},
@@ -109,6 +149,12 @@ export class AlertsComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Elimina una alerta mediante el servicio AlertService y actualiza la lista de alertas localmente.
+   *
+   * @param {number} alertId - ID de la alerta que se va a eliminar.
+   * @memberof AlertsComponent
+   */
   public deleteAlert(alertId: number) {
     this.alertService.deleteAlert(alertId).subscribe({
       next: (response) => {

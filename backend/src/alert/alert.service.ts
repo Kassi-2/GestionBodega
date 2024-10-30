@@ -7,6 +7,9 @@ import { AlertCreateDTO } from './dto/alert-create.dto';
 export class AlertService {
   constructor(private prismaService: PrismaService) {}
 
+  // Obtener las alertas más recientes
+  // Devuelve una promesa que contiene un array de alertas ordenadas
+  // de forma descendente por fecha, limitadas a las 30 más recientes
   public async getAllAlerts() {
     return this.prismaService.alert.findMany({
       orderBy: { date: 'desc' },
@@ -14,6 +17,9 @@ export class AlertService {
     });
   }
 
+  // Crear una nueva alerta si no existe una alerta en la misma fecha
+  // Devuelve una promesa con la alerta creada o la alerta existente si ya existe
+  // Genera una descripción indicando la cantidad de préstamos activos
   public async createAlert(newAlert: AlertCreateDTO) {
     try {
       const alertDate = new Date(newAlert.date);
@@ -51,6 +57,9 @@ export class AlertService {
     }
   }
 
+  // Marcar una alerta como vista
+  // Devuelve una promesa con la alerta actualizada o lanza un error
+  // si la alerta no existe
   public async markAlertAsViewed(alertId: number) {
     try {
       const existAlert = await this.prismaService.alert.findUnique({
@@ -69,6 +78,8 @@ export class AlertService {
     }
   }
 
+  // Eliminar una alerta mediante su id
+  // Devuelve una promesa con la alerta eliminada o lanza un error si no existe
   public async deleteAlert(alertId: number) {
     try {
       const existAlert = await this.prismaService.alert.findUnique({

@@ -12,6 +12,9 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
+  // Iniciar sesión para un usuario existente
+  // Valida el nombre de usuario y la contraseña, generando un token JWT si son correctos
+  // Devuelve un objeto con el token de acceso
   public async login(user: LoginDTO) {
     try {
       const existUser = await this.prismaService.user.findUnique({
@@ -39,6 +42,9 @@ export class AuthService {
     }
   }
 
+  // Registrar un nuevo usuario en el sistema
+  // Hashea la contraseña y guarda los datos en la base de datos
+  // Devuelve una promesa que contiene los datos del usuario registrado
   public async register(newUser: RegisterDTO) {
     const saltOrRounds = 10;
     const hash = await bcrypt.hash(newUser.password, saltOrRounds);
