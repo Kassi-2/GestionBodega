@@ -1,6 +1,8 @@
 export interface Lending {
   id: number;
   date: Date;
+  finalizeDate: Date;
+  eliminateDate: Date;
   state: string;
   comments?: string;
   borrowerId: number;

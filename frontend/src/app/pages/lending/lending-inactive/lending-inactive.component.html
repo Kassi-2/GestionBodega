@@ -20,7 +20,8 @@
       <tr>
         <th scope="col" class="text-center">Id</th>
         <th scope="col" class="text-center">Nombre del prestatario</th>
-        <th scope="col" class="text-center">Fecha</th>
+        <th scope="col" class="text-center">Fecha de creación</th>
+        <th scope="col" class="text-center">Fecha de eliminación</th>
         <th scope="col" class="text-center">Profesor Asignado</th>
         <th scope="col" class="text-center">Acciones</th>
       </tr>
@@ -31,6 +32,7 @@
         <th scope="row" class="text-center">{{lending.id}}</th>
         <td class="text-center">{{lending.borrower.name}}</td>
         <td class="text-center">{{ lending.date | date:'dd/MM/yyyy HH:mm' }}</td>
+        <td class="text-center">{{ lending.eliminateDate | date:'dd/MM/yyyy HH:mm' }}</td>
         <td class="text-center">
           @if (lending.teacherId != null) {
             {{lending.teacher.BorrowerId.name}}
@@ -67,7 +69,8 @@
       <div class="modal-body">
         <p><strong>ID:</strong> {{ selectedLending?.id }}</p>
         <p><strong>Nombre del prestatario:</strong> {{ selectedLending?.borrower.name }}</p>
-        <p><strong>Fecha:</strong> {{ selectedLending?.date | date:'dd/MM/yyyy HH:mm' }}</p>
+        <p><strong>Fecha de creación:</strong> {{ selectedLending?.date | date:'dd/MM/yyyy HH:mm' }}</p>
+        <p><strong>Fecha de eliminación:</strong> {{ selectedLending?.eliminateDate | date:'dd/MM/yyyy HH:mm' }}</p>
         <p><strong>Profesor asignado:</strong>
           @if (selectedLending?.teacherId != null) {
               {{ selectedLending?.teacher.BorrowerId.name }}
