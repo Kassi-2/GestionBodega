@@ -4,6 +4,8 @@ import { Router, RouterLink, RouterModule } from '@angular/router';
 import { AlertsComponent } from '../alerts/alerts.component';
 import { NgbToastModule } from '@ng-bootstrap/ng-bootstrap';
 import Swal from 'sweetalert2';
+import { AlertService } from '../../../core/services/alert.service';
+
 
 @Component({
   selector: 'app-sidebar',
@@ -15,7 +17,20 @@ import Swal from 'sweetalert2';
 export class SidebarComponent {
   public show = true;
 
-  constructor(private authService: AuthService, private router: Router) {}
+  unreadCount: number = 0;
+
+  constructor(private authService: AuthService, private router: Router, private alertService: AlertService) {}
+
+  ngOnInit(): void {
+    this.getNotifications();
+  }
+
+  getNotifications(): void {
+    this.alertService.getAllAlert().subscribe(notifications => {
+      this.unreadCount = notifications.filter(notification => !notification.state).length;
+    });
+  }
+
 
   public logout(): void {
     const isLoggedOut = this.authService.logout();

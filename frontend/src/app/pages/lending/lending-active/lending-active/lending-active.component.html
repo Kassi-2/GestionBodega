@@ -27,7 +27,7 @@
       </tr>
     </thead>
     <tbody>
-      @for (lending of lending | slice: (page-1) * pageSize : page * pageSize;track lending;let i = $index) {
+      @for (lending of filteredList() | slice: (page-1) * pageSize : page * pageSize;track lending;let i = $index) {
         <tr>
         <th scope="row" class="text-center">{{lending.id}}</th>
         <td class="text-center">{{lending.borrower.name}}</td>
