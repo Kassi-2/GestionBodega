@@ -1,41 +1,50 @@
-<section class="vh-100" style="background-color: #333333;">
+<section class="vh-100" style="background-color: #f79123;">
   <div class="container py-5 h-100">
     <div class="row d-flex justify-content-center align-items-center h-100">
       <div class="col col-xl-10">
         <div class="card" style="border-radius: 1rem;">
           <div class="row g-0">
             <div class="col-md-6 col-lg-5 d-none d-md-block">
-              <img src="https://www.uta.cl/wp-content/uploads/2023/01/CAMPUS-SAUCACHE-UTA-19.jpg"
-                alt="login form" class="img-fluid" style="border-radius: 1rem 0 0 1rem; height: 650px; width: 500px;" />
+              <img src="assets\images\depa-mecanica-fondo.jpg"
+                alt="login form" class="img-fluid" style="border-radius: 1rem 0 0 1rem; height: 555px; width: 600px;" />
             </div>
             <div class="col-md-6 col-lg-7 d-flex align-items-center">
-              <div class="card-body p-4 p-lg-5 text-black">
+              <div class="card-body p-4 p-lg-10 text-black">
 
-                <form>
 
                   <div class="d-flex align-items-center">
-                    <img src="assets\images\logo-departamento-mecanica.png" class="container-fluid "
+                    <img src="https://uninews.datoslab.cl/static/img/universidades/uta.png" class="container-fluid "
+                    style=" height: 70px; width: 200px;" alt="Logo">
+                    <img src="assets\images\logo-depa-mec-sinfondo.png" class="container-fluid "
                     style=" height: 100px; width: 100px;" alt="Logo">
+                    <img src="https://sentai.uta.cl/wp-content/uploads/2017/01/logo-informatica-01.png" class="container-fluid "
+                    style=" height: 50px; width: 200px;" alt="Logo">
                   </div>
 
-                  <h5 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px;">Inicie sesión</h5>
+                  <div [formGroup]="loginForm" class="container">
+                    <h5 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px; padding-top: 30px">Inicie sesión</h5>
 
-                  <div data-mdb-input-init class="form-outline mb-4">
-                    <input type="email" id="form2Example17" class="form-control form-control-lg" placeholder="Usuario"/>
-                  </div>
+                    <div class="mb-4">
+                        <input type="text" id="form2Example17" class="form-control" placeholder="Usuario" required formControlName="username" [class.is-invalid]="notValidUsername"/>
+                        @if (notValidUsername) {
+                          <small class="text-danger">Ingrese un usuario.</small>
+                        }
+                      </div>
 
-                  <div data-mdb-input-init class="form-outline mb-4">
-                    <input type="password" id="form2Example27" class="form-control form-control-lg" placeholder="Contraseña"/>
-                  </div>
+                    <div class="mb-4">
+                        <input  type="password" id="form2Example27" class="form-control" placeholder="Contraseña" required  formControlName="password" [class.is-invalid]="notValidPassword"/>
+                        @if (notValidPassword) {
+                          <small class="text-danger">Ingrese una contraseña.</small>
+                        }
+                      </div>
 
-                  <div class="pt-1 mb-4">
-                    <button data-mdb-button-init data-mdb-ripple-init class="btn btn-secondary btn-lg btn-block" type="button">Iniciar sesión</button>
-                  </div>
+                    <div class="mb-4">
+                        <button class="btn btn-primary" style = "background-color: #4d4d4d; border-color: #4d4d4d;" type="submit" (click)="login()">Iniciar sesión</button>
+                    </div>
 
+                    <p style="color: #999999; font-style: italic; padding-top: 20px;">Proyecto desarrollado por el Departamento de Informática.</p>
+                </div>
 
-                  <p class="mb-5 pb-lg-2" style="color: #393f81;">Proyecto desarrollado por el Departamento de Informática</p>
-
-                </form>
 
               </div>
             </div>
