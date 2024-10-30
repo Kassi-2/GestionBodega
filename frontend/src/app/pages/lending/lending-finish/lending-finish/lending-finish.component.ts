@@ -121,11 +121,11 @@ export class LendingFinishComponent {
       buttonsStyling: false
     });
     swalWithBootstrapButtons.fire({
-      title: "Estas seguro?",
-      text: "Estas a punto de eliminar un prestamo!",
+      title: "¿Estás seguro?",
+      text: "¡Estás a punto de eliminar un préstamo!",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonText: "Si, quiero eliminarlo!",
+      confirmButtonText: "Sí, quiero eliminarlo",
       cancelButtonText: "No, no quiero eliminarlo",
       reverseButtons: true
     }).then((result) => {
@@ -133,8 +133,8 @@ export class LendingFinishComponent {
         this.lendingService.deleteLending(idLending).subscribe(() => {
           this.lending = this.lending.filter(lending => lending.id !== idLending);
           swalWithBootstrapButtons.fire({
-            title: "Eliminado!",
-            text: "El prestamo fue eliminado.",
+            title: "¡Eliminado!",
+            text: "El préstamo fue eliminado.",
             icon: "success",
             timer: 1500,
             showConfirmButton: false,
@@ -145,7 +145,7 @@ export class LendingFinishComponent {
       ) {
         swalWithBootstrapButtons.fire({
           title: "Cancelado",
-          text: "El prestamo no fue eliminado",
+          text: "El préstamo no fue eliminado.",
           icon: "error",
           timer: 1500,
           showConfirmButton: false,

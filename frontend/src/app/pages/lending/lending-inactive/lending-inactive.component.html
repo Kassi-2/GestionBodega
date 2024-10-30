@@ -58,7 +58,6 @@
   </div>
 </div>
 
-<!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -73,12 +72,12 @@
         <p><strong>Fecha de eliminación:</strong> {{ selectedLending?.eliminateDate | date:'dd/MM/yyyy HH:mm' }}</p>
         <p><strong>Profesor asignado:</strong>
           @if (selectedLending?.teacherId != null) {
+            <p><strong>Profesor asignado:</strong>
               {{ selectedLending?.teacher.BorrowerId.name }}
+            </p>
           }
-          @else {
-            No existe un profesor asignado
-          }
-        </p>
+
+
         <p><strong>Detalles del préstamo:</strong> {{ selectedLending?.comments}}</p>
         <table class="table">
           <thead>

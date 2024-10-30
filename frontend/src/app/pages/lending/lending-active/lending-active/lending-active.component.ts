@@ -101,11 +101,11 @@ export class LendingActiveComponent {
       buttonsStyling: false
     });
     swalWithBootstrapButtons.fire({
-      title: "Estas seguro?",
-      text: "Estas a punto de finalizar un prestamo!",
+      title: "¿Estás seguro?",
+      text: "¡Estás a punto de finalizar un préstamo!",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonText: "Si, estoy seguro!",
+      confirmButtonText: "Sí, estoy seguro",
       cancelButtonText: "No, no estoy seguro",
       reverseButtons: true
     }).then((result) => {
@@ -113,8 +113,8 @@ export class LendingActiveComponent {
         this.lendingService.lendingFinish(idLending, comments).subscribe(() => {
         this.lending = this.lending.filter(lending => lending.id !== idLending);
         swalWithBootstrapButtons.fire({
-          title: "Finalizado!",
-          text: "El prestamo fue finalizado.",
+          title: "¡Finalizado!",
+          text: "El préstamo fue finalizado con éxito.",
           icon: "success",
           timer: 1500,
           showConfirmButton: false,
@@ -126,7 +126,7 @@ export class LendingActiveComponent {
       ) {
         swalWithBootstrapButtons.fire({
           title: "Cancelado",
-          text: "El prestamo no fue finalizado",
+          text: "El préstamo no fue finalizado.",
           icon: "error",
           timer: 1500,
           showConfirmButton: false,
