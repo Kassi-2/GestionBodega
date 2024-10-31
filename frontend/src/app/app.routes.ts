@@ -11,6 +11,7 @@ import { LendingAddComponent } from './pages/lending/lending-add/lending-add.com
 import { LoginComponent } from './pages/auth/login/login.component';
 import { authGuard, loginGuard } from './core/guards/auth.guard';
 import { MainLayoutComponent } from './pages/layouts/main-layout/main-layout.component';
+import { LendingPendingComponent } from './pages/lending/lending-pending/lending-pending.component';
 
 export const routes: Routes = [
   {
@@ -45,6 +46,11 @@ export const routes: Routes = [
       {
         path: 'lendings/active',
         component: LendingActiveComponent,
+        canActivate: [authGuard],
+      },
+      {
+        path: 'lendings/pending',
+        component: LendingPendingComponent,
         canActivate: [authGuard],
       },
       {

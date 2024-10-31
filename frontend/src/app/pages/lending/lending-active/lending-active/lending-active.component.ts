@@ -91,8 +91,6 @@ export class LendingActiveComponent {
 
   // Función para poder finalizar un prestamo activo
   finishLending(idLending: number, comments: string): void {
-    console.log(idLending)
-    console.log(comments)
     const swalWithBootstrapButtons = Swal.mixin({
       customClass: {
         confirmButton: "btn btn-success",
