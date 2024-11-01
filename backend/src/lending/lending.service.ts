@@ -66,7 +66,10 @@ async getPendingLendings(): Promise<Lending[]> {
     });
 }
 
-//obtiene un préstamo por su id
+//obtiene un préstamo por su id y entrega todos los detalles
+//del préstamo: nombre de los productos, cantidad de productos,
+//stock actual del producto, nombre y rut del prestatario,
+//nombre y rut del profesor en caso de ser necesario.
 async getLendingById(id: number): Promise<Lending> {
     return this.prisma.lending.findUnique({
       where: {
@@ -176,7 +179,7 @@ async getLendingById(id: number): Promise<Lending> {
 
 
       //obtiene los préstamos finalizados ordenados desde los más recientes
-      //a los más antiguos, por la fecha en la que se creó el préstamo
+      //a los más antiguos, por la fecha en la que se finalizó el préstamo
       async getFinalizedLendings(): Promise<Lending[]> {
         return this.prisma.lending.findMany({
             where: {
@@ -199,12 +202,47 @@ async getLendingById(id: number): Promise<Lending> {
                   },
             },
             orderBy: {
-                date: "desc",
+                finalizeDate: "desc",
             },
         });
       }
+      //obtiene los préstamos finalizados, buscados en toda la base de datos, los entrega
+      //ordenados por la fecha de finalización, desde el más reciente al más antiguo
+      //se le debe entregar un string con el nombre del prestatario completo o parte de él
+      async getFinalizedLendingsByBorrowerName(borrowerName: string): Promise<Lending[]> {
+        return this.prisma.lending.findMany({
+            where: {
+                state: LendingState.Finalized,
+                borrower: {
+                    name: {
+                        contains: borrowerName,
+                    },
+                },
+            },
+            include: {
+                borrower: {
+                    select: {
+                        name: true,
+                    },
+                },
+                teacher: {
+                    select: {
+                        BorrowerId: {
+                            select: {
+                                name: true,
+                            },
+                        },
+                    },
+                },
+            },
+            orderBy: {
+                finalizeDate: 'desc',
+            },
+        });
+    }
+    
       //obtiene solo los primeros 20 préstamos finalizados ordenados desde los 
-      //más recientes a los más antiguos por la fecha en la que se creó el préstamo
+      //más recientes a los más antiguos por la fecha en la que se finalizó el préstamo
       async getFinalizedLendingsMax(): Promise<Lending[]> {
         return this.prisma.lending.findMany({
             where: {
@@ -227,7 +265,7 @@ async getLendingById(id: number): Promise<Lending> {
                   },
             },
             orderBy: {
-                date: "desc",
+                finalizeDate: "desc",
             },
             take: 50,
         });
@@ -316,7 +354,7 @@ async getLendingById(id: number): Promise<Lending> {
             }
         }
 
-        const lendingState = LendingState.Active;
+        const lendingState = data.teacherId ? LendingState.Pending : LendingState.Active;
 
     const lending = await this.prisma.lending.create({
         data: {
@@ -372,7 +410,6 @@ async getLendingById(id: number): Promise<Lending> {
         if (!lending) {
             throw new NotFoundException("Préstamo no encontrado");
         }
-
         const updatedLending = await this.prisma.lending.update({
             where: { id: lendingId },
             data: { state: LendingState.Finalized,
@@ -380,7 +417,7 @@ async getLendingById(id: number): Promise<Lending> {
                 comments: comments !== undefined ? comments : lending.comments,
              },
         });
-    
+
         for (const lendingProduct of lending.lendingProducts) {
             const product = lendingProduct.product;
     
@@ -442,6 +479,51 @@ async getLendingById(id: number): Promise<Lending> {
     return updatedLending;   
 
     }
+
+    //función que elimina PERMANENTEMENTE de la base de datos un préstamo.
+    //primero se verifica si existe el préstamo con el id que se recibe
+    //y que el estado esté en pendiente, elimina los datos de la tabla LendingProduct
+    //y finalmente elimina el préstamo
+    async deletePermanentlyLending(lendingId: number):Promise<Lending> {
+        const lending = await this.prisma.lending.findUnique({
+            where: { id: lendingId },
+            include: {
+                lendingProducts: {
+                    include: {
+                        product: true,
+                    },
+                },
+            },
+        });  
+        if (!lending) {
+            throw new NotFoundException("Préstamo no encontrado");
+        }
+        if (lending.state != LendingState.Pending) {
+            throw new NotFoundException("El préstamo no está pendiente para rechazar");
+        }
+        for (const lendingProduct of lending.lendingProducts) {
+            const product = lendingProduct.product;
+    
+            if (!product.fungible) {
+                await this.prisma.product.update({
+                    where: { id: product.id },
+                    data: {
+                        stock: {
+                            increment: lendingProduct.amount,
+                        },
+                    },
+                });
+            }
+        }
+        await this.prisma.lendingProduct.deleteMany({
+            where: { lendingId: lendingId },
+        });
+    
+        return this.prisma.lending.delete({
+            where: { id: lendingId },
+        });
+    }
+
     }
     
 
