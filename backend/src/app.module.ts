@@ -6,12 +6,11 @@ import { UserModule } from './user/user.module';
 import { LendingModule } from './lending/lending.module';
 import { AlertModule } from './alert/alert.module';
 import { AuthModule } from './auth/auth.module';
-import { QrCodeService } from './qr-code/qr-code.service';
-import { QrCodeController } from './qr-code/qr-code.controller';
+import { QrCodeModule } from './qr-code/qr-code.module';
 
 @Module({
-  imports: [ProductModule, UserModule, LendingModule, AlertModule, AuthModule],
-  controllers: [AppController, QrCodeController],
-  providers: [AppService, QrCodeService],
+  imports: [ProductModule, UserModule, LendingModule, AlertModule, AuthModule, QrCodeModule],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {}
