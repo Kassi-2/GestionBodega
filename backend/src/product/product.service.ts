@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { product } from '@prisma/client';
+import { Product } from '@prisma/client';
 import { ProductCreateDTO } from './dto/product-create.dto';
 import { ProductUpdateDTO } from './dto/product-update.dto';
 
@@ -15,7 +15,7 @@ export class ProductService {
   //Obtener todos los productos de la tabla product de la base de datos
   //Devuelve un array de solo los productos que tienen estado true=activo,
   //y los entrega ordenados alfabéticamente por nombre ascendentemente
-  async getActiveProductsNameAsc(): Promise<product[]> {
+  async getActiveProductsNameAsc(): Promise<Product[]> {
     return this.prisma.product.findMany({
       where: {
         state: true,
@@ -29,7 +29,7 @@ export class ProductService {
   //Obtener todos los productos de la tabla product de la base de datos
   //Devuelve un array de solo los productos que tienen estado true=activo,
   //y los entrega ordenados alfabéticamente por nombre descendentemente
-  async getActiveProductsNameDesc(): Promise<product[]> {
+  async getActiveProductsNameDesc(): Promise<Product[]> {
     return this.prisma.product.findMany({
       where: {
         state: true,
@@ -43,7 +43,7 @@ export class ProductService {
   //Obtener todos los productos de la tabla product de la base de datos
   //Devuelve un array de solo los productos que tienen estado true=activo,
   //y los entrega ordenados ascendentemente por stock
-  async getActiveProductsStockAsc(): Promise<product[]> {
+  async getActiveProductsStockAsc(): Promise<Product[]> {
     return this.prisma.product.findMany({
       where: {
         state: true,
@@ -57,7 +57,7 @@ export class ProductService {
   //Obtener todos los productos de la tabla product de la base de datos
   //Devuelve un array de solo los productos que tienen estado true=activo,
   //y los entrega ordenados descendentemente por stock
-  async getActiveProductsStockDesc(): Promise<product[]> {
+  async getActiveProductsStockDesc(): Promise<Product[]> {
     return this.prisma.product.findMany({
       where: {
         state: true,
@@ -70,7 +70,7 @@ export class ProductService {
   //Obtener todos los productos de la tabla product de la base de datos
   //Devuelve un array de solo los productos que tienen un stock mayor a 0
   //y los entrega ordenados alfabéticamente por nombre
-  async getAvailableProducts(): Promise<product[]> {
+  async getAvailableProducts(): Promise<Product[]> {
     return this.prisma.product.findMany({
       where: {
         stock: { gt: 0 },
@@ -83,7 +83,7 @@ export class ProductService {
 
   //Obtener un solo producto por su id
   //Devuelve el producto que coinicide con el id ingresado
-  async getProductById(id: number): Promise<product> {
+  async getProductById(id: number): Promise<Product> {
     return this.prisma.product.findUnique({
       where: {
         id,
@@ -96,7 +96,7 @@ export class ProductService {
   //verifica que no exista un prducto ya creado con el mismo nombre
   //revisa en los productos eliminados si ya existía un producto con el mismo nombre
   //si existía se actualizan los valores por los nuevos ingresados
-  async createProduct(data: ProductCreateDTO): Promise<product> {
+  async createProduct(data: ProductCreateDTO): Promise<Product> {
     const buscarProduct = await this.prisma.product.findUnique({
       where: {
         name: data.name,
@@ -125,7 +125,7 @@ export class ProductService {
   //Eliminar un producto, pero no se borra de la base de datos
   //primero busca que el producto esté en la base de datos, y además tenga estado true
   //solo se actualiza el estado del producto de "activo" "desactivo", true a false
-  async deleteProduct(id: number): Promise<product> {
+  async deleteProduct(id: number): Promise<Product> {
     const product = await this.prisma.product.findUnique({
       where: { id },
     });
@@ -146,7 +146,7 @@ export class ProductService {
   //Verifica si existe el nombre del producto que se quiere editar en la base de datos
   //con estado activo o inactivo, si está activo se le avisa que ya hay un producto con ese nombre
   //si está inactivo se actualiza el nombre, pero el producto antiguo se le agrega "-{id}"
-  async updateProduct(id: number, data: ProductUpdateDTO): Promise<product> {
+  async updateProduct(id: number, data: ProductUpdateDTO): Promise<Product> {
     const product = await this.prisma.product.findUnique({
       where: { id },
     });

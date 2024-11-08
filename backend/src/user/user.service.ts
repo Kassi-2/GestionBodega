@@ -74,7 +74,7 @@ export class UserService {
       });
       if (!existUser) {
         throw new BadRequestException(
-          'El usuario que se intenta obetener no existe',
+          'El usuario que se intenta obtener no existe',
         );
       }
       return existUser;

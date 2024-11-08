@@ -6,9 +6,10 @@ import { UserModule } from './user/user.module';
 import { LendingModule } from './lending/lending.module';
 import { AlertModule } from './alert/alert.module';
 import { AuthModule } from './auth/auth.module';
+import { CategoryModule } from './category/category.module';
 
 @Module({
-  imports: [ProductModule, UserModule, LendingModule, AlertModule, AuthModule],
+  imports: [ProductModule, UserModule, LendingModule, AlertModule, AuthModule, CategoryModule],
   controllers: [AppController],
   providers: [AppService],
 })
