@@ -4,14 +4,15 @@ import { CommonModule } from '@angular/common';
 import { Component, ViewChild } from '@angular/core';
 import { NgxScannerQrcodeModule, ScannerQRCodeResult, ScannerQRCodeConfig, NgxScannerQrcodeComponent, ScannerQRCodeDevice, NgxScannerQrcodeService } from 'ngx-scanner-qrcode';
 import { delay } from 'rxjs';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import Swal from 'sweetalert2';
 import { UserService } from '../../../core/services/user.service';
+
 
 @Component({
   selector: 'app-lending-add-qr',
   standalone: true,
-  imports: [NgxScannerQrcodeModule, CommonModule],
+  imports: [NgxScannerQrcodeModule, CommonModule, RouterModule],
   templateUrl: './lending-add-qr.component.html',
   styleUrls: ['./lending-add-qr.component.css']
 })
@@ -53,13 +54,13 @@ export class LendingAddQrComponent {
     if (e?.length) {
       action?.pause();
 
-      const qrRut = e[0]?.value;
+      const qrCode = e[0]?.value;
 
-      if (qrRut) {
-        console.log('Valor del QR:', qrRut);
+      if (qrCode) {
+        console.log('Valor del QR:', qrCode);
 
 
-        this.userService.getUserByRut(qrRut).subscribe({
+        this.userService.sendCode(qrCode).subscribe({
           next: (result) => {
             this.qrUser = result
             Swal.fire({
@@ -70,11 +71,17 @@ export class LendingAddQrComponent {
               showConfirmButton: false,
             });
             this.lendingService.setCurrentStep(2);
+            this.lendingService.setSelectedUser(this.qrUser)
             this.router.navigate(['/lending-add']);
           },
           error: (error) => {
-            alert(error.error.message);
-            window.location.reload();
+            Swal.fire({
+              title: 'Error',
+              text: 'Ocurrió un error.',
+              icon: 'error',
+              timer: 1500,
+              showConfirmButton: false,
+            });
           },
         });
 
