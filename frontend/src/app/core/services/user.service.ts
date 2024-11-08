@@ -105,4 +105,9 @@ export class UserService {
   public importUsers(data: FormData) {
     return this.http.post(`${this.apiUrl}/import`, data);
   }
+
+  public getUserByRut(rut: string): Observable<User> {
+    return this.http.get<User>(`${this.apiUrl}/user/${rut}`);
+
+  }
 }

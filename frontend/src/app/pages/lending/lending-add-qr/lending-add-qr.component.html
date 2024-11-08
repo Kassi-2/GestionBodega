@@ -1,2 +1,5 @@
-<zxing-scanner></zxing-scanner>
+<!-- For camera -->
+<ngx-scanner-qrcode #action="scanner" [config]="config" (event)="onEvent($event, action)"></ngx-scanner-qrcode>
+
+
 
