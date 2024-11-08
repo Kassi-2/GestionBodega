@@ -38,7 +38,7 @@ export class LendingAddQrComponent {
   action!: NgxScannerQrcodeComponent;
 
   constructor(
-    private qrcode: NgxScannerQrcodeService,
+    private scanner: NgxScannerQrcodeService,
     private lendingService: LendingService,
     private router: Router,
     private userService: UserService
@@ -48,6 +48,12 @@ export class LendingAddQrComponent {
     this.action.isReady.pipe(delay(1000)).subscribe(() => {
       this.handle(this.action, 'start');
     });
+  }
+
+  ngOnDestroy(): void {
+    if (this.action) {
+      this.action.stop();  // Detiene la cámara al destruir el componente
+    }
   }
 
   public onEvent(e: ScannerQRCodeResult[], action?: any): void {
@@ -82,6 +88,9 @@ export class LendingAddQrComponent {
               timer: 1500,
               showConfirmButton: false,
             });
+            setTimeout(() => {
+              location.reload()
+            }, 1500);
           },
         });
 
