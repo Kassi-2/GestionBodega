@@ -1,3 +1,4 @@
+import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import {
@@ -24,6 +25,7 @@ import { NgbPagination } from '@ng-bootstrap/ng-bootstrap';
     AddProductComponent,
     HttpClientModule,
     NgbPagination,
+    RouterLink
   ],
   templateUrl: './view-products.component.html',
   styleUrls: ['./view-products.component.css'],

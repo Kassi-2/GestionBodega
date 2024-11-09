@@ -12,6 +12,7 @@ import { LoginComponent } from './pages/auth/login/login.component';
 import { authGuard, loginGuard } from './core/guards/auth.guard';
 import { MainLayoutComponent } from './pages/layouts/main-layout/main-layout.component';
 import { LendingPendingComponent } from './pages/lending/lending-pending/lending-pending.component';
+import { HistoryProductsComponent } from './pages/products/history-products/history-products.component';
 
 export const routes: Routes = [
   {
@@ -68,6 +69,11 @@ export const routes: Routes = [
         component: LendingAddComponent,
         canActivate: [authGuard],
       },
+      {
+      path: 'history-products',
+      component: HistoryProductsComponent,
+      canActivate: [authGuard],
+     },
     ],
     canActivate: [authGuard]
   },
