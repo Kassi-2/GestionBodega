@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../../core/services/auth.service';
 import { HttpClientModule } from '@angular/common/http';
@@ -10,20 +10,21 @@ import Swal from 'sweetalert2';
   standalone: true,
   imports: [ReactiveFormsModule, HttpClientModule],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.css',
+  styleUrls: ['./login.component.css'],
   providers: [AuthService],
 })
 export class LoginComponent implements OnInit, OnDestroy {
-  ngOnInit(): void {
-  }
-  ngOnDestroy(): void {
-  }
+  @ViewChild('passwordInput')
+  passwordInput!: ElementRef;  // Referencia al campo de contraseña
 
   constructor(private authService: AuthService, private router: Router) {}
 
+  ngOnInit(): void {}
+  ngOnDestroy(): void {}
+
   public loginForm: FormGroup = new FormGroup({
     username: new FormControl('', [Validators.required]),
-    password: new FormControl('', [Validators.required])
+    password: new FormControl('', [Validators.required]),
   });
 
   get notValidUsername() {
@@ -38,10 +39,19 @@ export class LoginComponent implements OnInit, OnDestroy {
     );
   }
 
+  // Maneja el evento Enter en el campo de usuario
+  public onUserEnter(): void {
+    // Enfocar el campo de contraseña
+    this.passwordInput.nativeElement.focus();
+  }
 
-  public login() {
+  // Maneja el evento Enter en el campo de contraseña
+  public onPasswordEnter(): void {
+    this.login();
+  }
 
-
+  // Función de inicio de sesión (se ejecuta al enviar el formulario)
+  public login(): void {
     if (this.loginForm.invalid) {
       Object.values(this.loginForm.controls).forEach((control) => {
         control.markAsTouched();
@@ -67,7 +77,7 @@ export class LoginComponent implements OnInit, OnDestroy {
         });
         this.router.navigateByUrl('lendings/active');
       },
-      error: (error) =>{
+      error: (error) => {
         swalWithBootstrapButtons.fire({
           title: 'Error',
           text: 'El usuario o la contraseña son incorrectos',
