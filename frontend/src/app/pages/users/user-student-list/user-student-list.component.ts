@@ -166,4 +166,17 @@ export class UserStudentListComponent implements OnInit, OnDestroy {
       this.user = user;
     });
   }
+
+  public qrUser(id: number){
+    this.userService.getUserById(id).subscribe((user: User) => {
+      this.user = user;
+    });
+  }
+
+  addBlur() {
+    document.querySelector('.table-responsive-sm')?.classList.add('blur-background');
+  }
+
+
+
 }

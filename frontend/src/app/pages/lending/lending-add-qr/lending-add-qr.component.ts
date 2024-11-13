@@ -52,7 +52,7 @@ export class LendingAddQrComponent {
 
   ngOnDestroy(): void {
     if (this.action) {
-      this.action.stop();  // Detiene la cámara al destruir el componente
+      this.action.stop();
     }
   }
 

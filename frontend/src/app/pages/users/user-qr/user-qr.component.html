@@ -1,23 +1,64 @@
-<div class="modal fade" id="modalQrUser" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="modalQrUser" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
+     (hidden.bs.modal)="removeBlur()">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
         <h1 class="modal-title fs-5" id="exampleModalLabel">Información QR</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-
       <div class="modal-body">
-
         <div class="mb-3">
-          <div>
-            <label>Nombre usuario: {{this.user.name}}</label>
+          <p><strong>Nombre usuario: </strong>{{ this.user.name }}</p>
+          <div class="text-center">
+            <canvas #qrCanvas></canvas>
+          </div>
+          <div class="text-center">
+            <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal"
+            data-bs-target="#modalSendQr" >Enviar código QR al correo</button>
           </div>
         </div>
       </div>
-
-
     </div>
   </div>
 </div>
+
+
+<div class="modal fade" id="modalSendQr" tabindex="-1" aria-labelledby="sendQrLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="sendQrLabel">Enviar QR por Correo</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      @if(this.user.mail){
+        <div class="modal-body">
+          <p>Desea enviar el código QR al correo electrónico registrado?</p>
+          <div>
+            <input class="form-control" [value]="user.mail" #emailInput type="text">
+        </div>
+        <div class="text-center mt-4">
+          <button type="button" class="btn btn-outline-primary me-3" (click)="sendQr(emailInput.value)">Enviar</button>
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+        </div>
+        </div>
+      }
+      @else {
+        <div class="modal-body">
+          <p>Ingrese un correo temporal para enviar el código QR:</p>
+          <input class="form-control" #emailInput type="text">
+          <div class="text-center mt-4">
+            <button type="button" class="btn btn-outline-primary me-3" (click)="sendQr(emailInput.value)">Enviar</button>
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+          </div>
+        </div>
+
+
+      }
+    </div>
+  </div>
+</div>
+
+
 
 
