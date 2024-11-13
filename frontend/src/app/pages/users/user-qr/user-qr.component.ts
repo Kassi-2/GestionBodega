@@ -15,7 +15,8 @@ import Swal from 'sweetalert2';
 export class UserQrComponent {
   @Input() user!: User;
   @ViewChild('qrCanvas', { static: false }) qrCanvas!: ElementRef;
-  temporaryMail!: string;
+  isEmailValid: boolean = false;
+
 
   private qrToken: string = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJydXQiOiIyMTA0NTE4NC02IiwiaWF0IjoxNzMxMDY4NDczfQ.uzIa3u2ar2JRPIpDlO1lEu6UqgCxaWmTEo_owK_Xk_Q';
 
@@ -31,7 +32,10 @@ export class UserQrComponent {
     });
   }
 
-
+  validateEmail(email: string): void {
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    this.isEmailValid = emailRegex.test(email);
+  }
 
   async generateQRCode(data: string) {
      const canvas = this.qrCanvas.nativeElement as HTMLCanvasElement;

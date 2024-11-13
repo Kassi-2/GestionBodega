@@ -30,31 +30,32 @@
         <h1 class="modal-title fs-5" id="sendQrLabel">Enviar QR por Correo</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-
-      @if(this.user.mail){
+      @if(this.user.mail) {
         <div class="modal-body">
           <p>Desea enviar el código QR al correo electrónico registrado?</p>
           <div>
-            <input class="form-control" [value]="user.mail" #emailInput type="text">
-        </div>
-        <div class="text-center mt-4">
-          <button type="button" class="btn btn-outline-primary me-3" (click)="sendQr(emailInput.value)">Enviar</button>
-          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
-        </div>
+            <input class="form-control" [value]="user.mail" #emailInput type="text" (input)="validateEmail(emailInput.value)">
+          </div>
+          <div class="text-center mt-4">
+            <button type="button" class="btn btn-outline-primary me-3" [disabled]="!isEmailValid" (click)="sendQr(emailInput.value)">Enviar</button>
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+          </div>
         </div>
       }
       @else {
         <div class="modal-body">
           <p>Ingrese un correo temporal para enviar el código QR:</p>
-          <input class="form-control" #emailInput type="text">
+          <input class="form-control" #emailInput type="text" (input)="validateEmail(emailInput.value)">
           <div class="text-center mt-4">
-            <button type="button" class="btn btn-outline-primary me-3" (click)="sendQr(emailInput.value)">Enviar</button>
+            <button type="button" class="btn btn-outline-primary me-3" [disabled]="!isEmailValid" (click)="sendQr(emailInput.value)">Enviar</button>
             <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
           </div>
         </div>
-
-
       }
+
+
+
+
     </div>
   </div>
 </div>

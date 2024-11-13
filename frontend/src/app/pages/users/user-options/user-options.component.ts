@@ -4,11 +4,13 @@ import { SearchService } from '../../../core/services/search.service';
 import { FormsModule } from '@angular/forms';
 import { UserAddComponent } from '../user-add/user-add.component';
 import { RouterLink } from '@angular/router';
+import { UserSendQrComponent } from '../user-send-qr/user-send-qr.component';
 
 @Component({
   selector: 'app-user-options',
   standalone: true,
-  imports: [UserAddComponent, UsersImportComponent, FormsModule, RouterLink],
+  imports: [UserAddComponent, UsersImportComponent, FormsModule, RouterLink, UserSendQrComponent
+  ],
   templateUrl: './user-options.component.html',
   styleUrl: './user-options.component.css',
 })
