@@ -7,7 +7,6 @@ import {
   OnInit,
   SimpleChanges,
 } from '@angular/core';
-import { SidebarComponent } from '../../../shared/components/sidebar/sidebar.component';
 import {
   AbstractControl,
   FormControl,
@@ -29,13 +28,7 @@ declare var bootstrap: any;
 @Component({
   selector: 'app-user-edit',
   standalone: true,
-  imports: [
-    SidebarComponent,
-    ReactiveFormsModule,
-    FormsModule,
-    HttpClientModule,
-    CommonModule,
-  ],
+  imports: [ReactiveFormsModule, FormsModule, HttpClientModule, CommonModule],
   templateUrl: './user-edit.component.html',
   styleUrl: './user-edit.component.css',
   providers: [UserService],

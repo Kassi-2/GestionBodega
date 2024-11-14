@@ -31,6 +31,7 @@ export class ProductService {
    * @memberof ProductService
    */
   updateProduct(id: number, updatedProduct: Product): Observable<Product> {
+    console.log(updatedProduct);
     return this.http.put<Product>(`${this.apiUrl}/${id}`, updatedProduct);
   }
   /**
@@ -61,9 +62,9 @@ export class ProductService {
    * @memberof ProductService
    */
   addProduct(product: NewProduct) {
+    console.log(product);
     return this.http.post(`${this.apiUrl}`, product);
   }
-
 
   /**
    *Función que recibe un tipo de ordenamiento y devuelve un listado de los productos acorde al ordenamiento solicitado.

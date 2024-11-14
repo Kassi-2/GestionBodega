@@ -1,5 +1,4 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { SidebarComponent } from '../../../shared/components/sidebar/sidebar.component';
 import {
   AbstractControl,
   FormControl,
@@ -21,7 +20,6 @@ import { NgbPopoverModule } from '@ng-bootstrap/ng-bootstrap';
   selector: 'app-user-add',
   standalone: true,
   imports: [
-    SidebarComponent,
     ReactiveFormsModule,
     FormsModule,
     HttpClientModule,
@@ -198,7 +196,6 @@ export class UserAddComponent implements OnInit, OnDestroy {
     const degree = this.degrees.find((d) => d.code == code);
     return degree?.name;
   }
-
 }
 /**
  * Función que verifica la validación del rut ingresado por el usuario.

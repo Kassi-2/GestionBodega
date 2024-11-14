@@ -32,7 +32,7 @@ export class CategoryController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  public async createCategory(category: CategoryCreateDTO) {
+  public async createCategory(@Body() category: CategoryCreateDTO) {
     return await this.categoryService.createCategory(category);
   }
 

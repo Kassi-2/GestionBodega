@@ -13,6 +13,8 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import Swal from 'sweetalert2';
 import { NgbPopover } from '@ng-bootstrap/ng-bootstrap';
+import { Category } from '../../../core/models/category.interface';
+import { CategoryService } from '../../../core/services/category.service';
 
 @Component({
   selector: 'app-add-product',
@@ -38,12 +40,14 @@ export class AddProductComponent implements OnInit {
       criticalStock: 0,
       state: true,
       fungible: false,
+      categoryId: 0,
     },
   ];
   private subscription: Subscription = new Subscription();
   public userForm!: FormGroup;
   isFungible: boolean = false;
   succesfulEntry: boolean = true;
+  public categories!: Category[];
 
   /**
    * Crea una instancia de AddProductComponent.
@@ -53,8 +57,8 @@ export class AddProductComponent implements OnInit {
    * @memberof AddProductComponent
    */
   constructor(
-    private fb: FormBuilder,
-    private productService: ProductService
+    private productService: ProductService,
+    private categoryService: CategoryService
   ) {}
 
   ngOnInit() {
@@ -65,7 +69,10 @@ export class AddProductComponent implements OnInit {
       stock: new FormControl('', [Validators.min(0)]),
       criticalStock: new FormControl('', [Validators.required]),
       isFungible: new FormControl(false),
+      category: new FormControl('', [Validators.required]),
     });
+
+    this.getAllCategories();
   }
   /**
    *  Verifica que si el nombre no es válido o si posiciona el mouse dentro del input y luego sale, marque la casilla con un error diciendo que tiene que ingresar un valor.
@@ -88,6 +95,13 @@ export class AddProductComponent implements OnInit {
     return (
       this.userForm.get('criticalStock')?.invalid &&
       this.userForm.get('criticalStock')?.touched
+    );
+  }
+
+  get notValidCategory() {
+    return (
+      this.userForm.get('category')?.invalid &&
+      this.userForm.get('category')?.touched
     );
   }
 
@@ -141,6 +155,7 @@ export class AddProductComponent implements OnInit {
       stock: stockValue,
       criticalStock: formValues.criticalStock,
       fungible: formValues.isFungible ?? false,
+      categoryId: +formValues.category,
     };
 
     const swalWithBootstrapButtons = Swal.mixin({
@@ -176,6 +191,7 @@ export class AddProductComponent implements OnInit {
           }, 1500);
         },
         error: (error) => {
+          console.log(error);
           swalWithBootstrapButtons.fire({
             title: 'Error',
             text: 'El producto no se ha agregado. El nombre del producto está repetido u ocurrió un error.',
@@ -186,5 +202,16 @@ export class AddProductComponent implements OnInit {
         },
       })
     );
+  }
+
+  private getAllCategories(): void {
+    this.categoryService.getAllCategories().subscribe({
+      next: (result) => {
+        this.categories = result;
+      },
+      error: (error) => {
+        alert(error);
+      },
+    });
   }
 }
