@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { QrCodeService } from './qr-code.service';
 
 @Controller('qr-code')
@@ -19,5 +19,15 @@ async generateQr(@Body('rut') rut: string): Promise<string> {
 async generateSendAllQr(): Promise<void> {
     await this.qrcodeService.sendAllQr();
 }
+
+@Get('decode')
+  async decodeRut(@Query('token') token: string): Promise<{ borrower: any }> {
+    try {
+      const borrower = await this.qrcodeService.decode(token);
+      return { borrower };
+    } catch (error) {
+      throw new BadRequestException("No se pudo decodificar el token");
+    }
+  }
 
 }
