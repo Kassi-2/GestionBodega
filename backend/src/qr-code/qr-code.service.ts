@@ -6,10 +6,10 @@ import * as jwt from 'jsonwebtoken';
 
 @Injectable()
 export class QrCodeService {
-  private readonly jwtSecret = 'gestion';
+  private readonly jwtSecret = "gestion";
   constructor(private readonly prisma: PrismaService) {}
 
-  private generateRutToken(rut: string): string {
+  generateRutToken(rut: string): string {
     return jwt.sign({ rut }, this.jwtSecret);
   }
 
@@ -19,8 +19,7 @@ export class QrCodeService {
       const token = this.generateRutToken(rut);
       return await QRCode.toDataURL(token); 
     } catch (error) {
-      console.error("Error generating QR code:", error);
-      throw new Error("Failed to generate QR code");
+      throw new Error("Error");
     }
   }
 
@@ -32,25 +31,25 @@ export class QrCodeService {
       const base64Data = qrCodeLink.replace(/^data:image\/png;base64,/, "");
 
       const transporter = nodemailer.createTransport({
-        service: 'gmail',
+        service: "gmail",
         auth: {
-          user: '', // mail del que se va a enviar
-          pass: '', // contraseña
+          user: "", // mail del que se va a enviar
+          pass: "", // contraseña
         },
       });
 
       await transporter.sendMail({
-        from: '', // mail del que se va a enviar
+        from: "", // mail del que se va a enviar
         to: borrower.mail,
-        subject: 'Código QR para realizar préstamos en el pañol',
+        subject: "Código QR para realizar préstamos en el pañol",
         html: `<p>${borrower.name}, este es tu código QR para poder realizar préstamos:</p>
                <img src="cid:qrcode" alt="Código QR" style="max-width: 200px;"/>`,
         attachments: [
           {
-            filename: 'qrcode.png',
+            filename: "qrcode.png",
             content: base64Data,
-            encoding: 'base64',
-            cid: 'qrcode'
+            encoding: "base64",
+            cid: "qrcode"
           }
         ]
       });
@@ -60,6 +59,53 @@ export class QrCodeService {
       console.error(`Error al enviar QR a ${borrower.mail}:`, error);
     }
   }
+
+  // función que envia el qr generado a un correo temporal que se debe proporcionar
+  async sendOneMail(token: string, mail: string): Promise<void> {
+    try {
+        const decoded = jwt.verify(token, this.jwtSecret) as { rut: string };
+        const rut = decoded.rut;
+
+        const borrower = await this.prisma.borrower.findUnique({
+            where: { rut },
+        });
+
+        if (!borrower) {
+            throw new Error(`No se encontró el borrower con rut: ${rut}`);
+        }
+
+        const qrCodeLink = await this.generateQr(rut);
+
+        const base64Data = qrCodeLink.replace(/^data:image\/png;base64,/, "");
+
+        const transporter = nodemailer.createTransport({
+            service: "gmail",
+            auth: {
+                user: "", // mail del que se va a enviar
+                pass: "", // contraseña
+            },
+        });
+        await transporter.sendMail({
+            from: "", // mail del que se va a enviar
+            to: mail, 
+            subject: "Código QR para realizar préstamos en el pañol",
+            html: `<p>Este es tu código QR para poder realizar préstamos:</p>
+                   <img src="cid:qrcode" alt="Código QR" style="max-width: 200px;"/>`,
+            attachments: [
+                {
+                    filename: "qrcode.png",
+                    content: base64Data,
+                    encoding: "base64",
+                    cid: "qrcode"
+                }
+            ]
+        });
+
+      console.log(`QR enviado a: ${mail}`);
+    } catch (error) {
+        console.error(`Error al enviar QR a ${mail}`);
+    }
+}
 
   // enviar código qr a todos los correos de la base de datos de borrower
   async sendAllQr() {

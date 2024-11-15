@@ -7,7 +7,7 @@ constructor(private readonly qrcodeService: QrCodeService){}
 
 @Post('generate')
 async generateQr(@Body('rut') rut: string): Promise<string> {
-    return this.qrcodeService.generateQr(rut);
+    return this.qrcodeService.generateRutToken(rut);
 }
 
 @Post('send')
@@ -21,7 +21,7 @@ async generateSendAllQr(): Promise<void> {
 }
 
 @Get('decode')
-  async decodeRut(@Query('token') token: string): Promise<{ borrower: any }> {
+  async decodeRut(@Body('token') token: string): Promise<{ borrower: any }> {
     try {
       const borrower = await this.qrcodeService.decode(token);
       return { borrower };
@@ -29,5 +29,9 @@ async generateSendAllQr(): Promise<void> {
       throw new BadRequestException("No se pudo decodificar el token");
     }
   }
+@Post('temporary')
+async sendOneMail(@Body() body: { token: string; mail: string }): Promise<void> {
+  await this.qrcodeService.sendOneMail(body.token, body.mail);
+}
 
 }
