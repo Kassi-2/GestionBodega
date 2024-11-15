@@ -11,6 +11,7 @@ import { LendingAddComponent } from './pages/lending/lending-add/lending-add.com
 import { LoginComponent } from './pages/auth/login/login.component';
 import { authGuard, loginGuard } from './core/guards/auth.guard';
 import { MainLayoutComponent } from './pages/layouts/main-layout/main-layout.component';
+import { LendingAddQrComponent } from './pages/lending/lending-add-qr/lending-add-qr.component';
 
 export const routes: Routes = [
   {
@@ -60,6 +61,11 @@ export const routes: Routes = [
       {
         path: 'lending-add',
         component: LendingAddComponent,
+        canActivate: [authGuard],
+      },
+      {
+        path: 'lending-add/qr',
+        component: LendingAddQrComponent,
         canActivate: [authGuard],
       },
     ],

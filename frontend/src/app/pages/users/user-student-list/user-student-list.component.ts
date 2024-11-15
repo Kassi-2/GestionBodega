@@ -1,3 +1,4 @@
+import { UserQrComponent } from './../user-qr/user-qr.component';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { UserOptionsComponent } from '../user-options/user-options.component';
 import { UserService } from '../../../core/services/user.service';
@@ -16,9 +17,10 @@ import { CommonModule } from '@angular/common';
   imports: [
     CommonModule,
     UserOptionsComponent,
+    UserQrComponent,
     UserEditComponent,
-    UserEditComponent,
-    NgbPagination,
+    NgbPagination
+
   ],
   templateUrl: './user-student-list.component.html',
   styleUrl: './user-student-list.component.css',
@@ -164,4 +166,17 @@ export class UserStudentListComponent implements OnInit, OnDestroy {
       this.user = user;
     });
   }
+
+  public qrUser(id: number){
+    this.userService.getUserById(id).subscribe((user: User) => {
+      this.user = user;
+    });
+  }
+
+  addBlur() {
+    document.querySelector('.table-responsive-sm')?.classList.add('blur-background');
+  }
+
+
+
 }

@@ -10,11 +10,12 @@ import { UserOptionsComponent } from '../user-options/user-options.component';
 import { UserEditComponent } from '../user-edit/user-edit.component';
 import Swal from 'sweetalert2';
 import { NgbPagination } from '@ng-bootstrap/ng-bootstrap';
+import { UserQrComponent } from "../user-qr/user-qr.component";
 
 @Component({
   selector: 'app-user-assistant-list',
   standalone: true,
-  imports: [UserOptionsComponent, UserEditComponent, NgbPagination],
+  imports: [UserOptionsComponent, UserEditComponent, NgbPagination, UserQrComponent],
   templateUrl: './user-assistant-list.component.html',
   styleUrl: './user-assistant-list.component.css',
   providers: [UserService],
@@ -127,5 +128,14 @@ export class UserAssistantListComponent implements OnInit, OnDestroy {
         this.assistants = assistants;
         this.filteredAssistant = assistants;
       });
+  }
+  public qrUser(id: number){
+    this.userService.getUserById(id).subscribe((user: User) => {
+      this.user = user;
+    });
+  }
+
+  addBlur() {
+    document.querySelector('.table-responsive-sm')?.classList.add('blur-background');
   }
 }

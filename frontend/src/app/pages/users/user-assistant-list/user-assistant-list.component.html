@@ -25,11 +25,15 @@
         <td>
           <div class="d-flex gap-2 justify-content-center">
             <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal"
+        data-bs-target="#modalQrUser" (click)="qrUser(assistant.id); addBlur()">
+          <i class="bi bi-qr-code-scan"> QR</i>
+            </button>
+            <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal"
               data-bs-target="#modalEditUser" (click)="editUser(assistant.id)">
-              <i class="bi bi-pencil-square"> editar</i>
+              <i class="bi bi-pencil-square"> Editar</i>
             </button>
             <button type="button" class="btn btn-outline-danger btn-sm" (click)="deleteUser(assistant.id)">
-              <i class="bi bi-x-square"> eliminar</i>
+              <i class="bi bi-x-square"> Eliminar</i>
             </button>
           </div>
         </td>
@@ -43,3 +47,4 @@
 </div>
 
 <app-user-edit [user]="user"></app-user-edit>
+<app-user-qr [user]="user" ></app-user-qr>

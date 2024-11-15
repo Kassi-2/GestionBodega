@@ -11,40 +11,56 @@
             <div class="col-md-6 col-lg-7 d-flex align-items-center">
               <div class="card-body p-4 p-lg-10 text-black">
 
-
-                  <div class="d-flex align-items-center">
-                    <img src="https://uninews.datoslab.cl/static/img/universidades/uta.png" class="container-fluid "
+                <div class="d-flex align-items-center">
+                  <img src="https://uninews.datoslab.cl/static/img/universidades/uta.png" class="container-fluid"
                     style=" height: 70px; width: 200px;" alt="Logo">
-                    <img src="assets\images\logo-depa-mec-sinfondo.png" class="container-fluid "
+                  <img src="assets\images\logo-depa-mec-sinfondo.png" class="container-fluid"
                     style=" height: 100px; width: 100px;" alt="Logo">
-                    <img src="https://sentai.uta.cl/wp-content/uploads/2017/01/logo-informatica-01.png" class="container-fluid "
+                  <img src="https://sentai.uta.cl/wp-content/uploads/2017/01/logo-informatica-01.png" class="container-fluid"
                     style=" height: 50px; width: 200px;" alt="Logo">
-                  </div>
-
-                  <div [formGroup]="loginForm" class="container">
-                    <h5 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px; padding-top: 30px">Inicie sesión</h5>
-
-                    <div class="mb-4">
-                        <input type="text" id="form2Example17" class="form-control" placeholder="Usuario" required formControlName="username" [class.is-invalid]="notValidUsername"/>
-                        @if (notValidUsername) {
-                          <small class="text-danger">Ingrese un usuario.</small>
-                        }
-                      </div>
-
-                    <div class="mb-4">
-                        <input  type="password" id="form2Example27" class="form-control" placeholder="Contraseña" required  formControlName="password" [class.is-invalid]="notValidPassword"/>
-                        @if (notValidPassword) {
-                          <small class="text-danger">Ingrese una contraseña.</small>
-                        }
-                      </div>
-
-                    <div class="mb-4">
-                        <button class="btn btn-primary" style = "background-color: #4d4d4d; border-color: #4d4d4d;" type="submit" (click)="login()">Iniciar sesión</button>
-                    </div>
-
-                    <p style="color: #999999; font-style: italic; padding-top: 20px;">Proyecto desarrollado por el Departamento de Informática.</p>
                 </div>
 
+                <!-- Formulario con evento submit -->
+                <form [formGroup]="loginForm" (ngSubmit)="login()">
+                  <h5 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px; padding-top: 30px">Inicie sesión</h5>
+
+                  <div class="mb-4">
+                    <input
+                      type="text"
+                      id="form2Example17"
+                      class="form-control"
+                      placeholder="Usuario"
+                      required
+                      formControlName="username"
+                      [class.is-invalid]="notValidUsername"
+                      (keydown.enter)="onUserEnter()"/>
+                      @if(notValidUsername){
+                        <small class="text-danger">Ingrese un usuario.</small>
+                      }
+                  </div>
+
+                  <div class="mb-4">
+                    <input
+                      #passwordInput
+                      type="password"
+                      id="form2Example27"
+                      class="form-control"
+                      placeholder="Contraseña"
+                      required
+                      formControlName="password"
+                      [class.is-invalid]="notValidPassword"
+                      (keydown.enter)="onPasswordEnter()"/>
+                      @if(notValidPassword){
+                        <small class="text-danger">Ingrese una contraseña.</small>
+                      }
+                  </div>
+
+                  <div class="mb-4">
+                    <button class="btn btn-primary" style="background-color: #4d4d4d; border-color: #4d4d4d;" type="submit">Iniciar sesión</button>
+                  </div>
+
+                  <p style="color: #999999; font-style: italic; padding-top: 20px;">Proyecto desarrollado por el Departamento de Informática.</p>
+                </form>
 
               </div>
             </div>

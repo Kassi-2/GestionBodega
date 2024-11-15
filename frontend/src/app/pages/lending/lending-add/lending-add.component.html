@@ -36,7 +36,10 @@
   </li>
 </ul>
 
+
 @if (currentStep == 1){
+
+
 
 <div class="container mb-4">
   <div class="align-items-center justify-content-between">
@@ -78,41 +81,47 @@
         margin-bottom: 1%;
       "
     >
-      <div
-        class="custom_input"
-        style="
-          position: relative;
-          width: 40%;
-          display: flex;
-          align-items: center;
-        "
-      >
-        <input
-          type="text"
-          [(ngModel)]="searchTermUsers"
-          (input)="onSearch()"
-          placeholder="Buscar..."
-          class="input"
-          style="padding-left: 40px; width: 100%"
-        />
+    <div
+    class="custom_input"
+    style="
+      position: relative;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    "
+  >
+    <input
+      type="text"
+      [(ngModel)]="searchTermUsers"
+      (input)="onSearch()"
+      placeholder="Buscar..."
+      class="input"
+      style="padding-left: 50px; width: 50%; margin-right: 10px;"
+    />
 
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="svg_icon bi-search"
-          viewBox="0 0 16 16"
-          style="
-            position: absolute;
-            left: 20px;
-            top: 50%;
-            transform: translateY(-50%);
-            pointer-events: none;
-          "
-        >
-          <path
-            d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"
-          ></path>
-        </svg>
-      </div>
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      class="svg_icon bi-search"
+      viewBox="0 0 16 16"
+      style="
+        position: absolute;
+        left: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        pointer-events: none;
+      "
+    >
+      <path
+        d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"
+      ></path>
+    </svg>
+
+    <button class="btn btn-secondary" routerLink="/lending-add/qr">
+      <i class="bi bi-qr-code-scan"></i> Escanear QR
+    </button>
+  </div>
+
     </div>
   </div>
 </div>

@@ -105,4 +105,20 @@ export class UserService {
   public importUsers(data: FormData) {
     return this.http.post(`${this.apiUrl}/import`, data);
   }
+
+  public sendCode(qrCode: string): Observable<User> {
+    return this.http.get<User>(`${this.apiUrl}/user/${qrCode}`);
+  }
+
+  public getCode(user: User): Observable<string> {
+    return this.http.get<string>(`${this.apiUrl}/user/${user}`);
+  }
+
+  public sendCodeByUser(email: string) {
+    return this.http.post(`${this.apiUrl}`, email);
+  }
+
+  public sendToEveryoneQr(){
+    return this.http.get(`${this.apiUrl}/qr`);
+  }
 }
