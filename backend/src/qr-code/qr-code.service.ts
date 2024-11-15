@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import * as QRCode from 'qrcode';
 import * as nodemailer from 'nodemailer';
@@ -9,8 +9,12 @@ export class QrCodeService {
   private readonly jwtSecret = "gestion";
   constructor(private readonly prisma: PrismaService) {}
 
-  generateRutToken(rut: string): string {
-    return jwt.sign({ rut }, this.jwtSecret);
+  async generateRutToken(rut: string): Promise<string> {
+    try {
+      return jwt.sign({ rut }, this.jwtSecret);
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
   }
 
   // generar código QR 

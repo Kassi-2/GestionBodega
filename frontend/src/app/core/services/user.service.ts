@@ -17,6 +17,7 @@ import { Observable, tap } from 'rxjs';
 export class UserService {
   constructor(private http: HttpClient) {}
   private apiUrl = 'http://localhost:3000/users';
+  private apiUrlQr = 'http://localhost:3000/qr-code';
   /**
    *Función que recibe un usuario y lo ingresa en la base de datos.
    *
@@ -106,19 +107,23 @@ export class UserService {
     return this.http.post(`${this.apiUrl}/import`, data);
   }
 
-  public sendCode(qrCode: string): Observable<User> {
-    return this.http.get<User>(`${this.apiUrl}/user/${qrCode}`);
+  public readCode(qrCode: string): Observable<User> {
+    return this.http.get<User>(`${this.apiUrlQr}/decode/${qrCode}`);
   }
 
-  public getCode(user: User): Observable<string> {
-    return this.http.get<string>(`${this.apiUrl}/user/${user}`);
+  public getCode(rut: string): Observable<string> {
+    return this.http.post<string>(`${this.apiUrlQr}/generate`, { rut });
   }
 
-  public sendCodeByUser(email: string) {
-    return this.http.post(`${this.apiUrl}`, email);
+
+
+
+  public sendCodeByUser(token: string, email: string) {
+    return this.http.post(`${this.apiUrlQr}/temporary/${token}`, email);
   }
 
   public sendToEveryoneQr(){
-    return this.http.get(`${this.apiUrl}/qr`);
-  }
+    return this.http.post(`${this.apiUrlQr}/send-all`, null);
+}
+
 }

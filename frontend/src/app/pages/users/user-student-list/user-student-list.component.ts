@@ -20,7 +20,6 @@ import { CommonModule } from '@angular/common';
     UserQrComponent,
     UserEditComponent,
     NgbPagination
-
   ],
   templateUrl: './user-student-list.component.html',
   styleUrl: './user-student-list.component.css',
@@ -50,7 +49,7 @@ export class UserStudentListComponent implements OnInit, OnDestroy {
   }
 
   public page = 1;
-  public pageSize = 15;
+  public pageSize = 5;
   public selectedUserId!: number;
   public user!: User;
   private subscriptions: Subscription = new Subscription();

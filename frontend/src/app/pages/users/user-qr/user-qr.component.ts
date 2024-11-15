@@ -16,19 +16,25 @@ export class UserQrComponent {
   @Input() user!: User;
   @ViewChild('qrCanvas', { static: false }) qrCanvas!: ElementRef;
   isEmailValid: boolean = false;
-  userMail = { mail: 'usuario@ejemplo.com' }; // ejemplo de correo del usuario
+  userMail = { mail: 'usuario@ejemplo.com' };
 
   private qrToken!: string;
 
   constructor(private userService: UserService){}
 
   ngAfterViewInit() {
-    this.generateQRCode(this.qrToken);
-  }
-
-  ngOnInit(): void {
-    this.userService.getCode(this.user).subscribe((token: string) => {
-      this.qrToken = token;
+    this.userService.getCode(this.user.rut).subscribe({
+      next: (result: string) => {
+        console.log('Resultado recibido del backend:', result);
+        this.qrToken = result;
+        this.generateQRCode(this.qrToken);  // Genera el código QR con el token
+        console.log('Código QR generado con token:', this.qrToken);
+      },
+      error: (error) => {
+        console.log(error.error.message)
+        console.error('Error al obtener el código QR', error);
+        alert('No se pudo obtener el QR. Verifique el backend o la conexión.');
+      }
     });
   }
 
@@ -38,8 +44,12 @@ export class UserQrComponent {
   }
 
   async generateQRCode(data: string) {
-     const canvas = this.qrCanvas.nativeElement as HTMLCanvasElement;
-    await QRCode.toCanvas(canvas, data, { errorCorrectionLevel: 'H' });
+    if (data) {
+      const canvas = this.qrCanvas.nativeElement as HTMLCanvasElement;
+      await QRCode.toCanvas(canvas, data, { errorCorrectionLevel: 'H' });
+    } else {
+      console.error('No se pudo generar el QR: No se proporcionó datos.');
+    }
   }
 
   removeBlur() {
@@ -48,7 +58,7 @@ export class UserQrComponent {
 
   sendQr(email: string){
     console.log(email)
-    this.userService.sendCodeByUser(email).subscribe({
+    this.userService.sendCodeByUser(this.qrToken, email).subscribe({
       next: (result) => {
         Swal.fire({
           title: 'Código QR Escaneado',

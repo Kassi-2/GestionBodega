@@ -3,7 +3,6 @@
 <app-user-options></app-user-options>
 
 <div class="table-responsive-sm container-xl" style="margin-top: 20px;">
-
   <table class="table table-striped-columns">
     <thead>
       <tr>
@@ -31,10 +30,10 @@
             </button>
             <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal"
               data-bs-target="#modalEditUser" (click)="editUser(student.id)">
-              <i class="bi bi-pencil-square"> Editar</i>
+              <i class="bi bi-pencil-square"> editar</i>
             </button>
             <button type="button" class="btn btn-outline-danger btn-sm" (click)="deleteUser(student.id)">
-              <i class="bi bi-x-square"> Eliminar</i>
+              <i class="bi bi-x-square"> eliminar</i>
             </button>
           </div>
         </td>
@@ -46,8 +45,5 @@
     <ngb-pagination [collectionSize]="filteredStudents.length" [(page)]="page" [pageSize]="pageSize" [maxSize]="5" [rotate]="true" [ellipses]="false" [boundaryLinks]="true" />
   </div>
 </div>
-
 <app-user-edit [user]="user"></app-user-edit>
 <app-user-qr [user]="user" ></app-user-qr>
-
-

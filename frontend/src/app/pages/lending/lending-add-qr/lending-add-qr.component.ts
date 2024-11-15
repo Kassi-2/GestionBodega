@@ -66,7 +66,7 @@ export class LendingAddQrComponent {
         console.log('Valor del QR:', qrCode);
 
 
-        this.userService.sendCode(qrCode).subscribe({
+        this.userService.readCode(qrCode).subscribe({
           next: (result) => {
             this.qrUser = result
             Swal.fire({
