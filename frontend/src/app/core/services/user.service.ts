@@ -117,4 +117,8 @@ export class UserService {
   public sendCodeByUser(email: string) {
     return this.http.post(`${this.apiUrl}`, email);
   }
+
+  public sendToEveryoneQr(){
+    return this.http.get(`${this.apiUrl}/qr`);
+  }
 }

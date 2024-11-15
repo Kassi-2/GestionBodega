@@ -17,8 +17,7 @@ export class UserQrComponent {
   @ViewChild('qrCanvas', { static: false }) qrCanvas!: ElementRef;
   isEmailValid: boolean = false;
 
-
-  private qrToken: string = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJydXQiOiIyMTA0NTE4NC02IiwiaWF0IjoxNzMxMDY4NDczfQ.uzIa3u2ar2JRPIpDlO1lEu6UqgCxaWmTEo_owK_Xk_Q';
+  private qrToken!: string;
 
   constructor(private userService: UserService){}
 

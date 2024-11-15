@@ -8,11 +8,13 @@
       <div class="modal-body">
         <div class="mb-3">
           <div class="text-center">
-
+            <p>Se enviarán los códigos QR a todos los usuarios registrados en el sistema.</p>
           </div>
+          <div class="alert alert-danger" role="alert">
+Este proceso es costoso, trate de realizarlo la menor cantidad de veces posibles.          </div>
           <div class="text-center">
-            <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal"
-            data-bs-target="#modalSendQr" >Enviar código QR al correo</button>
+            <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" (click)="sendToEveryoneQr()"
+            >Enviar códigos QR a todos</button>
           </div>
         </div>
       </div>
