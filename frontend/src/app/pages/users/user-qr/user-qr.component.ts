@@ -16,6 +16,7 @@ export class UserQrComponent {
   @Input() user!: User;
   @ViewChild('qrCanvas', { static: false }) qrCanvas!: ElementRef;
   isEmailValid: boolean = false;
+  userMail = { mail: 'usuario@ejemplo.com' }; // ejemplo de correo del usuario
 
   private qrToken!: string;
 
@@ -32,8 +33,8 @@ export class UserQrComponent {
   }
 
   validateEmail(email: string): void {
-    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    this.isEmailValid = emailRegex.test(email);
+    const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    this.isEmailValid = emailPattern.test(email);
   }
 
   async generateQRCode(data: string) {
