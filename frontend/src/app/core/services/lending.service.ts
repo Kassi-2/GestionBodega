@@ -56,9 +56,9 @@ export class LendingService {
  * @return {*}
  * @memberof LendingService
  */
-public addLending(lending: newLending) {
+public addLending(lending: newLending): Observable<Lending> {
     this.currentStep = new BehaviorSubject<number>(1);
-    return this.http.post(`${this.apiUrl}`, lending);
+    return this.http.post<Lending>(`${this.apiUrl}`, lending);
   }
 
 /**
