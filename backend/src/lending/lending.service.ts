@@ -133,6 +133,7 @@ async getLendingById(id: number): Promise<Lending> {
     });
 
     console.log(lendings);
+    console.log(JSON.stringify(lendings, null, 2));
 
     if (!lendings || lendings.length === 0) {
         throw new NotFoundException(`No se encontraron préstamos en ${date}`);
