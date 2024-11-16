@@ -67,20 +67,27 @@ export class LendingAddQrComponent {
 
 
         this.userService.readCode(qrCode).subscribe({
-          next: (result) => {
-            this.qrUser = result
-            Swal.fire({
-              title: 'Código QR Escaneado',
-              text: `Usuario seleccionado: ${this.qrUser.name}`,
-              icon: 'success',
-              timer: 1500,
-              showConfirmButton: false,
-            });
-            this.lendingService.setCurrentStep(2);
-            this.lendingService.setSelectedUser(this.qrUser)
-            this.router.navigate(['/lending-add']);
+          next: (result: any) => { // Usamos 'any' para permitir el acceso a cualquier propiedad
+            console.log(result);
+
+            if ('borrower' in result) {
+              const borrower = result.borrower as User;  // Afirma el tipo de borrower como 'User'
+              if (borrower) {
+                Swal.fire({
+                  title: 'Código QR Escaneado',
+                  text: `Usuario seleccionado: ${borrower.name}`,
+                  icon: 'success',
+                  timer: 1500,
+                  showConfirmButton: false,
+                });
+                this.lendingService.setCurrentStep(2);
+                this.lendingService.setSelectedUser(borrower);
+                this.router.navigate(['/lending-add']);
+              }
+            }
           },
           error: (error) => {
+            console.error(error);
             Swal.fire({
               title: 'Error',
               text: 'Ocurrió un error.',
@@ -88,11 +95,13 @@ export class LendingAddQrComponent {
               timer: 1500,
               showConfirmButton: false,
             });
-            setTimeout(() => {
-              location.reload()
-            }, 1500);
           },
         });
+
+
+
+
+
 
       } else {
         console.warn('No se pudo obtener el valor del QR');

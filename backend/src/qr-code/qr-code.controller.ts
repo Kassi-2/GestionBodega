@@ -21,7 +21,7 @@ async generateSendAllQr(): Promise<void> {
 }
 
 @Get('decode')
-  async decodeRut(@Body('token') token: string): Promise<{ borrower: any }> {
+  async decodeRut(@Query('token') token: string): Promise<{ borrower: any }> {
     try {
       const borrower = await this.qrcodeService.decode(token);
       return { borrower };

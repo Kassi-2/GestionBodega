@@ -43,13 +43,11 @@
         <td class="text-center">
           <button type="button" class="btn btn-outline-success me-2"
           (click)="openLendingDetails(lending.id)"
-          data-bs-toggle="modal"
           data-bs-target="#exampleModal">
           <i class="bi bi-info-circle"></i>
           </button>
           <button class="btn btn-outline-danger"
           (click)="openLendingDetails(lending.id)"
-          data-bs-toggle="modal"
           data-bs-target="#modalFinishLending">
             <i class="bi bi-x-circle"></i> Finalizar
           </button>        </td>
@@ -158,7 +156,6 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
         <button type="button" class="btn btn-outline-danger" (click)="finishLending(selectedLending?.id, commentText.value)"
-        data-bs-toggle="modal"
         data-bs-target="#modalFinishLending">
           <i class="bi bi-x-circle"></i> Finalizar Préstamo
         </button>

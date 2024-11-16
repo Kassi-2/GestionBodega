@@ -37,13 +37,13 @@ export class QrCodeService {
       const transporter = nodemailer.createTransport({
         service: "gmail",
         auth: {
-          user: "", // mail del que se va a enviar
-          pass: "", // contraseña
+          user: "karen.fabiana226@gmail.com", // mail del que se va a enviar
+          pass: "lwqr guxn cfcl dryd", // contraseña
         },
       });
 
       await transporter.sendMail({
-        from: "", // mail del que se va a enviar
+        from: "karen.fabiana226@gmail.com", // mail del que se va a enviar
         to: borrower.mail,
         subject: "Código QR para realizar préstamos en el pañol",
         html: `<p>${borrower.name}, este es tu código QR para poder realizar préstamos:</p>
@@ -85,12 +85,12 @@ export class QrCodeService {
         const transporter = nodemailer.createTransport({
             service: "gmail",
             auth: {
-                user: "", // mail del que se va a enviar
-                pass: "", // contraseña
+                user: "karen.fabiana226@gmail.com", // mail del que se va a enviar
+                pass: "lwqr guxn cfcl dryd", // contraseña
             },
         });
         await transporter.sendMail({
-            from: "", // mail del que se va a enviar
+            from: "karen.fabiana226@gmail.com", // mail del que se va a enviar
             to: mail, 
             subject: "Código QR para realizar préstamos en el pañol",
             html: `<p>Este es tu código QR para poder realizar préstamos:</p>

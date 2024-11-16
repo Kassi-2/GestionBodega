@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {
   User,
@@ -108,15 +108,14 @@ export class UserService {
   }
 
   public readCode(qrCode: string): Observable<User> {
-    return this.http.get<User>(`${this.apiUrlQr}/decode/${qrCode}`);
+    const params = new HttpParams().set('token', qrCode);
+    return this.http.get<User>(`${this.apiUrlQr}/decode`, { params });
   }
+
 
   public getCode(rut: string): Observable<string> {
     return this.http.post<string>(`${this.apiUrlQr}/generate`, { rut });
   }
-
-
-
 
   public sendCodeByUser(token: string, email: string) {
     return this.http.post(`${this.apiUrlQr}/temporary/${token}`, email);
