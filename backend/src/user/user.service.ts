@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   Injectable,
+  InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -352,6 +353,17 @@ export class UserService {
       });
     } catch (error) {
       throw error;
+    }
+  }
+
+  public async getEliminatedUsers(): Promise<Borrower[]> {
+    try {
+      const users = await this.prismaService.borrower.findMany({
+        where: { state: false },
+      });
+      return users;
+    } catch (error) {
+      throw new InternalServerErrorException(error);
     }
   }
 }

@@ -55,6 +55,12 @@ export class UserController {
     return await this.userService.getUserById(id);
   }
 
+  @Get('eliminated')
+  @HttpCode(HttpStatus.OK)
+  public async getEliminatedUsers() {
+    return await this.userService.getEliminatedUsers();
+  }
+
   @Get('/degrees')
   @HttpCode(HttpStatus.OK)
   public async getAllDegrees() {
