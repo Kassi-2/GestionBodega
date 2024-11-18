@@ -31,9 +31,13 @@
             <div class="collapse position-absolute" id="logoutBox" style="right: 0; top: 50px;">
                 <div class="card" style="width: 180px;">
                     <div class="card-body">
+                      <button class="btn btn-secondary mb-2" routerLink="/lendings/inactive">
+                        <i class="bi bi-clock-history"></i> Historial
+                    </button>
                         <button class="btn btn-danger" (click)="logout()">
                             <i class="bi bi-box-arrow-right"></i> Cerrar sesión
                         </button>
+
                     </div>
                 </div>
             </div>

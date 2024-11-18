@@ -1,3 +1,4 @@
+import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import {
@@ -13,7 +14,6 @@ import Swal from 'sweetalert2';
 import { HttpClientModule } from '@angular/common/http';
 import { AddProductComponent } from '../add-product/add-product.component';
 import { NgbPagination } from '@ng-bootstrap/ng-bootstrap';
-import { RouterLink } from '@angular/router';
 import { CategoryService } from '../../../core/services/category.service';
 import { Category } from '../../../core/models/category.interface';
 

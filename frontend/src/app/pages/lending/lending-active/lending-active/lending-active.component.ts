@@ -1,3 +1,4 @@
+import { SearchService } from './../../../../core/services/search.service';
 import { UserTeacher } from './../../../../core/models/user.interface';
 import { LendingService } from './../../../../core/services/lending.service';
 import { Component, OnInit } from '@angular/core';
@@ -24,6 +25,7 @@ export class LendingActiveComponent {
   resetLending: any;
   searchTerm: string = '';
   lending: Lending[] = [];
+  public filteredLendings: Lending[] = [];
   teachers: UserTeacher[] = [];
   isEditMode: boolean = false;
   selectedDate: string = '';
@@ -32,20 +34,28 @@ export class LendingActiveComponent {
 
 
 
-  constructor(private lendingService: LendingService, private userService: UserService) {}
+  constructor(private lendingService: LendingService, private userService: UserService, private searchService: SearchService) {}
 
   ngOnInit() {
     this.getLending();
 
+    this.searchService.searchTerm$.subscribe((term: string) => {
+      this.filteredLendings = this.lending.filter(
+        (lending) =>
+          lending.borrower.name.toLowerCase().includes(this.searchTerm.toLowerCase())
+      );
+    });
   }
 
   // Funcion para poder mostrar prestamos activos por fecha
   selectDate(event: Event): void {
     const input = event.target as HTMLInputElement;
     const selectedDate = new Date(input.value);
-    const date = `${selectedDate.getFullYear()}-${selectedDate.getMonth()+1}-${selectedDate.getDate()}`
-    this.lendingService.lendingForDate(date).subscribe((lending: Lending[]) => {
-      this.lending = lending;
+    const date = `${selectedDate.getFullYear()}-${selectedDate.getMonth()+1}-${selectedDate.getDate()+1}`
+    console.log(date)
+    this.lendingService.lendingForDate(date).subscribe((lendings: Lending[]) => {
+      console.log(lendings); // Verifica la respuesta completa
+      this.filteredLendings = lendings;
     });
   }
 
@@ -53,6 +63,8 @@ export class LendingActiveComponent {
   getLending(): void {
     this.lendingService.getLending().subscribe((lending: Lending[]) => {
       this.lending = lending;
+      this.filteredLendings = lending;
+      console.log(this.filteredLendings)
     });
   }
 
@@ -91,8 +103,6 @@ export class LendingActiveComponent {
 
   // Función para poder finalizar un prestamo activo
   finishLending(idLending: number, comments: string): void {
-    console.log(idLending)
-    console.log(comments)
     const swalWithBootstrapButtons = Swal.mixin({
       customClass: {
         confirmButton: "btn btn-success",

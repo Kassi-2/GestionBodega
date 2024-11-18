@@ -466,6 +466,66 @@ export class LendingAddComponent implements OnInit {
       },
     });
   }
+
+  endAddLendingPending() {
+    if (!this.selectedUser) {
+      console.error('No user selected.');
+      return;
+    }
+
+    if (this.selectedTeacher != undefined) {
+      this.lending = {
+        comments: this.comments,
+        BorrowerId: this.selectedUser.id,
+        teacherId: this.selectedTeacher?.id,
+        products: this.contains,
+      };
+    } else {
+      this.lending = {
+        comments: this.comments,
+        BorrowerId: this.selectedUser.id,
+        teacherId: null,
+        products: this.contains,
+      };
+    }
+
+    this.currentStep = 1;
+
+    console.log(this.lending);
+
+    const swalWithBootstrapButtons = Swal.mixin({
+      customClass: {
+        confirmButton: 'btn btn-success',
+        cancelButton: 'btn btn-danger me-2',
+      },
+      buttonsStyling: false,
+    });
+
+    this.LendingService.addLending(this.lending).subscribe({
+      next: () => {
+        swalWithBootstrapButtons.fire({
+          title: '¡Préstamo creado!',
+          text: 'El préstamo ha sido creado con éxito.',
+          icon: 'success',
+          timer: 1500,
+          showConfirmButton: false,
+        });
+
+        this.initializeLendingForm();
+      },
+      error: (error) => {
+        swalWithBootstrapButtons.fire({
+          title: 'Error',
+          text: 'El préstamo no se ha guardado, revise nuevamente la información ingresada o solicite ayuda.',
+          icon: 'error',
+          timer: 1500,
+          showConfirmButton: false,
+        });
+
+        console.log(error);
+      },
+    });
+  }
   /**
    * Función para buscar según el tipo de usuario en la lista de usuarios.
    *

@@ -69,7 +69,6 @@
         <p><strong>Nombre del prestatario:</strong> {{ selectedLending?.borrower.name }}</p>
         <p><strong>Fecha de creación:</strong> {{ selectedLending?.date | date:'dd/MM/yyyy HH:mm' }}</p>
         <p><strong>Fecha de eliminación:</strong> {{ selectedLending?.eliminateDate | date:'dd/MM/yyyy HH:mm' }}</p>
-        <p><strong>Profesor asignado:</strong>
           @if (selectedLending?.teacherId != null) {
             <p><strong>Profesor asignado:</strong>
               {{ selectedLending?.teacher.BorrowerId.name }}
