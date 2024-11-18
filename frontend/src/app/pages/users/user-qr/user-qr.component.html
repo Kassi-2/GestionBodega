@@ -8,14 +8,14 @@
       </div>
       <div class="modal-body">
         <div class="mb-3">
-          <div *ngIf="user?.mail"><p>Nombre del usuario: {{user.name}}</p></div>
+          <div><p>Nombre del usuario: {{user.name}}</p></div>
 
           <div class="text-center">
             <canvas #qrCanvas></canvas>
           </div>
           <div class="text-center">
             <button type="button" class="btn btn-outline-secondary btn-sm"
-            data-bs-target="#modalSendQr" >Enviar código QR al correo</button>
+            data-bs-target="#modalSendQr" data-bs-toggle = "modal" >Enviar código QR al correo</button>
           </div>
         </div>
       </div>

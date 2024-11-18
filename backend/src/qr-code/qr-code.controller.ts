@@ -6,7 +6,7 @@ export class QrCodeController {
 constructor(private readonly qrcodeService: QrCodeService){}
 
 @Post('generate')
-async generateQr(@Body('rut') rut: string): Promise<string> {
+async generateQr(@Body('rut') rut: string): Promise<{ token: string }> {
     return this.qrcodeService.generateRutToken(rut);
 }
 

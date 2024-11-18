@@ -6,56 +6,60 @@ import * as jwt from 'jsonwebtoken';
 
 @Injectable()
 export class QrCodeService {
-  private readonly jwtSecret = "gestion";
+  private readonly jwtSecret = 'gestion';
   constructor(private readonly prisma: PrismaService) {}
 
-  async generateRutToken(rut: string): Promise<string> {
+  async generateRutToken(rut: string): Promise<{ token: string }> {
     try {
-      return jwt.sign({ rut }, this.jwtSecret);
+      return { token: jwt.sign({ rut }, this.jwtSecret) };
     } catch (error) {
       throw new InternalServerErrorException(error);
     }
   }
 
-  // generar código QR 
+  // generar código QR
   async generateQr(rut: string): Promise<string> {
     try {
       const token = this.generateRutToken(rut);
-      return await QRCode.toDataURL(token); 
+      return await QRCode.toDataURL(token);
     } catch (error) {
-      throw new Error("Error");
+      throw new Error('Error');
     }
   }
 
   // enviar QR al correo que aparece en la base de datos
-  async generateSendQr(borrower: { rut: string; mail: string; name: string }): Promise<void> {
+  async generateSendQr(borrower: {
+    rut: string;
+    mail: string;
+    name: string;
+  }): Promise<void> {
     try {
       const qrCodeLink = await this.generateQr(borrower.rut);
 
-      const base64Data = qrCodeLink.replace(/^data:image\/png;base64,/, "");
+      const base64Data = qrCodeLink.replace(/^data:image\/png;base64,/, '');
 
       const transporter = nodemailer.createTransport({
-        service: "gmail",
+        service: 'gmail',
         auth: {
-          user: "karen.fabiana226@gmail.com", // mail del que se va a enviar
-          pass: "lwqr guxn cfcl dryd", // contraseña
+          user: 'karen.fabiana226@gmail.com', // mail del que se va a enviar
+          pass: 'lwqr guxn cfcl dryd', // contraseña
         },
       });
 
       await transporter.sendMail({
-        from: "karen.fabiana226@gmail.com", // mail del que se va a enviar
+        from: 'karen.fabiana226@gmail.com', // mail del que se va a enviar
         to: borrower.mail,
-        subject: "Código QR para realizar préstamos en el pañol",
+        subject: 'Código QR para realizar préstamos en el pañol',
         html: `<p>${borrower.name}, este es tu código QR para poder realizar préstamos:</p>
                <img src="cid:qrcode" alt="Código QR" style="max-width: 200px;"/>`,
         attachments: [
           {
-            filename: "qrcode.png",
+            filename: 'qrcode.png',
             content: base64Data,
-            encoding: "base64",
-            cid: "qrcode"
-          }
-        ]
+            encoding: 'base64',
+            cid: 'qrcode',
+          },
+        ],
       });
 
       console.log(`QR enviado a: ${borrower.mail}`);
@@ -67,49 +71,49 @@ export class QrCodeService {
   // función que envia el qr generado a un correo temporal que se debe proporcionar
   async sendOneMail(token: string, mail: string): Promise<void> {
     try {
-        const decoded = jwt.verify(token, this.jwtSecret) as { rut: string };
-        const rut = decoded.rut;
+      const decoded = jwt.verify(token, this.jwtSecret) as { rut: string };
+      const rut = decoded.rut;
 
-        const borrower = await this.prisma.borrower.findUnique({
-            where: { rut },
-        });
+      const borrower = await this.prisma.borrower.findUnique({
+        where: { rut },
+      });
 
-        if (!borrower) {
-            throw new Error(`No se encontró el borrower con rut: ${rut}`);
-        }
+      if (!borrower) {
+        throw new Error(`No se encontró el borrower con rut: ${rut}`);
+      }
 
-        const qrCodeLink = await this.generateQr(rut);
+      const qrCodeLink = await this.generateQr(rut);
 
-        const base64Data = qrCodeLink.replace(/^data:image\/png;base64,/, "");
+      const base64Data = qrCodeLink.replace(/^data:image\/png;base64,/, '');
 
-        const transporter = nodemailer.createTransport({
-            service: "gmail",
-            auth: {
-                user: "karen.fabiana226@gmail.com", // mail del que se va a enviar
-                pass: "lwqr guxn cfcl dryd", // contraseña
-            },
-        });
-        await transporter.sendMail({
-            from: "karen.fabiana226@gmail.com", // mail del que se va a enviar
-            to: mail, 
-            subject: "Código QR para realizar préstamos en el pañol",
-            html: `<p>Este es tu código QR para poder realizar préstamos:</p>
+      const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: 'karen.fabiana226@gmail.com', // mail del que se va a enviar
+          pass: 'lwqr guxn cfcl dryd', // contraseña
+        },
+      });
+      await transporter.sendMail({
+        from: 'karen.fabiana226@gmail.com', // mail del que se va a enviar
+        to: mail,
+        subject: 'Código QR para realizar préstamos en el pañol',
+        html: `<p>Este es tu código QR para poder realizar préstamos:</p>
                    <img src="cid:qrcode" alt="Código QR" style="max-width: 200px;"/>`,
-            attachments: [
-                {
-                    filename: "qrcode.png",
-                    content: base64Data,
-                    encoding: "base64",
-                    cid: "qrcode"
-                }
-            ]
-        });
+        attachments: [
+          {
+            filename: 'qrcode.png',
+            content: base64Data,
+            encoding: 'base64',
+            cid: 'qrcode',
+          },
+        ],
+      });
 
       console.log(`QR enviado a: ${mail}`);
     } catch (error) {
-        console.error(`Error al enviar QR a ${mail}`);
+      console.error(`Error al enviar QR a ${mail}`);
     }
-}
+  }
 
   // enviar código qr a todos los correos de la base de datos de borrower
   async sendAllQr() {
@@ -125,7 +129,7 @@ export class QrCodeService {
         }
       }
     } catch (error) {
-      console.error("Error al enviar correos:", error);
+      console.error('Error al enviar correos:', error);
     }
   }
 
@@ -142,8 +146,7 @@ export class QrCodeService {
       }
       return borrower;
     } catch (error) {
-      throw new Error("No se pudo decodificar el token");
+      throw new Error('No se pudo decodificar el token');
     }
   }
-
 }

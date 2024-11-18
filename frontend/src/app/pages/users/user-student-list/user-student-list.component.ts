@@ -11,6 +11,8 @@ import Swal from 'sweetalert2';
 import { NgbPagination } from '@ng-bootstrap/ng-bootstrap';
 import { CommonModule } from '@angular/common';
 
+
+
 @Component({
   selector: 'app-user-student-list',
   standalone: true,
@@ -26,10 +28,14 @@ import { CommonModule } from '@angular/common';
   providers: [UserService, SearchService],
 })
 export class UserStudentListComponent implements OnInit, OnDestroy {
+
+
   constructor(
     private userService: UserService,
     private searchService: SearchService
   ) {}
+
+
 
   ngOnInit(): void {
     this.subscriptions.add(this.getAllStudents());
@@ -167,9 +173,12 @@ export class UserStudentListComponent implements OnInit, OnDestroy {
   }
 
   public qrUser(id: number){
-    this.userService.getUserById(id).subscribe((user: User) => {
-      this.user = user;
-    });
+    setTimeout(() => {
+      this.userService.getUserById(id).subscribe((user: User) => {
+        this.user = user;
+      });
+        }, 0);
+
   }
 
   addBlur() {

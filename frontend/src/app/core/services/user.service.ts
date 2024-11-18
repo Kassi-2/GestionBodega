@@ -7,9 +7,11 @@ import {
   UserRegister,
   UserStudent,
   UserTeacher,
+  userToken,
 } from '../models/user.interface';
 import { Degree } from '../models/degree.interface';
-import { Observable, tap } from 'rxjs';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { Token } from '@angular/compiler';
 
 @Injectable({
   providedIn: 'root',
@@ -18,6 +20,7 @@ export class UserService {
   constructor(private http: HttpClient) {}
   private apiUrl = 'http://localhost:3000/users';
   private apiUrlQr = 'http://localhost:3000/qr-code';
+
   /**
    *Función que recibe un usuario y lo ingresa en la base de datos.
    *
@@ -113,8 +116,8 @@ export class UserService {
   }
 
 
-  public getCode(rut: string): Observable<string> {
-    return this.http.post<string>(`${this.apiUrlQr}/generate`, { rut });
+  public getCode(rut: string): Observable<userToken> {
+    return this.http.post<userToken>(`${this.apiUrlQr}/generate`, { rut });
   }
 
   public sendCodeByUser(token: string, email: string) {
