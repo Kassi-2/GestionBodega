@@ -21,6 +21,10 @@ import { AuthGuard } from 'src/auth/guards/auth.guard';
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
+  @Get('/eliminated')
+  async getEliminatedProducts() {
+    return this.productService.getEliminatedProducts();
+  }
   @Get('/active-name-asc')
   async getActiveProductsNameAsc() {
     return this.productService.getActiveProductsNameAsc();

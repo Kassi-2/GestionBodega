@@ -12,6 +12,21 @@ import { ProductUpdateDTO } from './dto/product-update.dto';
 export class ProductService {
   constructor(private prisma: PrismaService) {}
 
+  // Obtener productos eliminados
+  public async getEliminatedProducts(): Promise<Product[]> {
+    try {
+      return await this.prisma.product.findMany({
+        where: {
+          state: false,
+        },
+        orderBy: {
+          name: 'asc',
+        },
+      });
+    } catch (error) {
+      throw error;
+    }
+  }
   //Obtener todos los productos de la tabla product de la base de datos
   //Devuelve un array de solo los productos que tienen estado true=activo,
   //y los entrega ordenados alfabéticamente por nombre ascendentemente

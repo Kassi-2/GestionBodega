@@ -129,9 +129,18 @@ async getLendingById(id: number): Promise<Lending> {
         },
       },
       include: {
-        lendingProducts: {
-          include: {
-            product: true,
+        borrower: { 
+          select: {
+            name: true,
+          },
+        },
+        teacher: { 
+          select: {
+            BorrowerId: {
+              select: {
+                name: true,
+              },
+            },
           },
         },
       },
