@@ -26,4 +26,8 @@ export class ProductCreateDTO {
   @IsOptional()
   @IsBoolean()
   fungible: boolean;
+
+  @IsNotEmpty()
+  @IsNumber()
+  categoryId: number;
 }

@@ -1,3 +1,5 @@
+import { Product } from "./product.interface";
+
 export interface Lending {
   id: number;
   date: Date;
@@ -22,13 +24,14 @@ export interface Teacher{
 
 export interface LendingProduct{
   amount: number;
-  product: product;
+  product: Product;
 }
 
 export interface product{
   id: number;
   name: string;
   stock: number;
+  criticalStock: number;
 }
 
 export interface newLending {

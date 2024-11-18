@@ -1,5 +1,7 @@
 import {
   contains,
+  Lending,
+  LendingProduct,
   newLending,
 } from './../../../core/models/lending.interface';
 import { ProductService } from './../../../core/services/product.service';
@@ -416,13 +418,37 @@ export class LendingAddComponent implements OnInit {
     });
 
     this.LendingService.addLending(this.lending).subscribe({
-      next: () => {
+      next: (response: Lending) => {
         swalWithBootstrapButtons.fire({
           title: '¡Préstamo creado!',
           text: 'El préstamo ha sido creado con éxito.',
           icon: 'success',
           timer: 1500,
           showConfirmButton: false,
+        });
+
+        console.log(response);
+
+        response.lendingProducts.forEach((lendingProduct: LendingProduct) => {
+          console.log('entre a revisar');
+          if (lendingProduct.product.stock <= lendingProduct.product.criticalStock) {
+            const Toast = Swal.mixin({
+              toast: true,
+              position: "top-end",
+              showConfirmButton: false,
+              timer: 3000,
+              timerProgressBar: true,
+              didOpen: (toast) => {
+                toast.onmouseenter = Swal.stopTimer;
+                toast.onmouseleave = Swal.resumeTimer;
+              }
+            });
+            Toast.fire({
+              icon: "success",
+              title: `${lendingProduct.product.name} tiene poco stock`
+            });
+            console.log('entre al if');
+          }
         });
 
         this.initializeLendingForm();

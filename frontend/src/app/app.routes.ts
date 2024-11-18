@@ -12,6 +12,7 @@ import { LoginComponent } from './pages/auth/login/login.component';
 import { authGuard, loginGuard } from './core/guards/auth.guard';
 import { MainLayoutComponent } from './pages/layouts/main-layout/main-layout.component';
 import { LendingAddQrComponent } from './pages/lending/lending-add-qr/lending-add-qr.component';
+import { CategoryListComponent } from './pages/categories/category-list/category-list.component';
 
 export const routes: Routes = [
   {
@@ -68,8 +69,13 @@ export const routes: Routes = [
         component: LendingAddQrComponent,
         canActivate: [authGuard],
       },
+      {
+        path: 'category',
+        component: CategoryListComponent,
+        canActivate: [authGuard],
+      },
     ],
-    canActivate: [authGuard]
+    canActivate: [authGuard],
   },
 
   { path: 'auth/login', component: LoginComponent, canActivate: [loginGuard] },

@@ -11,7 +11,7 @@
           <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
             <div class="mb-3">
               <label for="productName" class="col-form-label">Nombre:</label>
-              <input type="text" class="form-control" id="productName" name="name" required formControlName="name"
+              <input type="text" class="form-control" id="productName" name="name" formControlName="name"
                 [class.is-invalid]="notValidName" placeholder="Nombre del Producto" />
             @if (notValidName) {
               <small class="text-danger">Ingrese un nombre de producto.</small>
@@ -20,12 +20,14 @@
   
             <div class="mb-3">
               <label for="productCategory" class="col-form-label">Categoría:</label>
-              <select class="form-control" id="productCategory">
-                <option>Seleccione una categoría...</option>
-                <option>Insumos</option>
-                <option>Equipos</option>
-                <option>Herramientas</option>
+              <select class="form-control form-select" id="Category" formControlName="category">
+                @for (category of categories; track $index) {
+                  <option value={{category.id}}>{{category.name}}</option>
+                }
               </select>
+              @if (notValidCategory) {
+                <small class="text-danger">Ingrese una categoría.</small>
+              }
             </div>
   
             <div class="mb-3">
@@ -73,7 +75,7 @@
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="closeModal()">
             Cancelar
           </button>
-          <button type="submit" class="btn btn-primary" (click)="onSubmit()">
+          <button type="submit" class="btn btn-primary" (click)="onSubmit()" [disabled]="!userForm.valid">
             Confirmar
           </button>
         </div>

@@ -13,6 +13,9 @@ import Swal from 'sweetalert2';
 import { HttpClientModule } from '@angular/common/http';
 import { AddProductComponent } from '../add-product/add-product.component';
 import { NgbPagination } from '@ng-bootstrap/ng-bootstrap';
+import { RouterLink } from '@angular/router';
+import { CategoryService } from '../../../core/services/category.service';
+import { Category } from '../../../core/models/category.interface';
 
 @Component({
   selector: 'app-view-products',
@@ -24,6 +27,7 @@ import { NgbPagination } from '@ng-bootstrap/ng-bootstrap';
     AddProductComponent,
     HttpClientModule,
     NgbPagination,
+    RouterLink,
   ],
   templateUrl: './view-products.component.html',
   styleUrls: ['./view-products.component.css'],
@@ -34,9 +38,12 @@ export class ViewProductsComponent implements OnInit {
   public pageSize = 10;
 
   public forma!: FormGroup;
+  public categories!: Category[];
 
   selectedProductId: number | null = null;
   products: Product[] = [];
+  public allProducts!: Product[];
+  public selectedCategory!: number;
   exampleStock: number = 0;
 
   //Estos atributos serviran para buscar un producto según el nombre y para la paginación de la lista de productos.
@@ -46,7 +53,11 @@ export class ViewProductsComponent implements OnInit {
   selectedOption: string = '';
 
   //Esta función constructor crea el formulario con el que se va a trabajar (para agregar o editar un producto).
-  constructor(private productService: ProductService, private fb: FormBuilder) {
+  constructor(
+    private productService: ProductService,
+    private fb: FormBuilder,
+    private categoryService: CategoryService
+  ) {
     this.createForm();
   }
 
@@ -58,11 +69,13 @@ export class ViewProductsComponent implements OnInit {
       stock: ['', Validators.min(0)],
       criticalStock: [''],
       fungible: [false],
+      categoryId: [Validators.required],
     });
   }
 
   //Esta funcion obtiene los productos de la lista.
   ngOnInit(): void {
+    this.getAllCategories();
     this.getProducts();
   }
 
@@ -96,7 +109,8 @@ export class ViewProductsComponent implements OnInit {
   // Obtener todos los productos de la lista.
   getProducts(): void {
     this.productService.getProducts().subscribe((products) => {
-      this.products = products;
+      this.allProducts = products;
+      this.filteredByCategory(this.selectedCategory);
     });
   }
 
@@ -172,6 +186,7 @@ export class ViewProductsComponent implements OnInit {
           stock: product.stock,
           criticalStock: product.criticalStock,
           fungible: product.fungible,
+          categoryId: product.categoryId,
         });
       },
 
@@ -185,7 +200,8 @@ export class ViewProductsComponent implements OnInit {
     this.selectedOption = option;
     this.productService.filterListProduct(this.selectedOption).subscribe({
       next: (response) => {
-        this.products = response;
+        this.allProducts = response;
+        this.filteredByCategory(this.selectedCategory);
       },
       error: (error) => {
         console.error(error.error.message);
@@ -203,9 +219,11 @@ export class ViewProductsComponent implements OnInit {
       });
     }
 
+    console.log(this.forma.value.categoryId);
     const updatedProduct: Product = {
       id: this.selectedProductId,
       ...this.forma.value,
+      categoryId: +this.forma.value.categoryId,
     };
 
     this.productService
@@ -233,5 +251,22 @@ export class ViewProductsComponent implements OnInit {
       });
 
     this.forma.reset();
+  }
+
+  private getAllCategories() {
+    this.categoryService.getAllCategories().subscribe({
+      next: (result) => {
+        this.categories = result;
+        this.selectedCategory = result[0].id;
+      },
+    });
+  }
+
+  public filteredByCategory(id: number) {
+    console.log('filtrar por', id);
+    this.selectedCategory = id;
+    this.products = this.allProducts.filter(
+      (product) => product.categoryId == id
+    );
   }
 }

@@ -20,4 +20,8 @@ export class ProductUpdateDTO {
   @IsOptional()
   @IsBoolean()
   fungible: boolean;
+
+  @IsOptional()
+  @IsNumber()
+  categoryId: number;
 }

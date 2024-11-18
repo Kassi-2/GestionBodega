@@ -25,10 +25,23 @@
           <input type="text" [(ngModel)]="searchTerm" placeholder="Buscar..." class="input" style="min-width: 500px" />
         </div>
 
+        <a class="btn btn-outline-primary" routerLink="/category">
+          <i class="bi bi-folder"></i> Categorías
+        </a>
         <a href="inventory/add-product" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#addProductModal">
           <i class="bi bi-plus-circle"></i> Añadir Producto
         </a>
       </div>
+    </div>
+
+    <div class="container-xl mt-2">
+      <ul class="nav justify-content-center overflow-auto">
+        @for (category of categories; track $index) {
+          <li class="nav-item">
+            <button class="nav-link link-dark" (click)="filteredByCategory(category.id)">{{category.name}}</button>
+          </li>
+        }
+      </ul>
     </div>
 
     <div class="container">
@@ -122,11 +135,10 @@
 
                     <div class="mb-3">
                       <label for="productCategory" class="col-form-label">Categoría:</label>
-                      <select class="form-control" id="productCategory">
-                        <option>Seleccione una categoría...</option>
-                        <option>Insumos</option>
-                        <option>Equipos</option>
-                        <option>Herramientas</option>
+                      <select class="form-control form-select" id="productCategory" formControlName="categoryId">
+                        @for (category of categories; track $index) {
+                          <option value={{category.id}}>{{category.name}}</option>
+                        }
                       </select>
                     </div>
 
@@ -170,7 +182,9 @@
           </div>
         </div> }
       </div>
-      <ngb-pagination [collectionSize]="products.length" [(page)]="page" [pageSize]="pageSize" [maxSize]="5" [rotate]="true" [ellipses]="false" [boundaryLinks]="true" />
+      <div class="d-flex justify-content-center">
+        <ngb-pagination [collectionSize]="products.length" [(page)]="page" [pageSize]="pageSize" [maxSize]="5" [rotate]="true" [ellipses]="false" [boundaryLinks]="true" />
+      </div>
     </div>
 
 

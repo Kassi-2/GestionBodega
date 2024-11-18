@@ -23,7 +23,6 @@ export class AlertsComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {}
 
   public alerts: Alert[] = [];
-  private hasAlertBeenSentToday: boolean = false;
   public show = false;
   public alert: Alert = {
     id: 0,
@@ -56,8 +55,10 @@ export class AlertsComponent implements OnInit, OnDestroy {
     const checkTime = () => {
       const now = new Date();
       const currentHour = now.getHours();
-      if (currentHour >= 17 && !this.hasAlertBeenSentToday) {
+      if (currentHour >= 17 && localStorage.getItem('alert') === 'false') {
         this.sendAlert();
+      } else if ((currentHour < 17 && localStorage.getItem('alert') === 'true') || !localStorage.getItem('alert')) {
+        localStorage.setItem('alert', 'false');
       }
     };
     setInterval(checkTime, 60000);
@@ -73,7 +74,7 @@ export class AlertsComponent implements OnInit, OnDestroy {
   private sendAlert() {
     this.alertService.createAlert().subscribe({
       next: (result) => {
-        this.hasAlertBeenSentToday = true;
+        localStorage.setItem('alert', 'true');
         this.alert = result;
         const toastLiveExample = document.getElementById('toast');
         if (result.state == false) {
@@ -85,11 +86,9 @@ export class AlertsComponent implements OnInit, OnDestroy {
         setTimeout(() => {
           window.location.reload();
         }, 10000);
-        this.resetDailyFlagAtMidnight();
       },
       error: (error) => {
         console.error('Error al crear la alerta:', error);
-        return;
       },
     });
   }
@@ -100,14 +99,6 @@ export class AlertsComponent implements OnInit, OnDestroy {
    * @private
    * @memberof AlertsComponent
    */
-  private resetDailyFlagAtMidnight() {
-    const now = new Date();
-    const timeUntilMidnight = (24 - now.getHours()) * 60 * 60 * 1000;
-    setTimeout(() => {
-      this.hasAlertBeenSentToday = false;
-    }, timeUntilMidnight);
-  }
-
   /**
    * Calcula el número de días transcurridos desde la fecha de una alerta dada.
    * Devuelve una cadena indicando "Hoy", "Hace 1 día" o "Hace n días".

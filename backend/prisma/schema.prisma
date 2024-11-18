@@ -55,7 +55,7 @@ enum UserType {
 }
 
 
-model product {
+model Product {
   id        Int    @id @default(autoincrement())
   name    String
   description String?
@@ -63,6 +63,8 @@ model product {
   criticalStock Int @default(1)
   state     Boolean @default(true)
   fungible Boolean @default(false)
+  category Category @relation(fields: [categoryId], references: [id])
+  categoryId Int
   lendingProducts  LendingProduct[] @relation(name: "productLending") 
   @@unique([name])
 }
@@ -87,7 +89,7 @@ model LendingProduct {
   productId Int
   amount  Int    
   lending   Lending  @relation(name: "lendingProducts", fields: [lendingId], references: [id])
-  product   product  @relation(name: "productLending", fields: [productId], references: [id])
+  product   Product  @relation(name: "productLending", fields: [productId], references: [id])
 
   @@id([lendingId, productId]) 
   @@unique([lendingId, productId])
@@ -118,6 +120,11 @@ model AlertLending{
   @@id([alertId, lendingId])
 }
 
+model Category {
+  id Int @id @default(autoincrement())
+  name String @unique
+  products Product[]
+}
 
 model User {
   mail String @id

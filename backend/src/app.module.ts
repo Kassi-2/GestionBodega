@@ -7,9 +7,10 @@ import { LendingModule } from './lending/lending.module';
 import { AlertModule } from './alert/alert.module';
 import { AuthModule } from './auth/auth.module';
 import { QrCodeModule } from './qr-code/qr-code.module';
+import { CategoryModule } from './category/category.module';
 
 @Module({
-  imports: [ProductModule, UserModule, LendingModule, AlertModule, AuthModule, QrCodeModule],
+  imports: [ProductModule, UserModule, LendingModule, AlertModule, AuthModule, QrCodeModule, CategoryModule],
   controllers: [AppController],
   providers: [AppService],
 })
