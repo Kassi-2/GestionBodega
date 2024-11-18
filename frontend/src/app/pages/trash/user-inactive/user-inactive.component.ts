@@ -7,17 +7,17 @@ import { NgbPagination } from '@ng-bootstrap/ng-bootstrap';
 import Swal from 'sweetalert2';
 import { LendingService } from '../../../core/services/lending.service';
 import { UserService } from '../../../core/services/user.service';
-import { HistoryOptionsComponent } from '../history-options/history-options.component';
+import { TrashOptionsComponent } from '../trash-options/trash-options.component';
 
 
 @Component({
-  selector: 'app-product-inactive',
+  selector: 'app-user-inactive',
   standalone: true,
-  imports: [HistoryOptionsComponent, CommonModule, FormsModule, NgbPagination],
-  templateUrl: './product-inactive.component.html',
-  styleUrl: './product-inactive.component.css'
+  imports: [TrashOptionsComponent, CommonModule, FormsModule, NgbPagination],
+  templateUrl: './user-inactive.component.html',
+  styleUrl: './user-inactive.component.css'
 })
-export class ProductInactiveComponent {
+export class UserInactiveComponent {
   selectedLending: any;
   searchTerm: string = '';
   lending: Lending[] = [];

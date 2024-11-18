@@ -5,7 +5,7 @@ import { UserAssistantListComponent } from './pages/users/user-assistant-list/us
 import { ViewProductsComponent } from './pages/products/view-products/view-products.component';
 import { LendingActiveComponent } from './pages/lending/lending-active/lending-active/lending-active.component';
 import { LendingFinishComponent } from './pages/lending/lending-finish/lending-finish/lending-finish.component';
-import { LendingInactiveComponent } from './pages/history/lending-inactive/lending-inactive.component';
+import { LendingInactiveComponent } from './pages/trash/lending-inactive/lending-inactive.component';
 import { LendingAddComponent } from './pages/lending/lending-add/lending-add.component';
 
 import { LoginComponent } from './pages/auth/login/login.component';
@@ -13,8 +13,8 @@ import { authGuard, loginGuard } from './core/guards/auth.guard';
 import { MainLayoutComponent } from './pages/layouts/main-layout/main-layout.component';
 import { LendingPendingComponent } from './pages/lending/lending-pending/lending-pending.component';
 import { HistoryProductsComponent } from './pages/products/history-products/history-products.component';
-import { ProductInactiveComponent } from './pages/history/product-inactive/product-inactive.component';
-import { UserInactiveComponent } from './pages/history/user-inactive/user-inactive.component';
+import { ProductInactiveComponent } from './pages/trash/product-inactive/product-inactive.component';
+import { UserInactiveComponent } from './pages/trash/user-inactive/user-inactive.component';
 
 export const routes: Routes = [
   {
