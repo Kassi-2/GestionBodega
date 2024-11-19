@@ -42,7 +42,7 @@ export class QrCodeService {
         service: "gmail",
         auth: {
           user: "spam.panol.mecanica@gmail.com", // mail del que se va a enviar
-          pass: "oibo ophq jvru whgf", // contraseña
+          pass: "muql uoga wdpz kntn", // contraseña
         },
       });
 
@@ -86,7 +86,7 @@ export class QrCodeService {
             service: "gmail",
             auth: {
                 user: "spam.panol.mecanica@gmail.com", // mail del que se va a enviar
-                pass: "oibo ophq jvru whgf", // contraseña
+                pass: "muql uoga wdpz kntn", // contraseña
             },
         });
         await transporter.sendMail({

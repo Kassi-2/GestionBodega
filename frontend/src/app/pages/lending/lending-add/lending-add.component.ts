@@ -597,4 +597,8 @@ export class LendingAddComponent implements OnInit {
     this.initializeLendingForm();
     this.LendingService.setCurrentStep(1);
   }
+
+  deselectTeacher() {
+    this.selectedTeacher = null; // Reseteamos la selección
+  }
 }

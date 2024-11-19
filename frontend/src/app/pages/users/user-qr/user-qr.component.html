@@ -42,7 +42,7 @@
       <input class="form-control" [value]="user.mail" #emailInput type="text" (input)="validateEmail(emailInput.value)">
     </div>
     <div class="text-center mt-4">
-      <button type="button" class="btn btn-outline-primary me-3" [disabled]="!isEmailValid" (click)="sendQr(emailInput.value)">Enviar</button>
+      <button type="button" class="btn btn-outline-primary me-3" [disabled]="!isEmailValid" data-bs-dismiss="modal" (click)="sendQr(emailInput.value); removeBlur()">Enviar</button>
       <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" (click)="removeBlur()">Cancelar</button>
     </div>
   </div>
@@ -51,7 +51,7 @@
     <p>Ingrese un correo temporal para enviar el código QR:</p>
     <input class="form-control" #emailInput type="text" (input)="validateEmail(emailInput.value)">
     <div class="text-center mt-4">
-      <button type="button" class="btn btn-outline-primary me-3" [disabled]="!isEmailValid" (click)="sendQr(emailInput.value)">Enviar</button>
+      <button type="button" class="btn btn-outline-primary me-3" [disabled]="!isEmailValid" data-bs-dismiss="modal" (click)="sendQr(emailInput.value); removeBlur()">Enviar</button>
       <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" (click)="removeBlur()">Cancelar</button>
     </div>
   </ng-template>

@@ -57,7 +57,7 @@ export class UserQrComponent {
       const canvas = this.qrCanvas.nativeElement as HTMLCanvasElement;
       const context = canvas.getContext('2d');
       if (context) {
-        context.clearRect(0, 0, canvas.width, canvas.height); 
+        context.clearRect(0, 0, canvas.width, canvas.height);
       }
       await QRCode.toCanvas(canvas, data, { errorCorrectionLevel: 'H' });
     } else {
@@ -70,8 +70,20 @@ export class UserQrComponent {
   }
 
   sendQr(email: string) {
+    Swal.fire({
+      title: 'Enviando el código QR...',
+      text: 'Por favor espera un momento.',
+      icon: 'info',
+      showConfirmButton: false,
+      allowOutsideClick: false,
+    });
+
+    Swal.showLoading();
+
     this.userService.sendCodeByUser(this.qrToken, email).subscribe({
       next: () => {
+        Swal.close();
+
         Swal.fire({
           title: 'Código QR enviado',
           text: `Código QR enviado al correo: ${email}`,
@@ -81,14 +93,17 @@ export class UserQrComponent {
         });
       },
       error: () => {
+        Swal.close();
+
         Swal.fire({
           title: 'Error',
-          text: 'Ocurrió un error.',
+          text: 'Ocurrió un error al enviar el correo.',
           icon: 'error',
           timer: 1500,
           showConfirmButton: false,
         });
-      },
+      }
     });
   }
+
 }
