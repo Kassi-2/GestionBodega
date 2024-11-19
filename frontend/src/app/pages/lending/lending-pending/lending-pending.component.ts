@@ -53,7 +53,7 @@ export class LendingPendingComponent {
         this.lendingService.updateLendingPending(idLending).subscribe(() => {
           this.lending = this.lending.filter(lending => lending.id !== idLending);
           swalWithBootstrapButtons.fire({
-            title: "¡Eliminado!",
+            title: "¡Confirmado!",
             text: "El préstamo fue actualizado.",
             icon: "success",
             timer: 1500,

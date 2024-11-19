@@ -121,7 +121,7 @@ export class UserService {
   }
 
   public sendCodeByUser(token: string, email: string) {
-    return this.http.post(`${this.apiUrlQr}/temporary/${token}`, email);
+    return this.http.post(`${this.apiUrlQr}/temporary`, {token: token, mail: email});
   }
 
   public sendToEveryoneQr(){

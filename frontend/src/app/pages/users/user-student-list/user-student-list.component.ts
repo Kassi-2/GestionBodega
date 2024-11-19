@@ -55,9 +55,10 @@ export class UserStudentListComponent implements OnInit, OnDestroy {
   }
 
   public page = 1;
-  public pageSize = 5;
+  public pageSize = 15;
   public selectedUserId!: number;
   public user!: User;
+  public qrUser!: User;
   private subscriptions: Subscription = new Subscription();
   public students: UserStudent[] = [];
   public degrees!: Degree[];
@@ -172,10 +173,10 @@ export class UserStudentListComponent implements OnInit, OnDestroy {
     });
   }
 
-  public qrUser(id: number){
+  public defineQrUser(id: number){
     setTimeout(() => {
       this.userService.getUserById(id).subscribe((user: User) => {
-        this.user = user;
+        this.qrUser = user;
       });
         }, 0);
 

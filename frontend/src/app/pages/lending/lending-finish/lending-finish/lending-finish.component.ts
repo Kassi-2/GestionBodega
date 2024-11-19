@@ -132,6 +132,7 @@ export class LendingFinishComponent {
       if (result.isConfirmed) {
         this.lendingService.deleteLending(idLending).subscribe(() => {
           this.lending = this.lending.filter(lending => lending.id !== idLending);
+          console.log(this.lending.filter(lending => lending.id !== idLending))
           swalWithBootstrapButtons.fire({
             title: "¡Eliminado!",
             text: "El préstamo fue eliminado.",

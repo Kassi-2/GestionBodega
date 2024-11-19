@@ -20,7 +20,7 @@ export class UserSendQrComponent {
       next: (response) => {
         Swal.fire({
           title: 'Códigos QR enviados',
-          text: `Los códigos QR fueron enviados exitosamente a todos los usuarios.`,
+          text: "Los códigos QR fueron enviados exitosamente a todos los usuarios.",
           icon: 'success',
           timer: 1500,
           showConfirmButton: false,

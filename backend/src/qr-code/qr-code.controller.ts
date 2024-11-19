@@ -7,9 +7,9 @@ constructor(private readonly qrcodeService: QrCodeService){}
 
 @Post('generate')
 async generateQr(@Body('rut') rut: string): Promise<{ token: string }> {
-    return this.qrcodeService.generateRutToken(rut);
+    const token = await this.qrcodeService.generateRutToken(rut);
+    return { token }; 
 }
-
 @Post('send')
   async generateSendQr(@Body() borrower: { rut: string; mail: string; name: string }): Promise<void> {
     await this.qrcodeService.generateSendQr(borrower);
