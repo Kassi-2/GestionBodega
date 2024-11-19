@@ -91,7 +91,6 @@ export class LendingFinishComponent {
   private getLending(): void {
     this.lendingService.getLendingFinish().subscribe((lending: Lending[]) => {
       this.lending = lending
-      console.log(lending)
     });
   }
 

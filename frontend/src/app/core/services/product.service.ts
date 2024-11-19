@@ -1,4 +1,4 @@
-import { Observable, of } from 'rxjs';
+import { BehaviorSubject, Observable, of } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { Product, NewProduct } from '../models/product.interface';
 import { HttpClient } from '@angular/common/http';
@@ -9,7 +9,8 @@ import { HttpClient } from '@angular/common/http';
 export class ProductService {
   constructor(private http: HttpClient) {}
   private apiUrl = 'http://localhost:3000/products';
-  /**
+  private idProduct = new BehaviorSubject<number>(0);
+    /**
    *Función que devuelve un observable con todos los productos registrados en la base de datos.
    *
    * @return {*}  {Observable<Product[]>}
@@ -85,5 +86,14 @@ export class ProductService {
     } else {
       return this.http.get<Product[]>(`${this.apiUrl}/active-name-asc`);
     }
+  }
+  setIdProduct(id: number){
+    this.idProduct.next(id)
+    console.log(this.idProduct.asObservable())
+  }
+
+  getIdProduct(){
+    console.log(this.idProduct.asObservable())
+    return this.idProduct.asObservable();
   }
 }

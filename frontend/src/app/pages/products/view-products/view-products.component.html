@@ -104,10 +104,10 @@
                   [attr.data-bs-target]="'#deleteModal' + i" (click)="deleteProduct(product.id)">
                   <i class="bi bi-trash3-fill"></i> Eliminar
                 </a>
-                <a routerLink="/history-products" class="btn btn-outline-secondary me-2" [attr.data-bs-toggle]="'modal'"
+                <button [routerLink]="['/history-products', product.id]"  class="btn btn-outline-secondary me-2" [attr.data-bs-toggle]="'modal'"
                   [attr.data-bs-target]="'#modalRecord' + i" >
                   <i class="bi bi-clock-history"> </i> Ver historial
-                </a>
+                </button>
               </div>
             </div>
           </div>

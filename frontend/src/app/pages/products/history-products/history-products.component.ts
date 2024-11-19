@@ -1,23 +1,20 @@
 import { Component } from '@angular/core';
-import { LendingOptionsComponent } from '../../lending/lending-options/lending-options/lending-options.component';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NgbPagination } from '@ng-bootstrap/ng-bootstrap';
-import { User, UserTeacher } from './../../../core/models/user.interface';
-import { Lending } from './../../../core/models/lending.interface';
-import Swal from 'sweetalert2';
+import { User } from '../../../core/models/user.interface';
+import { Lending } from '../../../core/models/lending.interface';
 import { LendingService } from '../../../core/services/lending.service';
 import { UserService } from '../../../core/services/user.service';
-import { RouterLink } from '@angular/router';
-
-
+import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ProductService } from '../../../core/services/product.service';
 
 @Component({
   selector: 'app-history-products',
   standalone: true,
-  imports: [LendingOptionsComponent, CommonModule, FormsModule, NgbPagination, RouterLink],
+  imports: [CommonModule, FormsModule, NgbPagination, RouterLink],  // Ya no es necesario LendingOptionsComponent
   templateUrl: './history-products.component.html',
-  styleUrl: './history-products.component.css'
+  styleUrls: ['./history-products.component.css']
 })
 export class HistoryProductsComponent {
   selectedLending: any;
@@ -25,15 +22,33 @@ export class HistoryProductsComponent {
   lending: Lending[] = [];
   teachers: User[] = [];
   selectedDate: string = '';
+  public filteredLending: Lending[] = [];
   public page = 1;
   public pageSize = 10;
-  constructor(private lendingService: LendingService, private userService: UserService) {}
+  private idProduct!: number;
+  public productId!: string;
+
+  constructor(
+    private route: ActivatedRoute,
+    private lendingService: LendingService,
+    private userService: UserService,
+    private productService: ProductService
+  ) {}
 
   ngOnInit() {
-    this.getLending();
+    const id = this.route.snapshot.paramMap.get('id');
+    if (id !== null) {
+      this.productId = id;
+      this.idProduct = +id
+      console.log(this.productId)
+      this.getHistory()
+    } else {
+      console.error('No se encontró el parámetro ID');
+    }
+    this.getHistory();
   }
 
-  // Función para poder ver los prestamos eliminados filtrados por nombre
+
   filteredList(): Lending[] {
     const filteredLendings = this.lending.filter(
       (lending) =>
@@ -42,26 +57,25 @@ export class HistoryProductsComponent {
     return filteredLendings;
   }
 
-  // Funcion para poder mostrar todos los prestamos eliminados
-  private getLending(): void {
-    this.lendingService.getLendingPending().subscribe((lending: Lending[]) => {
-      this.lending = lending
+  private getHistory(): void {
+    this.lendingService.getHistoryProducts(this.idProduct).subscribe((lending: Lending[]) => {
+      this.lending = lending;
+      console.log(this.lending)
     });
   }
 
-  // Función para poder mostrar todos los profesores
-  private getAllTeachers() {
-    this.userService.getAllTeachers().subscribe((teachers: UserTeacher[]) => {
+
+
+  private getAllTeachers(): void {
+    this.userService.getAllTeachers().subscribe((teachers: User[]) => {
       this.teachers = teachers;
     });
   }
 
-  // Función para mostrar los detalles del prestamo
-  openLendingDetails(id: number) {
+  openLendingDetails(id: number): void {
     this.lendingService.getLendingForEdit(id).subscribe((lending: Lending[]) => {
       this.selectedLending = { ...lending };
       this.getAllTeachers();
     });
   }
-
 }

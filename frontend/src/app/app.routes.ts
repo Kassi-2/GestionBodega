@@ -74,7 +74,7 @@ export const routes: Routes = [
         canActivate: [authGuard],
       },
       {
-      path: 'history-products',
+      path: 'history-products/:id',
       component: HistoryProductsComponent,
       canActivate: [authGuard],
      },

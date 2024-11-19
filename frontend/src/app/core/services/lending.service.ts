@@ -56,6 +56,10 @@ export class LendingService {
     return this.http.put<Lending>(`${this.apiUrl}/active-pending/${id}`, {});
   }
 
+  public getHistoryProducts(id: number): Observable<Lending[]>{
+    return this.http.get<Lending[]>(`${this.apiUrl}/product/${id}`);
+  }
+
   /**
    * Función para enviar el préstamo creado por el usuario al backend.
    *

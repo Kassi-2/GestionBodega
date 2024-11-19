@@ -16,6 +16,7 @@ import { AddProductComponent } from '../add-product/add-product.component';
 import { NgbPagination } from '@ng-bootstrap/ng-bootstrap';
 import { CategoryService } from '../../../core/services/category.service';
 import { Category } from '../../../core/models/category.interface';
+import { HistoryProductsComponent } from "../history-products/history-products.component";
 
 @Component({
   selector: 'app-view-products',
@@ -28,7 +29,7 @@ import { Category } from '../../../core/models/category.interface';
     HttpClientModule,
     NgbPagination,
     RouterLink,
-  ],
+],
   templateUrl: './view-products.component.html',
   styleUrls: ['./view-products.component.css'],
   providers: [ProductService],
@@ -45,6 +46,7 @@ export class ViewProductsComponent implements OnInit {
   public allProducts!: Product[];
   public selectedCategory!: number;
   exampleStock: number = 0;
+  public idProduct: number = 0;
 
   //Estos atributos serviran para buscar un producto según el nombre y para la paginación de la lista de productos.
   searchTerm: string = '';
@@ -269,4 +271,5 @@ export class ViewProductsComponent implements OnInit {
       (product) => product.categoryId == id
     );
   }
+
 }
