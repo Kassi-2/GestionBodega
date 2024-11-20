@@ -20,6 +20,10 @@ export class ProductService {
     return this.http.get<Product[]>(`${this.apiUrl}/active-name-asc`);
   }
 
+  getProductsInactive(): Observable<Product[]> {
+    return this.http.get<Product[]>(`${this.apiUrl}/eliminated`);
+  }
+
   getAvailableProducts(): Observable<Product[]> {
     return this.http.get<Product[]>(`${this.apiUrl}/available`);
   }

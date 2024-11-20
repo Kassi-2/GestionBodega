@@ -34,10 +34,10 @@ export class UserInactiveComponent {
   }
 
   // Función para poder ver los prestamos eliminados filtrados por nombre
-  filteredList(): Lending[] {
-    const filteredLendings = this.lending.filter(
-      (lending) =>
-        lending.borrower.name.toLowerCase().includes(this.searchTerm.toLowerCase())
+  filteredList(): User[] {
+    const filteredLendings = this.user.filter(
+      (user) =>
+        user.name.toLowerCase().includes(this.searchTerm.toLowerCase())
     );
     return filteredLendings;
   }

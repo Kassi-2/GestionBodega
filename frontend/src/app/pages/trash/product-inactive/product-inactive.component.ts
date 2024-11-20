@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { User, UserTeacher } from './../../../core/models/user.interface';
-import { Lending } from './../../../core/models/lending.interface';
+import { Lending, product } from './../../../core/models/lending.interface';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NgbPagination } from '@ng-bootstrap/ng-bootstrap';
@@ -8,6 +8,9 @@ import Swal from 'sweetalert2';
 import { LendingService } from '../../../core/services/lending.service';
 import { UserService } from '../../../core/services/user.service';
 import { TrashOptionsComponent } from '../trash-options/trash-options.component';
+import { ProductService } from '../../../core/services/product.service';
+import { Product } from '../../../core/models/product.interface';
+
 
 
 @Component({
@@ -23,20 +26,21 @@ export class ProductInactiveComponent {
   lending: Lending[] = [];
   teachers: User[] = [];
   selectedDate: string = '';
+  public allProducts!: Product[];
   public page = 1;
   public pageSize = 10;
 
-  constructor(private lendingService: LendingService, private userService: UserService) {}
+  constructor(private lendingService: LendingService, private productService: ProductService) {}
 
   ngOnInit() {
-    this.getLending();
+    this.getProductsEliminated();
   }
 
   // Función para poder ver los prestamos eliminados filtrados por nombre
-  filteredList(): Lending[] {
-    const filteredLendings = this.lending.filter(
-      (lending) =>
-        lending.borrower.name.toLowerCase().includes(this.searchTerm.toLowerCase())
+  filteredList(): product[] {
+    const filteredLendings = this.allProducts.filter(
+      (product) =>
+        product.name.toLowerCase().includes(this.searchTerm.toLowerCase())
     );
     return filteredLendings;
   }
@@ -52,24 +56,18 @@ export class ProductInactiveComponent {
   }
 
   // Funcion para poder mostrar todos los prestamos eliminados
-  private getLending(): void {
-    this.lendingService.getLendingInactive().subscribe((lending: Lending[]) => {
-      this.lending = lending
+  public getProductsEliminated(): void {
+    this.productService.getProductsInactive().subscribe((products) => {
+      this.allProducts = products;
+      console.log(this.allProducts)
     });
   }
 
-  // Función para poder mostrar todos los profesores
-  private getAllTeachers() {
-    this.userService.getAllTeachers().subscribe((teachers: UserTeacher[]) => {
-      this.teachers = teachers;
-    });
-  }
 
   // Función para mostrar los detalles del prestamo
   openLendingDetails(id: number) {
     this.lendingService.getLendingForEdit(id).subscribe((lending: Lending[]) => {
       this.selectedLending = { ...lending };
-      this.getAllTeachers();
     });
   }
 

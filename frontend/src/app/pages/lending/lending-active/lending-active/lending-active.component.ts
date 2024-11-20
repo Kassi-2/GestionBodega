@@ -50,6 +50,11 @@ export class LendingActiveComponent {
   // Funcion para poder mostrar prestamos activos por fecha
   selectDate(event: Event): void {
     const input = event.target as HTMLInputElement;
+    if (!input.value) {
+      this.getLending();
+      return;
+    }
+
     const selectedDate = new Date(input.value);
     const date = `${selectedDate.getFullYear()}-${selectedDate.getMonth()+1}-${selectedDate.getDate()+1}`
     console.log(date)
