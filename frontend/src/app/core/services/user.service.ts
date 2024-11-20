@@ -40,6 +40,12 @@ export class UserService {
   public getAllStudents(): Observable<UserStudent[]> {
     return this.http.get<UserStudent[]>(`${this.apiUrl}/students`);
   }
+
+  public getAllStudentsEliminated(): Observable<User[]>{
+    const s = this.http.get<User[]>(`${this.apiUrl}/eliminated`);
+    console.log(s);
+    return s;
+  }
   /**
    *Función que devuelve una lsita de tipo Profesor de todos los usuarios de ese tipo registrados en la base de datos.
    *

@@ -1,3 +1,5 @@
+import { Degree } from "./degree.interface";
+
 export interface UserRegister {
   rut: string;
   name: string;
@@ -62,6 +64,7 @@ export interface UserTeacher {
 
 export interface Student {
   id: number;
+  degree: Degree;
   codeDegree: string;
 }
 

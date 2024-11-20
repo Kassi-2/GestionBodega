@@ -25,7 +25,13 @@ export class UserService {
   public async getAllStudents(): Promise<Borrower[]> {
     return await this.prismaService.borrower.findMany({
       where: { state: true, type: 'Student' },
-      include: { student: true },
+      include: {
+        student: {
+          include: {
+            degree: true,
+          },
+        },
+      },
       orderBy: { name: 'asc' },
     });
   }
@@ -360,6 +366,13 @@ export class UserService {
     try {
       const users = await this.prismaService.borrower.findMany({
         where: { state: false },
+        include: {
+          student: {
+            include: {
+              degree: true,
+            },
+          },
+        },
       });
       return users;
     } catch (error) {

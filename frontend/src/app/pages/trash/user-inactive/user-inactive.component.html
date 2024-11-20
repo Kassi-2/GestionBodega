@@ -18,36 +18,28 @@
   <table class="table table-striped">
     <thead class="table-light">
       <tr>
-        <th scope="col" class="text-center">Id</th>
-        <th scope="col" class="text-center">Nombre del prestatario</th>
-        <th scope="col" class="text-center">Fecha de creación</th>
-        <th scope="col" class="text-center">Fecha de eliminación</th>
-        <th scope="col" class="text-center">Profesor Asignado</th>
+        <th scope="col" class="text-center">Rut</th>
+        <th scope="col" class="text-center">Nombre</th>
+        <th scope="col" class="text-center">Carrera</th>
+        <th scope="col" class="text-center">Contactos</th>
         <th scope="col" class="text-center">Acciones</th>
       </tr>
     </thead>
     <tbody>
-      @for (lending of filteredList()| slice: (page-1) * pageSize : page * pageSize;track lending;let i = $index) {
+      @for (student of user| slice: (page-1) * pageSize : page * pageSize;track lending;let i = $index) {
       <tr>
-        <th scope="row" class="text-center">{{lending.id}}</th>
-        <td class="text-center">{{lending.borrower.name}}</td>
-        <td class="text-center">{{ lending.date | date:'dd/MM/yyyy HH:mm' }}</td>
-        <td class="text-center">{{ lending.eliminateDate | date:'dd/MM/yyyy HH:mm' }}</td>
+        <th scope="row" class="text-center">{{student.rut}}</th>
+        <td class="text-center">{{student.name}}</td>
+        <td class="text-center">{{ student.student ? (student.student.degree.name) : "-"}}</td>
+        <td class="text-center"> {{student.mail}} <br> @if (student.phoneNumber != 0 && student.phoneNumber) { +56 {{student.phoneNumber}} }
+
         <td class="text-center">
-          @if (lending.teacherId != null) {
-            {{lending.teacher.BorrowerId.name}}
-          }
-          @else {
-            -
-          }
-        </td>
-        <td class="text-center">
-          <button type="button" class="btn btn-outline-success me-2"
-          (click)="openLendingDetails(lending.id)"
-          data-bs-toggle="modal"
-          data-bs-target="#exampleModal">
-          <i class="bi bi-info-circle"></i>
-          </button>
+          <div class="d-flex gap-2 justify-content-center">
+            <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-toggle = "modal"
+              data-bs-target="#modalEditUser" disabled>
+              <i class="bi bi-pencil-square"> Historial</i>
+            </button>
+          </div>
         </td>
       </tr>
       }

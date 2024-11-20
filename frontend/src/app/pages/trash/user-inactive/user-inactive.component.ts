@@ -22,6 +22,7 @@ export class UserInactiveComponent {
   searchTerm: string = '';
   lending: Lending[] = [];
   teachers: User[] = [];
+  user: User[] =[];
   selectedDate: string = '';
   public page = 1;
   public pageSize = 10;
@@ -29,7 +30,7 @@ export class UserInactiveComponent {
   constructor(private lendingService: LendingService, private userService: UserService) {}
 
   ngOnInit() {
-    this.getLending();
+    this.getStudentsEliminated();
   }
 
   // Función para poder ver los prestamos eliminados filtrados por nombre
@@ -52,9 +53,10 @@ export class UserInactiveComponent {
   }
 
   // Funcion para poder mostrar todos los prestamos eliminados
-  private getLending(): void {
-    this.lendingService.getLendingInactive().subscribe((lending: Lending[]) => {
-      this.lending = lending
+  private getStudentsEliminated(): void {
+    this.userService.getAllStudentsEliminated().subscribe((user: User[]) => {
+      this.user = user
+      console.log(user)
     });
   }
 
