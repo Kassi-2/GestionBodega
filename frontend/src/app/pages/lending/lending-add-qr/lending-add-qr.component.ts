@@ -34,6 +34,7 @@ export class LendingAddQrComponent {
     } as any,
   };
 
+
   @ViewChild('action')
   action!: NgxScannerQrcodeComponent;
 
@@ -55,8 +56,14 @@ export class LendingAddQrComponent {
       this.action.stop();
     }
   }
-
-  public onEvent(e: ScannerQRCodeResult[], action?: any): void {
+/**
+ * Función que lee el código Qr y si es positivo el resultado del backend, setea el usuario seleccionado y redirecciona al siguiente paso de creación del préstamo.
+ *
+ * @param {ScannerQRCodeResult[]} e
+ * @param {*} [action]
+ * @memberof LendingAddQrComponent
+ */
+public onEvent(e: ScannerQRCodeResult[], action?: any): void {
     if (e?.length) {
       action?.pause();
 
@@ -67,11 +74,11 @@ export class LendingAddQrComponent {
 
 
         this.userService.readCode(qrCode).subscribe({
-          next: (result: any) => { // Usamos 'any' para permitir el acceso a cualquier propiedad
+          next: (result: any) => {
             console.log(result);
 
             if ('borrower' in result) {
-              const borrower = result.borrower as User;  // Afirma el tipo de borrower como 'User'
+              const borrower = result.borrower as User;
               if (borrower) {
                 Swal.fire({
                   title: 'Código QR Escaneado',
@@ -98,19 +105,20 @@ export class LendingAddQrComponent {
           },
         });
 
-
-
-
-
-
       } else {
         console.warn('No se pudo obtener el valor del QR');
       }
     }
   }
 
-
-  public handle(action: any, fn: string): void {
+/**
+ * Funciónn para iniciar la cámara como lector de qr.
+ *
+ * @param {*} action
+ * @param {string} fn
+ * @memberof LendingAddQrComponent
+ */
+public handle(action: any, fn: string): void {
     const playDeviceFacingBack = (devices: ScannerQRCodeDevice[]) => {
       const device = devices.find(f => (/back|rear|environment/gi.test(f.label)));
       action.playDevice(device ? device.deviceId : devices[0].deviceId);

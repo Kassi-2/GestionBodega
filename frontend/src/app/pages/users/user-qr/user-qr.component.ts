@@ -28,31 +28,42 @@ export class UserQrComponent {
       this.fetchAndGenerateQR();
     }
   }
-
-  private fetchAndGenerateQR() {
+/**
+ * Función que verifica el usuario seleccionado por el otro componente para generar el código Qr.
+ *
+ * @private
+ * @memberof UserQrComponent
+ */
+private fetchAndGenerateQR() {
     if (this.user && this.user.rut) {
       this.userService.getCode(this.user.rut).subscribe({
         next: (result: userToken) => {
-          console.log('Resultado recibido del backend:', result);
           this.qrToken = result.token;
-
           this.generateQRCode(this.qrToken);
-
-          console.log('Código QR generado con token:', this.qrToken);
         },
         error: (error) => {
-          console.error('Error al obtener el código QR:', error.error);
+          console.log('Error al obtener el código QR:', error.error);
         }
       });
     }
   }
-
-  validateEmail(email: string): void {
+/**
+ * Fución para validar el email ingresado por el usuario en un input.
+ *
+ * @param {string} email
+ * @memberof UserQrComponent
+ */
+validateEmail(email: string): void {
     const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     this.isEmailValid = emailPattern.test(email);
   }
-
-  async generateQRCode(data: string) {
+/**
+ * Función que genera el código qr según el token seleccionado mediante un canva.
+ *
+ * @param {string} data
+ * @memberof UserQrComponent
+ */
+async generateQRCode(data: string) {
     if (data) {
       const canvas = this.qrCanvas.nativeElement as HTMLCanvasElement;
       const context = canvas.getContext('2d');
@@ -61,18 +72,27 @@ export class UserQrComponent {
       }
       await QRCode.toCanvas(canvas, data, { errorCorrectionLevel: 'H' });
     } else {
-      console.error('No se pudo generar el QR: No se proporcionó datos.');
+      console.log('No se pudo generar el QR: No se proporcionó datos.');
     }
   }
-
-  removeBlur() {
+/**
+ * Función que quita la difuminación de la tabla de información de los usuarios.
+ *
+ * @memberof UserQrComponent
+ */
+removeBlur() {
     document.querySelector('.table-responsive-sm')?.classList.remove('blur-background');
   }
-
-  sendQr(email: string) {
+/**
+ * Fución que envía al backend el token y el email ingresado por el usuario o el registrado, para que éste haga el envío del correo.
+ *
+ * @param {string} email
+ * @memberof UserQrComponent
+ */
+sendQr(email: string) {
     Swal.fire({
       title: 'Enviando el código QR...',
-      text: 'Por favor espera un momento.',
+      text: 'Por favor espere un momento.',
       icon: 'info',
       showConfirmButton: false,
       allowOutsideClick: false,

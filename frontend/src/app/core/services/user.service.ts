@@ -109,22 +109,45 @@ export class UserService {
   public importUsers(data: FormData) {
     return this.http.post(`${this.apiUrl}/import`, data);
   }
-
-  public readCode(qrCode: string): Observable<User> {
+/**
+ * Función que recibe un token de Qr para poder enviarlo al backend y obtener el usuario asociado a ese token.
+ *
+ * @param {string} qrCode
+ * @return {*}  {Observable<User>}
+ * @memberof UserService
+ */
+public readCode(qrCode: string): Observable<User> {
     const params = new HttpParams().set('token', qrCode);
     return this.http.get<User>(`${this.apiUrlQr}/decode`, { params });
   }
-
-
-  public getCode(rut: string): Observable<userToken> {
+/**
+ * Función que recibe el rut de un usuario y devuelve del backend el token de Qr asociado a ese usuario.
+ *
+ * @param {string} rut
+ * @return {*}  {Observable<userToken>}
+ * @memberof UserService
+ */
+public getCode(rut: string): Observable<userToken> {
     return this.http.post<userToken>(`${this.apiUrlQr}/generate`, { rut });
   }
-
-  public sendCodeByUser(token: string, email: string) {
+/**
+ * Fució para enviar el código Qr por un usuario en particular, para esto debe recibir el token de Qr y el email a enviar.
+ *
+ * @param {string} token
+ * @param {string} email
+ * @return {*}
+ * @memberof UserService
+ */
+public sendCodeByUser(token: string, email: string) {
     return this.http.post(`${this.apiUrlQr}/temporary`, {token: token, mail: email});
   }
-
-  public sendToEveryoneQr(){
+/**
+ * Función que envía al backend la acción de enviar códigos qr a todos los usuarios registrados de la base de datos.
+ *
+ * @return {*}
+ * @memberof UserService
+ */
+public sendToEveryoneQr(){
     return this.http.post(`${this.apiUrlQr}/send-all`, null);
 }
 

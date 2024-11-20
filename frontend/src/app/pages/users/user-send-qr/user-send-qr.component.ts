@@ -15,29 +15,45 @@ export class UserSendQrComponent {
 
   constructor(private userService: UserService){}
 
-  sendToEveryoneQr(){
+/**
+ * Función que envía al servicio la orden de mandar al backend la acción de enviar códigos qr a todos los usuarios registrados en la base de datos.
+ *
+ * @memberof UserSendQrComponent
+ */
+sendToEveryoneQr(){
+    Swal.fire({
+      title: 'Enviando los códigos QR...',
+      text: 'Por favor espere un momento.',
+      icon: 'info',
+      showConfirmButton: false,
+      allowOutsideClick: false,
+    });
+
+    Swal.showLoading();
+
     this.userService.sendToEveryoneQr().subscribe({
-      next: (response) => {
+      next: () => {
+        Swal.close();
+
         Swal.fire({
           title: 'Códigos QR enviados',
-          text: "Los códigos QR fueron enviados exitosamente a todos los usuarios.",
+          text: `Código QR enviados a todos`,
           icon: 'success',
           timer: 1500,
           showConfirmButton: false,
         });
       },
-      error: (error) => {
+      error: () => {
+        Swal.close();
+
         Swal.fire({
           title: 'Error',
-          text: 'Ocurrió un error.',
+          text: 'Ocurrió un error al enviar los correos.',
           icon: 'error',
           timer: 1500,
           showConfirmButton: false,
         });
-        setTimeout(() => {
-          location.reload()
-        }, 1500);
-      },
+      }
     });
   }
 }

@@ -172,8 +172,13 @@ export class UserStudentListComponent implements OnInit, OnDestroy {
       this.user = user;
     });
   }
-
-  public defineQrUser(id: number){
+/**
+ * Función que setea el usuario según el id obtenido mediante el servicio.
+ *
+ * @param {number} id
+ * @memberof UserStudentListComponent
+ */
+public defineQrUser(id: number){
     setTimeout(() => {
       this.userService.getUserById(id).subscribe((user: User) => {
         this.qrUser = user;
@@ -181,8 +186,12 @@ export class UserStudentListComponent implements OnInit, OnDestroy {
         }, 0);
 
   }
-
-  addBlur() {
+/**
+ * Función que llama al css para poder difuminar la tabla de información de los usuarios mientras se muestra el Qr de un usuario.
+ *
+ * @memberof UserStudentListComponent
+ */
+addBlur() {
     document.querySelector('.table-responsive-sm')?.classList.add('blur-background');
   }
 

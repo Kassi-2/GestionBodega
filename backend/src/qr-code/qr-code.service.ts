@@ -39,15 +39,16 @@ export class QrCodeService {
       const base64Data = qrCodeLink.replace(/^data:image\/png;base64,/, "");
 
       const transporter = nodemailer.createTransport({
-        service: "gmail",
+        host: 'smtp.sendgrid.net',
+        port: 587,
         auth: {
-          user: "spam.panol.mecanica@gmail.com", // mail del que se va a enviar
-          pass: "muql uoga wdpz kntn", // contraseña
+          user: 'apikey',
+          pass: "INGRESAR API KEY", 
         },
       });
 
       await transporter.sendMail({
-        from: "spam.panol.mecanica@gmail.com", // mail del que se va a enviar
+        from: "spam.panol.mecanica@gmail.com",
         to: borrower.mail,
         subject: "Código QR para realizar préstamos en el pañol",
         html: `<p>${borrower.name}, este es tu código QR para poder realizar préstamos:</p>
@@ -83,14 +84,15 @@ export class QrCodeService {
         const base64Data = qrCodeLink.replace(/^data:image\/png;base64,/, "");
 
         const transporter = nodemailer.createTransport({
-            service: "gmail",
-            auth: {
-                user: "spam.panol.mecanica@gmail.com", // mail del que se va a enviar
-                pass: "muql uoga wdpz kntn", // contraseña
-            },
+          host: 'smtp.sendgrid.net',
+          port: 587,
+          auth: {
+            user: 'apikey', 
+            pass: "INGRESAR API KEY", 
+          },
         });
         await transporter.sendMail({
-            from: "spam.panol.mecanica@gmail.com", // mail del que se va a enviar
+            from: "spam.panol.mecanica@gmail.com", 
             to: mail, 
             subject: "Código QR para realizar préstamos en el pañol",
             html: `<p>Este es tu código QR para poder realizar préstamos:</p>

@@ -38,6 +38,7 @@ export class UserAssistantListComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {}
 
   public user!: User;
+  public qrUser!: User;
   public assistants: UserAssitant[] = [];
   public filteredAssistant: UserAssitant[] = [];
   public page = 1;
@@ -129,13 +130,26 @@ export class UserAssistantListComponent implements OnInit, OnDestroy {
         this.filteredAssistant = assistants;
       });
   }
-  public qrUser(id: number){
+/**
+ * Función que setea el usuario según el id obtenido mediante el servicio.
+ *
+ * @param {number} id
+ * @memberof UserStudentListComponent
+ */
+public defineQrUser(id: number){
+  setTimeout(() => {
     this.userService.getUserById(id).subscribe((user: User) => {
-      this.user = user;
+      this.qrUser = user;
     });
-  }
+      }, 0);
 
-  addBlur() {
-    document.querySelector('.table-responsive-sm')?.classList.add('blur-background');
-  }
+}
+/**
+* Función que llama al css para poder difuminar la tabla de información de los usuarios mientras se muestra el Qr de un usuario.
+*
+* @memberof UserStudentListComponent
+*/
+addBlur() {
+  document.querySelector('.table-responsive-sm')?.classList.add('blur-background');
+}
 }

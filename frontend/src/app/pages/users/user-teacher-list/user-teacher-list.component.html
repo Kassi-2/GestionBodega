@@ -22,7 +22,7 @@
         <td>
           <div class="d-flex gap-2 justify-content-center">
             <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal"
-        data-bs-target="#modalQrUser" (click)="qrUser(teacher.id); addBlur()">
+        data-bs-target="#modalQrUser" (click)="defineQrUser(teacher.id); addBlur()">
           <i class="bi bi-qr-code-scan"> QR</i>
             </button>
             <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal"
@@ -43,5 +43,5 @@
   </div>
 </div>
 <app-user-edit [user]="user"></app-user-edit>
-<app-user-qr [user]="user" ></app-user-qr>
+<app-user-qr [user]="qrUser"></app-user-qr>
 
