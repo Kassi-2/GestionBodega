@@ -43,7 +43,7 @@ export class QrCodeService {
         port: 587,
         auth: {
           user: 'apikey',
-          pass: "INGRESAR API KEY", 
+          pass: "", 
         },
       });
 
@@ -88,7 +88,7 @@ export class QrCodeService {
           port: 587,
           auth: {
             user: 'apikey', 
-            pass: "INGRESAR API KEY", 
+            pass: "", 
           },
         });
         await transporter.sendMail({

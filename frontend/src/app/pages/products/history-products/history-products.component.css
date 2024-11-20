@@ -5,6 +5,11 @@
   margin-top: 20px;
 }
 
+.btn-primary {
+  background-color: #f79123;
+  border: #f79123;
+}
+
 .custom_input {
   display: flex;
   align-items: center;

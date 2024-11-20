@@ -129,18 +129,7 @@ export class ViewProductsComponent implements OnInit {
       .fire({
         title: '¿Estás seguro?',
         text: `¡Estás a punto de eliminar este producto!`,
-        iconHtml: `
-          <div style="
-            background-color: FCBF49;
-            border-radius: 50%;
-            width: 4rem;
-            height: 4rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-          ">
-            <i class="bi bi-exclamation-triangle-fill"></i>
-          </div>`,
+        icon: 'info',
         showCancelButton: true,
         confirmButtonText: 'Sí, estoy seguro',
         cancelButtonText: 'No, cancelar',

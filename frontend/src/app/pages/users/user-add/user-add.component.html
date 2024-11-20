@@ -127,8 +127,12 @@
             } @else {
             <li><strong>Tipo de Usuario:</strong> Profesor</li>
             }
-            <li><strong>Correo Electrónico:</strong> {{ userForm.get('mail')?.value }}</li>
-            <li><strong>Número de celular:</strong> +56 9 {{ userForm.get('phoneNumber')?.value }}</li>
+            @if(userForm.get('mail')?.value){
+              <li><strong>Correo Electrónico:</strong> {{ userForm.get('mail')?.value }}</li>
+            }
+            @if(userForm.get('phoneNumber')?.value){
+              <li><strong>Número de celular:</strong> +56 9 {{ userForm.get('phoneNumber')?.value }}</li>
+            }
           </ul>
         </div>
         <div class="modal-footer">

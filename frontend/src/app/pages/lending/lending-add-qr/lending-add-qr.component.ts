@@ -102,6 +102,10 @@ public onEvent(e: ScannerQRCodeResult[], action?: any): void {
               timer: 1500,
               showConfirmButton: false,
             });
+            setTimeout(() => {
+              location.reload()
+
+            }, 1500);
           },
         });
 
