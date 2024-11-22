@@ -38,6 +38,7 @@
     <thead class="table-light">
       <tr>
         <th scope="col" class="text-center">Id</th>
+        <th scope="col" class="text-center"></th>
         <th scope="col" class="text-center">Nombre del prestatario</th>
         <th scope="col" class="text-center">Fecha de creación</th>
         <th scope="col" class="text-center">Fecha de finalización</th>
@@ -48,14 +49,36 @@
     <tbody>
       @for (lending of filteredList()| slice: (page-1) * pageSize : page * pageSize;track lending;let i = $index) {
         <tr [ngStyle]="{
-          'background-color': lending.teacherId ? '#fffae6 !important' : 'white !important'
-        }"
-        >
-        <th scope="row" class="text-center">{{lending.id}}</th>
-        <td class="text-center">{{lending.borrower.name}}</td>
-        <td class="text-center">{{ lending.date | date:'dd/MM/yyyy HH:mm' }}</td>
-        <td class="text-center">{{ lending.finalizeDate | date:'dd/MM/yyyy HH:mm' }}</td>
-        <td class="text-center">
+          'background-color': lending.teacherId ? '#fffae6' : 'white'
+        }">
+
+        <th [ngStyle]="{
+          'background-color': lending.teacherId ? '#fffae6' : 'white'
+        }" scope="row" class="text-center">{{lending.id}}</th>
+        @if (lending.teacherId) {
+        <th tr [ngStyle]="{
+          'background-color': lending.teacherId ? '#fffae6' : 'white'
+        }" class="text-center"><i class="bi bi-exclamation-triangle-fill"
+          style="color: #FFCC00;
+                  text-shadow: -1px -1px 0 black, 1px -1px 0 black,
+                              -1px 1px 0 black, 1px 1px 0 black;">
+        </i>
+        </th>
+      }@else {
+        <th></th>
+      }
+        <td [ngStyle]="{
+          'background-color': lending.teacherId ? '#fffae6' : 'white'
+        }" class="text-center">{{lending.borrower.name}}</td>
+        <td [ngStyle]="{
+          'background-color': lending.teacherId ? '#fffae6' : 'white'
+        }" class="text-center">{{ lending.date | date:'dd/MM/yyyy HH:mm' }}</td>
+        <td [ngStyle]="{
+          'background-color': lending.teacherId ? '#fffae6' : 'white'
+        }" class="text-center">{{ lending.finalizeDate | date:'dd/MM/yyyy HH:mm' }}</td>
+        <td [ngStyle]="{
+          'background-color': lending.teacherId ? '#fffae6' : 'white'
+        }" class="text-center">
           @if (lending.teacherId != null) {
             {{lending.teacher.BorrowerId.name}}
           }
@@ -63,7 +86,9 @@
             -
           }
         </td>
-        <td class="text-center">
+        <td [ngStyle]="{
+          'background-color': lending.teacherId ? '#fffae6' : 'white'
+        }" class="text-center">
           <button type="button" class="btn btn-outline-success me-2"
           (click)="openLendingDetails(lending.id)"
           data-bs-toggle="modal"
