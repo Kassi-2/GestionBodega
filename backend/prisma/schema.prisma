@@ -134,10 +134,10 @@ model User {
 }
 
 model Invoice {
-  id                  Int               @id @default(autoincrement())
-  
+  id Int @id @default(autoincrement())
+
   state               Boolean           @default(true)
-  purchaseOrderNumber Int               @unique
+  purchaseOrderNumber String            @unique
   shipmentDate        DateTime
   registrationDate    DateTime          @default(now())
   invoiceCategory     InvoiceCategory[] @relation(name: "invoiceCategory")
