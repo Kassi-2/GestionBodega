@@ -2,7 +2,7 @@ import { SearchService } from './../../../../core/services/search.service';
 import { UserTeacher } from './../../../../core/models/user.interface';
 import { LendingService } from './../../../../core/services/lending.service';
 import { Component, OnInit } from '@angular/core';
-import { NgbAccordionModule, NgbPagination } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAccordionModule, NgbPagination, NgbPopover } from '@ng-bootstrap/ng-bootstrap';
 import Swal from 'sweetalert2';
 import { LendingOptionsComponent } from '../../lending-options/lending-options/lending-options.component';
 import { CommonModule } from '@angular/common';
@@ -15,7 +15,7 @@ import { UserService } from '../../../../core/services/user.service';
 @Component({
   selector: 'app-lending-active',
   standalone: true,
-  imports: [LendingOptionsComponent, NgbAccordionModule, CommonModule, FormsModule, NgbPagination],
+  imports: [LendingOptionsComponent, NgbAccordionModule, CommonModule, FormsModule, NgbPagination, NgbPopover],
   templateUrl: './lending-active.component.html',
   styleUrl: './lending-active.component.css',
   providers: [LendingService]

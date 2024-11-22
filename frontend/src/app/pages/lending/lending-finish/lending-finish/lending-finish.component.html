@@ -47,7 +47,10 @@
     </thead>
     <tbody>
       @for (lending of filteredList()| slice: (page-1) * pageSize : page * pageSize;track lending;let i = $index) {
-      <tr>
+        <tr [ngStyle]="{
+          'background-color': lending.teacherId ? '#fffae6 !important' : 'white !important'
+        }"
+        >
         <th scope="row" class="text-center">{{lending.id}}</th>
         <td class="text-center">{{lending.borrower.name}}</td>
         <td class="text-center">{{ lending.date | date:'dd/MM/yyyy HH:mm' }}</td>
@@ -63,10 +66,11 @@
         <td class="text-center">
           <button type="button" class="btn btn-outline-success me-2"
           (click)="openLendingDetails(lending.id)"
-
+          data-bs-toggle="modal"
           data-bs-target="#exampleModal">
           <i class="bi bi-info-circle"></i>
           </button>
+
           <button class="btn btn-outline-danger me-2"(click)="deleteLending(lending.id)"><i class="bi bi-trash3"></i></button>
         </td>
       </tr>
