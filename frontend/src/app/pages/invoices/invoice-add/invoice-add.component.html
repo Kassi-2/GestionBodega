@@ -1,0 +1,53 @@
+<div class="modal fade" id="addInvoiceModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">
+          Agregar Producto
+        </h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+          <div class="mb-3">
+            <label for="criticalStock" class="col-form-label">N° Orden de Compra: </label>
+
+            <button type="button" class="myButton" placement="end"
+            ngbPopover="Es el número identificador de la factura."
+            popoverTitle="N° Orden de Compra">?</button>
+
+          </div>
+
+          <div class="mb-3">
+            <div class="input-group">
+              <input
+                class="form-control"
+                placeholder="yyyy-mm-dd"
+                name="dp"
+                [(ngModel)]="model"
+                ngbDatepicker
+                #d="ngbDatepicker"
+              />
+              <button class="btn btn-outline-secondary bi bi-calendar3" (click)="d.toggle()" type="button"></button>
+            </div>          @if (notValidDescription) {
+            <small class="text-danger">Ingrese un nombre de producto.</small>
+          }
+          </div>
+
+
+
+
+
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="closeModal()">
+          Cancelar
+        </button>
+        <button type="submit" class="btn btn-primary" (click)="onSubmit()" [disabled]="!userForm.valid">
+          Confirmar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

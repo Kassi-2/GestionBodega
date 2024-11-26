@@ -17,6 +17,8 @@ import { ProductInactiveComponent } from './pages/trash/product-inactive/product
 import { UserInactiveComponent } from './pages/trash/user-inactive/user-inactive.component';
 import { LendingAddQrComponent } from './pages/lending/lending-add-qr/lending-add-qr.component';
 import { CategoryListComponent } from './pages/categories/category-list/category-list.component';
+import { InvoiceListComponent } from './pages/invoices/invoice-list/invoice-list.component';
+import { InvoiceAddComponent } from './pages/invoices/invoice-add/invoice-add.component';
 
 export const routes: Routes = [
   {
@@ -96,6 +98,11 @@ export const routes: Routes = [
       {
         path: 'category',
         component: CategoryListComponent,
+        canActivate: [authGuard],
+      },
+      {
+        path: 'invoices',
+        component: InvoiceListComponent,
         canActivate: [authGuard],
       },
     ],
