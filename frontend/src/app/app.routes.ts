@@ -19,6 +19,7 @@ import { LendingAddQrComponent } from './pages/lending/lending-add-qr/lending-ad
 import { CategoryListComponent } from './pages/categories/category-list/category-list.component';
 import { InvoiceListComponent } from './pages/invoices/invoice-list/invoice-list.component';
 import { InvoiceAddComponent } from './pages/invoices/invoice-add/invoice-add.component';
+import { UserManualViewComponent } from './shared/components/user-manual-view/user-manual-view.component';
 
 export const routes: Routes = [
   {
@@ -48,6 +49,11 @@ export const routes: Routes = [
       {
         path: 'inventory',
         component: ViewProductsComponent,
+        canActivate: [authGuard],
+      },
+      {
+        path: 'user-manual',
+        component: UserManualViewComponent,
         canActivate: [authGuard],
       },
       {
@@ -105,6 +111,7 @@ export const routes: Routes = [
         component: InvoiceListComponent,
         canActivate: [authGuard],
       },
+
     ],
     canActivate: [authGuard],
   },
