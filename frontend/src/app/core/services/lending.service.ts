@@ -60,6 +60,9 @@ export class LendingService {
     return this.http.get<Lending[]>(`${this.apiUrl}/product/${id}`);
   }
 
+  public lendingForName(name: string): Observable<Lending[]>{
+    return this.http.get<Lending[]>(`${this.apiUrl}/finalized/${name}`);
+  }
   /**
    * Función para enviar el préstamo creado por el usuario al backend.
    *

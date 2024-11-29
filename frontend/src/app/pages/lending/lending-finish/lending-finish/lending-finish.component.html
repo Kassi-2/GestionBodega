@@ -5,7 +5,7 @@
       <app-lending-options class="me-5"></app-lending-options>
 
       <button type="button" class="btn btn-outline-secondary custom-margin-left btn-custom rounded-pill custom-button"
-
+        data-bs-toggle="modal"
         data-bs-target="#modalSearch">
         <i class="bi bi-search ms-2"></i> Buscar préstamos antiguos
       </button>
@@ -173,7 +173,7 @@
       />
       <button class="btn btn-outline-secondary" (click)="handleSubmit()">Enviar</button>
       </div>
-      @if (showList) {
+      @if (!showList) {
       <table class="table table-striped">
         <thead class="table-light">
           <tr>
@@ -185,7 +185,7 @@
           </tr>
         </thead>
         <tbody>
-          @for (lending of lending| slice: (pageLending-1) * pageSizeLending : pageLending * pageSizeLending; track lending; let i = $index) {
+          @for (lending of lendingForName| slice: (pageLending-1) * pageSizeLending : pageLending * pageSizeLending; track lending; let i = $index) {
           <tr>
             <th scope="row" class="text-center">{{lending.id}}</th>
             <td class="text-center">{{lending.borrower.name}}</td>
