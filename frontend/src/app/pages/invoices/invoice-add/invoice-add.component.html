@@ -1,52 +1,64 @@
 <div class="modal fade" id="addInvoiceModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
+  <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">
-          Agregar Producto
-        </h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        <h5 class="modal-title" id="exampleModalLabel">Crear Factura</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+
+          <!-- N° Orden de Compra -->
           <div class="mb-3">
-            <label for="criticalStock" class="col-form-label">N° Orden de Compra: </label>
-
-            <button type="button" class="myButton" placement="end"
-            ngbPopover="Es el número identificador de la factura."
-            popoverTitle="N° Orden de Compra">?</button>
-
+            <label for="orderNumber" class="form-label">N° Orden de Compra:</label>
+            <input type="text" id="orderNumber" class="form-control" formControlName="purchaseOrderNumber"
+              [class.is-invalid]="notValidOrderNumber" placeholder="Ingrese N° Orden de Compra">
+            <div *ngIf="notValidOrderNumber" class="text-danger">El número de orden es obligatorio.</div>
           </div>
 
+          <!-- Fecha de Recibo -->
           <div class="mb-3">
-            <div class="input-group">
-              <input
-                class="form-control"
-                placeholder="yyyy-mm-dd"
-                name="dp"
-                [(ngModel)]="model"
-                ngbDatepicker
-                #d="ngbDatepicker"
-              />
-              <button class="btn btn-outline-secondary bi bi-calendar3" (click)="d.toggle()" type="button"></button>
-            </div>          @if (notValidDescription) {
-            <small class="text-danger">Ingrese un nombre de producto.</small>
-          }
+            <label for="receiptDate" class="form-label">Fecha de Recibo:</label>
+            <input type="date" id="receiptDate" class="form-control" formControlName="registrationDate">
           </div>
 
+          <!-- Fecha de Envío -->
+          <div class="mb-3">
+            <label for="shipmentDate" class="form-label">Fecha de Envío:</label>
+            <input type="date" id="shipmentDate" class="form-control" formControlName="shipmentDate">
+          </div>
 
+          <!-- Adjuntar Archivo PDF -->
+          <div class="mb-3">
+            <label for="invoiceFile" class="form-label">Adjuntar Archivo PDF:</label>
+            <input type="file" class="form-control" id="invoiceFile" (change)="onFileSelected($event)" accept="application/pdf">
+            <div *ngIf="userForm.get('invoiceFile')?.errors?.invalidFileType && userForm.get('invoiceFile')?.touched" class="text-danger">
+              Solo se permiten archivos PDF.
+            </div>
+          </div>
 
+          <!-- Categorías -->
+          <div class="mb-3">
+            <label for="categories" class="form-label">Seleccionar Categorías:</label>
+            <div id="categories">
+              @for(category of categories; track $index){
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" [value]="category.id" (change)="onCategoryChange($event, category.id)"
+                    [checked]="userForm.get('categories')?.value.includes(category.id)">
+                  <label class="form-check-label">{{ category.name }}</label>
+                </div>
+              }
 
+            </div>
+            <div *ngIf="notValidCategories" class="text-danger">Debe seleccionar al menos una categoría.</div>
+          </div>
 
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-primary" [disabled]="!userForm.valid">Confirmar</button>
+          </div>
         </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="closeModal()">
-          Cancelar
-        </button>
-        <button type="submit" class="btn btn-primary" (click)="onSubmit()" [disabled]="!userForm.valid">
-          Confirmar
-        </button>
+
       </div>
     </div>
   </div>

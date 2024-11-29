@@ -4,7 +4,7 @@
     position: relative;
     max-width: 200%;
   }
-  
+
   .input {
     font-size: 18px;
     padding: 5px 10px;
@@ -17,19 +17,19 @@
     border-radius: 40px;
     box-shadow: 3px 3px 2px 0px #E2E2E2;
     transition: 0.3s ease;
-  
+
   }
-  
+
   .input:focus {
     background: #F2F2F2;
     border: 1px solid #F79123;
     border-radius: 40px;
   }
-  
+
   .input::placeholder {
     color: #DDDDDD;
   }
-  
+
   .svg_icon {
     position: absolute;
     left: 10px;
@@ -37,11 +37,55 @@
     width: 18px;
     height: 18px;
   }
-  
+
   .d-flex.gap-4 {
     gap: 1rem;
   }
-  
+
   .subtitulo{
     margin-top: 20px;
   }
+
+/* Estilo ajustado para tarjetas de categorías */
+.category-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 15px; /* Menor separación entre tarjetas */
+}
+
+.category-card {
+  background-color: #f9f9f9;
+  border: 2px solid #ccc;
+  border-radius: 8px; /* Bordes ligeramente menos redondeados */
+  padding: 10px 20px; /* Padding más reducido */
+  text-align: center;
+  width: 120px; /* Tarjeta más estrecha */
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra más sutil */
+  color: #333;
+  font-size: 14px; /* Texto más pequeño */
+}
+
+.category-card:hover {
+  background-color: #FF9933; /* Fondo naranja al pasar el cursor */
+  border-color: #FF9933;
+  color: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); /* Sombra ligeramente más intensa */
+  transform: translateY(-3px); /* Elevación más sutil */
+}
+
+.active-category {
+  background-color: #FF9933;
+  color: white;
+  border-color: #FF9933;
+  font-weight: bold;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transform: translateY(-3px); /* Elevación más ligera */
+}
+
+.category-card p {
+  margin: 0;
+  font-size: 16px; /* Tamaño de texto reducido */
+  font-weight: 500; /* Peso del texto */
+}

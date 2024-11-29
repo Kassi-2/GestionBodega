@@ -14,7 +14,7 @@ import {
   User,
 } from '../../../core/models/user.interface';
 import { HttpClientModule } from '@angular/common/http';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Degree } from '../../../core/models/degree.interface';
 import { NgbPagination } from '@ng-bootstrap/ng-bootstrap';
@@ -67,7 +67,8 @@ export class LendingAddComponent implements OnInit {
   constructor(
     private LendingService: LendingService,
     private productService: ProductService,
-    private userService: UserService
+    private userService: UserService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -452,6 +453,14 @@ export class LendingAddComponent implements OnInit {
         });
 
         this.initializeLendingForm();
+        if(this.lending.teacherId){
+          this.router.navigateByUrl('/lendings/pending')
+        }
+        else{
+          this.router.navigateByUrl('/lendings/active')
+
+        }
+
       },
       error: (error) => {
         swalWithBootstrapButtons.fire({

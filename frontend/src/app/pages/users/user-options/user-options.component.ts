@@ -5,17 +5,20 @@ import { FormsModule } from '@angular/forms';
 import { UserAddComponent } from '../user-add/user-add.component';
 import { RouterLink } from '@angular/router';
 import { UserSendQrComponent } from '../user-send-qr/user-send-qr.component';
+import { CommonModule } from '@angular/common';
+
 
 @Component({
   selector: 'app-user-options',
   standalone: true,
-  imports: [UserAddComponent, UsersImportComponent, FormsModule, RouterLink, UserSendQrComponent
+  imports: [UserAddComponent, UsersImportComponent, FormsModule, RouterLink, UserSendQrComponent, CommonModule
   ],
   templateUrl: './user-options.component.html',
   styleUrl: './user-options.component.css',
 })
 export class UserOptionsComponent {
   searchTerm: string = '';
+  selectedCategory: string = 'students';
 
   constructor(private searchService: SearchService) {}
   /**
@@ -25,5 +28,9 @@ export class UserOptionsComponent {
    */
   onSearch() {
     this.searchService.updateSearchTerm(this.searchTerm);
+  }
+
+  selectCategory(category: string): void {
+    this.selectedCategory = category;
   }
 }

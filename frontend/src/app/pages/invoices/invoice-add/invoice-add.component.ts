@@ -1,45 +1,126 @@
-import { Component, inject } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { NgbCalendar, NgbDatepickerModule, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
-import { FormsModule } from '@angular/forms';
-import { JsonPipe } from '@angular/common';
-
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { CategoryService } from '../../../core/services/category.service';
+import { Category } from '../../../core/models/category.interface';
+import { InvoiceService } from '../../../core/services/invoice.service';
+import { Invoice } from '../../../core/models/invoice.interface'; // Asegúrate de tener la interfaz Invoice
+import Swal from 'sweetalert2';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-invoice-add',
   standalone: true,
-  imports: [ReactiveFormsModule, NgbDatepickerModule, FormsModule],
+  imports: [ReactiveFormsModule],  // Importación existente
   templateUrl: './invoice-add.component.html',
-  styleUrl: './invoice-add.component.css'
 })
-export class InvoiceAddComponent {
-  today = inject(NgbCalendar).getToday();
+export class InvoiceAddComponent implements OnInit {
+  userForm!: FormGroup;
+  public categories: Category[] = [];
 
-	model!: NgbDateStruct ;
-	date!: { year: number; month: number; };
-  public userForm!: FormGroup;
+  constructor(
+    private fb: FormBuilder,
+    private categoryService: CategoryService,
+    private invoiceService: InvoiceService
+  ) {}
 
-  ngOnInit() {
-    this.userForm = new FormGroup({
-      name: new FormControl('', [Validators.required]),
-      description: new FormControl(null),
+  ngOnInit(): void {
+    this.userForm = this.fb.group({
+      purchaseOrderNumber: ['', Validators.required],
+      shipmentDate: ['', Validators.required],
+      registrationDate: ['', Validators.required],
+      invoiceFile: [null, Validators.required],
+      categories: [[], Validators.required], // Validación para mínimo una categoría
+    });
 
+    this.getAllCategories();
+  }
+
+  onSubmit(): void {
+    if (this.userForm.invalid) {
+      this.userForm.markAllAsTouched(); // Marcar todos los campos como tocados para mostrar errores
+      return;
+    }
+
+    const invoice: Invoice = {
+      id: 0,
+      state: true,
+      purchaseOrderNumber: this.userForm.value.purchaseOrderNumber,
+      shipmentDate: this.userForm.value.shipmentDate,
+      registrationDate: this.userForm.value.registrationDate,
+      invoiceCategory: this.userForm.value.categories.map((categoryId: number) => ({
+        invoice: {} as Invoice,
+        category: { id: categoryId} as Category,
+      })),
+    };
+
+    console.log(invoice)
+
+    this.invoiceService.addInvoice(invoice).subscribe({
+      next: () => {
+        Swal.fire({
+          title: '¡Factura creada!',
+          text: 'La factura ha sido creada con éxito.',
+          icon: 'success',
+          timer: 1500,
+          showConfirmButton: false,
+        });
+      },
+      error: (error) => {
+        Swal.fire({
+          title: 'Error',
+          text: 'Hubo un error al crear la factura.',
+          icon: 'error',
+          timer: 1500,
+          showConfirmButton: false,
+        });
+        console.error(error);
+      },
     });
   }
 
-  get notValidDescription() {
-    return (
-      this.userForm.get('description')?.invalid && this.userForm.get('description')?.touched
-    );
+  onCategoryChange(event: any, categoryId: number): void {
+    const selectedCategories = this.userForm.get('categories')?.value as number[];
+
+    if (event.target.checked) {
+      selectedCategories.push(categoryId);
+    } else {
+      const index = selectedCategories.indexOf(categoryId);
+      if (index > -1) {
+        selectedCategories.splice(index, 1);
+      }
+    }
+    this.userForm.patchValue({ categories: selectedCategories });
+    this.userForm.get('categories')?.updateValueAndValidity(); // Actualiza la validez del campo
   }
 
-  closeModal() {
-    this.userForm.reset();
+  onFileSelected(event: any): void {
+    const file = event.target.files[0];
+    if (file && file.type === 'application/pdf') {
+      this.userForm.patchValue({ invoiceFile: file });
+      this.userForm.get('invoiceFile')?.setErrors(null); // Limpiar errores si es válido
+    } else {
+      this.userForm.patchValue({ invoiceFile: null });
+      this.userForm.get('invoiceFile')?.setErrors({ invalidFileType: true });
+    }
   }
 
-
-  onSubmit(): any {
-
+  private getAllCategories(): void {
+    this.categoryService.getAllCategories().subscribe({
+      next: (result) => {
+        this.categories = result;
+      },
+      error: (error) => {
+        alert(error);
+      },
+    });
   }
 
+  // Métodos para comprobar la validez de campos individuales
+  get notValidOrderNumber() {
+    return this.userForm.get('purchaseOrderNumber')?.invalid && this.userForm.get('purchaseOrderNumber')?.touched;
+  }
+
+  get notValidCategories() {
+    return this.userForm.get('categories')?.invalid && this.userForm.get('categories')?.touched;
+  }
 }

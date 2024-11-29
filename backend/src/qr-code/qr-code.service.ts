@@ -43,7 +43,7 @@ export class QrCodeService {
         port: 587,
         auth: {
           user: 'apikey',
-          pass: "", 
+          pass: '', 
         },
       });
 
