@@ -3,19 +3,20 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CategoryService } from '../../../core/services/category.service';
 import { Category } from '../../../core/models/category.interface';
 import { InvoiceService } from '../../../core/services/invoice.service';
-import { Invoice } from '../../../core/models/invoice.interface'; // Asegúrate de tener la interfaz Invoice
+import { Invoice, newInvoice } from '../../../core/models/invoice.interface';
 import Swal from 'sweetalert2';
 import { ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-invoice-add',
   standalone: true,
-  imports: [ReactiveFormsModule],  // Importación existente
+  imports: [ReactiveFormsModule],
   templateUrl: './invoice-add.component.html',
 })
 export class InvoiceAddComponent implements OnInit {
   userForm!: FormGroup;
   public categories: Category[] = [];
+
 
   constructor(
     private fb: FormBuilder,
@@ -24,12 +25,17 @@ export class InvoiceAddComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    const today = new Date();
+    today.setDate(today.getDate() - 1);
+    const formattedDate = today.toISOString().split('T')[0];
+
+
     this.userForm = this.fb.group({
       purchaseOrderNumber: ['', Validators.required],
-      shipmentDate: ['', Validators.required],
-      registrationDate: ['', Validators.required],
+      shipmentDate: [formattedDate, Validators.required],
+      registrationDate: [formattedDate, Validators.required],
       invoiceFile: [null, Validators.required],
-      categories: [[], Validators.required], // Validación para mínimo una categoría
+      categories: [[], Validators.required],
     });
 
     this.getAllCategories();
@@ -37,20 +43,19 @@ export class InvoiceAddComponent implements OnInit {
 
   onSubmit(): void {
     if (this.userForm.invalid) {
-      this.userForm.markAllAsTouched(); // Marcar todos los campos como tocados para mostrar errores
+      this.userForm.markAllAsTouched();
       return;
     }
 
-    const invoice: Invoice = {
-      id: 0,
-      state: true,
+    const invoice: newInvoice = {
       purchaseOrderNumber: this.userForm.value.purchaseOrderNumber,
       shipmentDate: this.userForm.value.shipmentDate,
       registrationDate: this.userForm.value.registrationDate,
       invoiceCategory: this.userForm.value.categories.map((categoryId: number) => ({
-        invoice: {} as Invoice,
-        category: { id: categoryId} as Category,
+        invoice: null,
+        category: { id: categoryId } as Category
       })),
+      file: this.userForm.value.invoiceFile
     };
 
     console.log(invoice)
@@ -78,6 +83,21 @@ export class InvoiceAddComponent implements OnInit {
     });
   }
 
+  get notValidpurchaseOrderNumber() {
+    return (
+      this.userForm.get('purchaseOrderNumber')?.invalid &&
+      this.userForm.get('purchaseOrderNumber')?.touched
+    );
+  }
+
+  get notValidFile() {
+    return (
+      this.userForm.get('file')?.invalid &&
+      this.userForm.get('file')?.touched
+    );
+  }
+
+
   onCategoryChange(event: any, categoryId: number): void {
     const selectedCategories = this.userForm.get('categories')?.value as number[];
 
@@ -90,14 +110,14 @@ export class InvoiceAddComponent implements OnInit {
       }
     }
     this.userForm.patchValue({ categories: selectedCategories });
-    this.userForm.get('categories')?.updateValueAndValidity(); // Actualiza la validez del campo
+    this.userForm.get('categories')?.updateValueAndValidity();
   }
 
   onFileSelected(event: any): void {
     const file = event.target.files[0];
     if (file && file.type === 'application/pdf') {
       this.userForm.patchValue({ invoiceFile: file });
-      this.userForm.get('invoiceFile')?.setErrors(null); // Limpiar errores si es válido
+      this.userForm.get('invoiceFile')?.setErrors(null);
     } else {
       this.userForm.patchValue({ invoiceFile: null });
       this.userForm.get('invoiceFile')?.setErrors({ invalidFileType: true });
@@ -115,7 +135,6 @@ export class InvoiceAddComponent implements OnInit {
     });
   }
 
-  // Métodos para comprobar la validez de campos individuales
   get notValidOrderNumber() {
     return this.userForm.get('purchaseOrderNumber')?.invalid && this.userForm.get('purchaseOrderNumber')?.touched;
   }
