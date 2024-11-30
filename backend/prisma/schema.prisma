@@ -39,8 +39,6 @@ model Degree {
 model Teacher {
   BorrowerId Borrower  @relation(fields: [id], references: [id])
   id         Int       @id
-  BorrowerId Borrower  @relation(fields: [id], references: [id])
-  id         Int       @id
   lendings   Lending[] @relation(name: "authorizes")
 }
 
@@ -67,33 +65,9 @@ model Product {
   category        Category         @relation(fields: [categoryId], references: [id])
   categoryId      Int
   lendingProducts LendingProduct[] @relation(name: "productLending")
-
-  id              Int              @id @default(autoincrement())
-  name            String
-  description     String?
-  stock           Int?             @default(0)
-  criticalStock   Int              @default(1)
-  state           Boolean          @default(true)
-  fungible        Boolean          @default(false)
-  category        Category         @relation(fields: [categoryId], references: [id])
-  categoryId      Int
-  lendingProducts LendingProduct[] @relation(name: "productLending")
-
   @@unique([name])
 }
 
-model Lending {
-  id              Int              @id @default(autoincrement())
-  state           LendingState     @default(Active)
-  date            DateTime         @default(now())
-  finalizeDate    DateTime?
-  eliminateDate   DateTime?
-  comments        String?
-  BorrowerId      Int
-  borrower        Borrower         @relation(name: "make", fields: [BorrowerId], references: [id])
-  alerts          AlertLending[]
-  teacherId       Int?
-  teacher         Teacher?         @relation(name: "authorizes", fields: [teacherId], references: [id])
 model Lending {
   id              Int              @id @default(autoincrement())
   state           LendingState     @default(Active)
@@ -115,11 +89,7 @@ model LendingProduct {
   amount    Int
   lending   Lending @relation(name: "lendingProducts", fields: [lendingId], references: [id])
   product   Product @relation(name: "productLending", fields: [productId], references: [id])
-  amount    Int
-  lending   Lending @relation(name: "lendingProducts", fields: [lendingId], references: [id])
-  product   Product @relation(name: "productLending", fields: [productId], references: [id])
 
-  @@id([lendingId, productId])
   @@id([lendingId, productId])
   @@unique([lendingId, productId])
 }
@@ -136,19 +106,11 @@ model Alert {
   id          Int            @id @default(autoincrement())
   date        DateTime
   name        String
-model Alert {
-  id          Int            @id @default(autoincrement())
-  date        DateTime
-  name        String
   description String
   state       Boolean        @default(false)
   lendings    AlertLending[]
 }
 
-model AlertLending {
-  alert     Alert   @relation(fields: [alertId], references: [id], onDelete: Cascade)
-  alertId   Int
-  lending   Lending @relation(fields: [lendingId], references: [id])
 model AlertLending {
   alert     Alert   @relation(fields: [alertId], references: [id], onDelete: Cascade)
   alertId   Int
@@ -163,14 +125,9 @@ model Category {
   name            String            @unique
   products        Product[]
   invoiceCategory InvoiceCategory[] @relation(name: "categoryInvoice")
-  id              Int               @id @default(autoincrement())
-  name            String            @unique
-  products        Product[]
-  invoiceCategory InvoiceCategory[] @relation(name: "categoryInvoice")
 }
 
 model User {
-  mail     String @id
   mail     String @id
   username String @unique
   password String
