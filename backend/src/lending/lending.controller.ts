@@ -25,6 +25,10 @@ export class LendingController {
   async getLendingById(@Param('id') id: string) {
     return this.lendingService.getLendingById(Number(id));
   }
+  @Get('finalized/:borrowerName')
+  async getFinalizedLendingsByBorrowerName(@Param('borrowerName') borrowerName: string){
+    return this.lendingService.getFinalizedLendingsByBorrowerName(borrowerName);
+  }
 
   @Get('lending-create-date/:date')
   async getLendingByCreateDate(@Param('date') date: string) {
