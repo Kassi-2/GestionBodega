@@ -138,8 +138,8 @@ model Invoice {
 
   state               Boolean           @default(true)
   purchaseOrderNumber String            @unique
-  shipmentDate        DateTime
-  registrationDate    DateTime          @default(now())
+  shipmentDate        DateTime          @db.Date
+  registrationDate    DateTime          @default(now()) @db.Date
   invoiceCategory     InvoiceCategory[] @relation(name: "invoiceCategory")
 }
 
