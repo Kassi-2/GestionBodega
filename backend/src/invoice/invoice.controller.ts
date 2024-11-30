@@ -8,69 +8,91 @@ export class InvoiceController {
   constructor(private readonly invoiceService: InvoiceService) {}
 
   @Post('upload')
-  @UseInterceptors(
-    FileInterceptor('file', {
-      storage: multer.diskStorage({
-        destination: './uploads',
-        filename: (req, file, callback) => {
-          const filename = `${Date.now()}-${file.originalname}`;
-          callback(null, filename);
-        },
-      }),
+@UseInterceptors(
+  FileInterceptor('file', {
+    storage: multer.diskStorage({
+      destination: './uploads',
+      filename: (req, file, callback) => {
+        const filename = `${Date.now()}-${file.originalname}`;
+        callback(null, filename);
+      },
     }),
-  )
-  async uploadFile(
-    @UploadedFile() file: Express.Multer.File,
-    @Body() body: {
-      purchaseOrderNumber: string;
-      shipmentDate: string;
-      categoryId: string; 
-      registrationDate?: string;
-    }
-  ) {
-    if (!file) {
-      throw new BadRequestException('Debe proporcionar un archivo');
-    }
-
-    const categoryId = parseInt(body.categoryId, 10); 
-
-    if (isNaN(categoryId)) {
-      throw new BadRequestException('categoryId debe ser un número válido');
-    }
-
-    const result = await this.invoiceService.processAndUploadFile(
-      file,
-      body.purchaseOrderNumber,
-      body.shipmentDate,
-      categoryId,
-      body.registrationDate
-    );
-
-    return result;
+  }),
+)
+async uploadFile(
+  @UploadedFile() file: Express.Multer.File,
+  @Body() body: {
+    purchaseOrderNumber: string;
+    shipmentDate: string;
+    categoryIds: string[];  
+    registrationDate?: string;
   }
+) {
+  if (!file) {
+    throw new BadRequestException('Debe proporcionar un archivo');
+  }
+
+  const categoryIds = body.categoryIds.map((categoryId) => parseInt(categoryId, 10));
+
+  if (categoryIds.some(isNaN)) {
+    throw new BadRequestException('categoryIds deben ser números válidos');
+  }
+  const result = await this.invoiceService.processAndUploadFile(
+    file,
+    body.purchaseOrderNumber,
+    body.shipmentDate,
+    categoryIds,  
+    body.registrationDate
+  );
+
+  return result;
+}
+
 
   @Put('update/:id')
-  async updateInvoice(
-    @Param('id') id: number, 
-    @Body() body: {
-      purchaseOrderNumber: string;
-      shipmentDate: string;
-      registrationDate: string;
-      fileUrl: string;
-      categoryId: string;
-    }
-  ) {
-    const categoryId = parseInt(body.categoryId, 10);
-
-    const result = await this.invoiceService.updateInvoice(
-      id,
-      body.purchaseOrderNumber,
-      body.shipmentDate,
-      body.registrationDate,
-      body.fileUrl,
-      categoryId,
-    );
-
-    return result;
+@UseInterceptors(
+  FileInterceptor('file', {
+    storage: multer.diskStorage({
+      destination: './uploads', 
+      filename: (req, file, callback) => {
+        const filename = `${Date.now()}-${file.originalname}`;
+        callback(null, filename); 
+      },
+    }),
+  }),
+)
+async updateInvoice(
+  @Param('id') id: string, 
+  @Body() body: {
+    purchaseOrderNumber?: string;
+    shipmentDate?: string;
+    registrationDate?: string;
+    categoryIds?: string[]; 
+  },
+  @UploadedFile() file: Express.Multer.File, 
+) {
+  const parsedId = parseInt(id, 10); 
+  if (isNaN(parsedId)) {
+    throw new BadRequestException('El ID debe ser un número válido');
   }
+
+  const categoryIds = body.categoryIds
+    ? body.categoryIds.map((categoryId) => parseInt(categoryId, 10)) 
+    : undefined;
+
+  if (categoryIds && categoryIds.some((categoryId) => isNaN(categoryId))) {
+    throw new BadRequestException('categoryIds deben ser números válidos');
+  }
+
+  const result = await this.invoiceService.updateInvoice(
+    parsedId,
+    body.purchaseOrderNumber,
+    body.shipmentDate,
+    body.registrationDate,
+    file, 
+    categoryIds, 
+  );
+
+  return result;
+}
 }

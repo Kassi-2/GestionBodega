@@ -12,59 +12,60 @@ export class InvoiceService {
     file: Express.Multer.File,
     purchaseOrderNumber: string,
     shipmentDate: string,
-    categoryId: number,
-    registrationDate: string 
+    categoryIds: number[], 
+    registrationDate: string
   ) {
     try {
-
       const existingInvoice = await this.prisma.invoice.findUnique({
         where: { purchaseOrderNumber },
       });
-
+  
       if (existingInvoice) {
         throw new BadRequestException('El número de orden de compra ya existe');
       }
 
-      const existingCategory = await this.prisma.category.findUnique({
-        where: { id: categoryId },
-      });
-
-      if (!existingCategory) {
-        throw new BadRequestException('La categoría especificada no existe');
+      for (const categoryId of categoryIds) {
+        const existingCategory = await this.prisma.category.findUnique({
+          where: { id: categoryId },
+        });
+  
+        if (!existingCategory) {
+          throw new BadRequestException(`La categoría con ID ${categoryId} no existe`);
+        }
       }
-
+  
       const fileContent = fs.readFileSync(file.path);
       const fileBase64 = fileContent.toString('base64');
-
+  
       const uploadResult = await this.uploadToGoogleAppsScript(
         fileBase64,
         file.mimetype,
         file.originalname
       );
-
+  
       if (!uploadResult.success) {
         throw new Error('Error al intentar subir el archivo');
       }
-
-      const updatedInvoice = await this.prisma.invoice.create({
+  
+      const newInvoice = await this.prisma.invoice.create({
         data: {
           purchaseOrderNumber,
           shipmentDate: new Date(shipmentDate),
           registrationDate: registrationDate ? new Date(registrationDate) : new Date(),
           fileUrl: uploadResult.fileUrl,
           invoiceCategory: {
-            create: {
+            create: categoryIds.map((categoryId) => ({
               categoryId,
-            },
+            })),
           },
         },
         include: {
           invoiceCategory: true,
         },
       });
-
-      fs.unlinkSync(file.path);
-      return updatedInvoice;
+  
+      fs.unlinkSync(file.path); 
+      return newInvoice;
     } catch (error) {
       console.error('Error procesando el archivo:', error.message);
       throw error instanceof BadRequestException
@@ -72,6 +73,92 @@ export class InvoiceService {
         : new Error('No se pudo procesar el archivo');
     }
   }
+
+  async updateInvoice(
+    id: number,
+    purchaseOrderNumber?: string,
+    shipmentDate?: string,
+    registrationDate?: string,
+    file?: Express.Multer.File,
+    categoryIds?: number[],
+  ) {
+    try {
+      const invoice = await this.prisma.invoice.findUnique({
+        where: { id },
+        include: { invoiceCategory: { select: { categoryId: true } } },
+      });
+  
+      if (!invoice) {
+        throw new Error('La factura no existe');
+      }
+  
+      if (categoryIds && categoryIds.length === 0) {
+        throw new Error('Debe haber al menos una categoría asociada');
+      }
+  
+      const existingCategoryIds = invoice.invoiceCategory.map((ic) => ic.categoryId);
+  
+      const categoriesToRemove = existingCategoryIds.filter(
+        (categoryId) => !categoryIds?.includes(categoryId),
+      );
+  
+      const categoriesToAdd = categoryIds?.filter((categoryId) => !existingCategoryIds.includes(categoryId));
+  
+      if (categoriesToRemove.length > 0) {
+        await this.prisma.invoiceCategory.deleteMany({
+          where: {
+            invoiceId: id,
+            categoryId: { in: categoriesToRemove },
+          },
+        });
+      }
+  
+      if (categoriesToAdd?.length > 0) {
+        await this.prisma.invoiceCategory.createMany({
+          data: categoriesToAdd.map((categoryId) => ({
+            invoiceId: id,
+            categoryId,
+          })),
+        });
+      }
+  
+      let fileUrl: string | undefined;
+      if (file) {
+        const fileContent = fs.readFileSync(file.path);
+        const fileBase64 = fileContent.toString('base64');
+  
+        const uploadResult = await this.uploadToGoogleAppsScript(
+          fileBase64,
+          file.mimetype,
+          file.originalname,
+        );
+  
+        if (!uploadResult.success) {
+          throw new Error('Error al intentar subir el archivo');
+        }
+  
+        fileUrl = uploadResult.fileUrl;
+        fs.unlinkSync(file.path);
+      }
+  
+      const updatedInvoice = await this.prisma.invoice.update({
+        where: { id },
+        data: {
+          purchaseOrderNumber,
+          shipmentDate: shipmentDate ? new Date(shipmentDate) : undefined,
+          registrationDate: registrationDate ? new Date(registrationDate) : undefined,
+          fileUrl, 
+        },
+        include: { invoiceCategory: true },
+      });
+  
+      return updatedInvoice;
+    } catch (error) {
+      console.error('Error actualizando la factura:', error.message);
+      throw new Error('No se pudo actualizar la factura');
+    }
+  }
+  
 
   private async uploadToGoogleAppsScript(
     fileBase64: string,
@@ -98,56 +185,4 @@ export class InvoiceService {
       throw new Error('No se pudo subir el archivo');
     }
   }
-
-  async updateInvoice(
-    id: number,
-    purchaseOrderNumber: string,
-    shipmentDate: string,
-    registrationDate: string,
-    fileUrl: string,
-    categoryId: number,
-  ) {
-    try {
-      const existingCategory = await this.prisma.category.findUnique({
-        where: { id: categoryId },
-      });
-
-      if (!existingCategory) {
-        throw new Error('La categoría no existe');
-      }
-
-      const updatedInvoice = await this.prisma.invoice.update({
-        where: { id },
-        data: {
-          purchaseOrderNumber,
-          shipmentDate: new Date(shipmentDate),
-          registrationDate: new Date(registrationDate),
-          fileUrl,
-          invoiceCategory: {
-            upsert: {
-              where: {
-                invoiceId_categoryId: {
-                  invoiceId: id,
-                  categoryId,
-                },
-              },
-              update: {},
-              create: {
-                categoryId,
-              },
-            },
-          },
-        },
-        include: {
-          invoiceCategory: true,
-        },
-      });
-
-      return updatedInvoice;
-    } catch (error) {
-      console.error('Error actualizando la factura:', error.message);
-      throw new Error('No se pudo actualizar la factura');
-    }
-  }
 }
-
