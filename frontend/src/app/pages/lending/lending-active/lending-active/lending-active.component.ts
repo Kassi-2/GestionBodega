@@ -31,6 +31,7 @@ export class LendingActiveComponent {
   selectedDate: string = '';
   public page = 1;
   public pageSize = 10;
+  auxiliaryComments: any;
 
 
 
@@ -97,17 +98,25 @@ export class LendingActiveComponent {
   }
 
   // Función para mostrar los detalles del prestamos
-  openLendingDetails(id: number) {
+  openLendingDetails(id: number): void {
     this.lendingService.getLendingForEdit(id).subscribe((lending: Lending[]) => {
       this.resetLending = lending;
-      this.selectedLending = { ...lending };
+      this.selectedLending = { ...lending }; // Crea una copia del préstamo
+      this.auxiliaryComments = this.selectedLending.comments; // Inicializa con el valor actual
       this.getAllTeachers();
-      console.log(this.selectedLending)
     });
   }
 
+
+  closeModal(): void {
+    this.auxiliaryComments = this.selectedLending.comments; // Restaura el valor inicial
+  }
+
+
+
   // Función para poder finalizar un prestamo activo
   finishLending(idLending: number, comments: string): void {
+
     const swalWithBootstrapButtons = Swal.mixin({
       customClass: {
         confirmButton: "btn btn-success",
@@ -125,6 +134,7 @@ export class LendingActiveComponent {
       reverseButtons: true
     }).then((result) => {
       if (result.isConfirmed) {
+        this.selectedLending.comments = this.auxiliaryComments;
         this.lendingService.lendingFinish(idLending, comments).subscribe(() => {
         this.lending = this.lending.filter(lending => lending.id !== idLending);
         swalWithBootstrapButtons.fire({

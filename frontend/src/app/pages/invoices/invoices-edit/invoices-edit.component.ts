@@ -17,11 +17,13 @@ import { ReactiveFormsModule } from '@angular/forms';
 export class InvoicesEditComponent {
   userForm!: FormGroup;
   public categories: Category[] = [];
+
   constructor(
     private fb: FormBuilder,
     private categoryService: CategoryService,
     private invoiceService: InvoiceService
   ) {}
+
   ngOnInit(): void {
     const today = new Date();
     today.setDate(today.getDate() - 1);
