@@ -5,6 +5,31 @@
   margin-top: 20px;
 }
 
+.search-bar {
+  max-width: 500px;
+  border: 1px solid orange;
+  border-radius: 30px; /* Bordes redondeados */
+  overflow: hidden; /* Para redondear los bordes internos */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Sombra suave */
+}
+
+.input-group-text {
+  background-color: white;
+  border-right: none;
+}
+
+.form-control {
+  border: none;
+  box-shadow: none; /* Quita el borde por defecto */
+}
+
+.form-control::placeholder {
+  color: #b0b0b0; /* Color del placeholder */
+}
+
+.text-orange {
+  color: orange; /* Color de la lupa */
+}
 .custom_input {
   display: flex;
   align-items: center;

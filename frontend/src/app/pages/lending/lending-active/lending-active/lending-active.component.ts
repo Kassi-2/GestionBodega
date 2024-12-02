@@ -64,6 +64,10 @@ export class LendingActiveComponent {
     });
   }
 
+  openDatePicker(datePicker: HTMLInputElement) {
+    datePicker.showPicker(); // Compatible con navegadores modernos
+  }
+
   // Funcion para poder mostrar todos los prestamos activos
   getLending(): void {
     this.lendingService.getLending().subscribe((lending: Lending[]) => {

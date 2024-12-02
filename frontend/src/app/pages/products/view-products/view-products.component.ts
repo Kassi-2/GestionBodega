@@ -116,6 +116,10 @@ export class ViewProductsComponent implements OnInit {
     });
   }
 
+  selectCategory(categoryId: number): void {
+    this.selectedCategory = categoryId;
+  }
+
   // Eliminar un producto de la lista (muestra una alerta de confimar eliminación).
   deleteProduct(idProduct: number): void {
     const swalWithBootstrapButtons = Swal.mixin({
@@ -199,6 +203,8 @@ export class ViewProductsComponent implements OnInit {
       },
     });
   }
+
+
 
   // Editar un producto de la lista (muestra una alerta de confirmar la edición) y se asegura que la información
   // enviada del formuario cumpla con las restricciones, como puede ser que el nombre no se repita con otro producto
