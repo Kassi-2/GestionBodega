@@ -43,7 +43,6 @@ export class UserService {
 
   public getAllStudentsEliminated(): Observable<User[]>{
     const s = this.http.get<User[]>(`${this.apiUrl}/eliminated`);
-    console.log(s);
     return s;
   }
   /**

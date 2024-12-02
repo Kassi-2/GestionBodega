@@ -29,8 +29,6 @@ export class InvoiceListComponent implements OnInit, OnDestroy {
     invoice.invoiceCategory.forEach((category) => {
       categories = categories + category.category.name + '\n';
     });
-
-    console.log(categories);
     return categories;
   }
 
@@ -77,6 +75,40 @@ export class InvoiceListComponent implements OnInit, OnDestroy {
           showConfirmButton: false,
         });
       }
+    });
+  }
+
+  public async downloadInvoice(invoiceId: number) {
+    Swal.fire({
+      title: 'Preparando el archivo',
+      text: 'Por favor espere un momento.',
+      icon: 'info',
+      showConfirmButton: false,
+      allowOutsideClick: false,
+    });
+    Swal.showLoading();
+    const invoice = this.invoices.find((invoice) => invoice.id === invoiceId);
+    this.invoiceService.downloadInvoice(invoiceId).subscribe({
+      next: (blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `factura-${invoice?.purchaseOrderNumber}.pdf`;
+        a.click();
+        window.URL.revokeObjectURL(url);
+        Swal.close();
+        Swal.fire({
+          title: 'Agregada!',
+          text: `La factura ${invoice?.purchaseOrderNumber} ha sido descargada de forma exitosa`,
+          icon: 'success',
+          timer: 1500,
+          showConfirmButton: false,
+        });
+      },
+      error: (err) => {
+        console.error('Error descargando la factura:', err);
+        alert('No se pudo descargar la factura. Inténtalo de nuevo.');
+      },
     });
   }
 }

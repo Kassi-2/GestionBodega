@@ -9,6 +9,8 @@ import { Invoice } from '@prisma/client';
 import * as FormData from 'form-data';
 import * as fs from 'fs';
 import axios from 'axios';
+import { Readable } from 'stream';
+import { InvoiceFilterDTO } from './dto/invoice-filter.dto';
 
 @Injectable()
 export class InvoiceService {
@@ -251,5 +253,84 @@ export class InvoiceService {
       console.error('Error ejecutando Google Apps Script:', error.message);
       throw new Error('No se pudo subir el archivo');
     }
+  }
+
+  public async getInvoiceFile(
+    id: number,
+  ): Promise<{ stream: Readable; fileName: string }> {
+    const invoice = await this.prismaService.invoice.findUnique({
+      where: { id },
+    });
+
+    if (!invoice || !invoice.fileUrl) {
+      throw new NotFoundException('El archivo no existe');
+    }
+
+    try {
+      const fileId = invoice.fileUrl.split('/d/')[1].split('/')[0];
+      const downloadUrl = `https://drive.google.com/uc?export=download&id=${fileId}`;
+
+      const response = await axios.get(downloadUrl, { responseType: 'stream' });
+
+      return {
+        stream: response.data,
+        fileName: `${invoice.purchaseOrderNumber}.pdf`,
+      };
+    } catch (error) {
+      throw new InternalServerErrorException(
+        'No se pudo descargar el archivo' + error.message,
+      );
+    }
+  }
+
+  async filterInvoices(filters: InvoiceFilterDTO) {
+    const { startDate, endDate, categories } = filters;
+
+    const conditions = [];
+
+    if (startDate) {
+      conditions.push({
+        shipmentDate: {
+          gte: new Date(startDate),
+        },
+      });
+    }
+
+    if (endDate) {
+      conditions.push({
+        shipmentDate: {
+          lte: new Date(endDate),
+        },
+      });
+    }
+
+    if (categories && categories.length > 0) {
+      const categoriesNumber =
+        typeof categories === 'string'
+          ? [Number(categories)]
+          : categories.map(Number);
+      conditions.push({
+        invoiceCategory: {
+          some: {
+            category: {
+              id: { in: categoriesNumber },
+            },
+          },
+        },
+      });
+    }
+
+    return this.prismaService.invoice.findMany({
+      where: {
+        AND: conditions,
+      },
+      include: {
+        invoiceCategory: {
+          include: {
+            category: true,
+          },
+        },
+      },
+    });
   }
 }

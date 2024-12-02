@@ -3,17 +3,20 @@ import { SearchService } from '../../../core/services/search.service';
 import { InvoiceListComponent } from '../invoice-list/invoice-list.component';
 import { FormsModule } from '@angular/forms';
 import { InvoiceService } from '../../../core/services/invoice.service';
-import { Invoice } from '../../../core/models/invoice.interface';
+import { FilterInvoices, Invoice } from '../../../core/models/invoice.interface';
 import { CategoryService } from '../../../core/services/category.service';
 import { Category } from '../../../core/models/category.interface';
 import {
   NgbCalendar,
   NgbDate,
   NgbDateParserFormatter,
+  NgbDatepickerI18n,
   NgbDatepickerModule,
   NgbDateStruct,
 } from '@ng-bootstrap/ng-bootstrap';
 import { JsonPipe } from '@angular/common';
+import { CustomDatepickerI18n } from '../../../core/services/custom-datepicker-i18n.service';
+import { CustomDateParserFormatter } from '../../../core/services/custom-date-parser-formatter.service';
 
 @Component({
   selector: 'app-invoice-options',
@@ -21,16 +24,24 @@ import { JsonPipe } from '@angular/common';
   imports: [InvoiceListComponent, FormsModule, NgbDatepickerModule, JsonPipe],
   templateUrl: './invoice-options.component.html',
   styleUrl: './invoice-options.component.css',
+  providers: [ 
+    { provide: NgbDatepickerI18n, useClass: CustomDatepickerI18n },
+    { provide: NgbDateParserFormatter, useClass: CustomDateParserFormatter }
+  ],
 })
 export class InvoiceOptionsComponent implements OnInit {
   public searchTerm: string = '';
+  public allInvoices: Invoice[] = [];
   public invoices: Invoice[] = [];
   public categories: Category[] = [];
   model!: NgbDateStruct;
   date!: { year: number; month: number };
+  public startDate!: string;
+  public endDate!: string;
+  public selectedCategories: number[] = [];
 
   constructor(
-    private searchService: SearchService,
+
     private invoiceService: InvoiceService,
     private categoryService: CategoryService
   ) {}
@@ -39,20 +50,13 @@ export class InvoiceOptionsComponent implements OnInit {
     this.getAllCategories();
   }
 
-  onSearch() {
-    this.searchService.updateSearchTerm(this.searchTerm);
-  }
 
   calendar = inject(NgbCalendar);
   formatter = inject(NgbDateParserFormatter);
 
   hoveredDate: NgbDate | null = null;
-  fromDate: NgbDate | null = this.calendar.getToday();
-  toDate: NgbDate | null = this.calendar.getNext(
-    this.calendar.getToday(),
-    'd',
-    10
-  );
+  fromDate: NgbDate | null = null;
+  toDate: NgbDate | null = null;
 
   onDateSelection(date: NgbDate) {
     if (!this.fromDate && !this.toDate) {
@@ -103,8 +107,8 @@ export class InvoiceOptionsComponent implements OnInit {
   public getAllInvoices() {
     this.invoiceService.getAllInvoices().subscribe({
       next: (invoices: Invoice[]) => {
+        this.allInvoices = invoices;
         this.invoices = invoices;
-        console.log(invoices);
       },
       error: (error) => {
         alert(error);
@@ -121,5 +125,59 @@ export class InvoiceOptionsComponent implements OnInit {
         alert(error);
       },
     });
+  }
+
+  filteredList(): Invoice[] {
+    const filteredInvoices = this.invoices.filter(
+      (invoice: Invoice) =>
+        invoice.purchaseOrderNumber.toLowerCase().includes(this.searchTerm.toLowerCase())
+    );
+    return filteredInvoices;
+  }
+
+  toggleCategory(category: number) {
+    if (this.selectedCategories.includes(category)) {
+      this.selectedCategories = this.selectedCategories.filter((c) => c !== category);
+    } else {
+      this.selectedCategories.push(category);
+    }
+  }
+
+  filterInvoices() {
+
+    const startDateFormatted = this.fromDate
+    ? `${this.fromDate.year}-${this.pad(this.fromDate.month)}-${this.pad(this.fromDate.day)}`
+    : undefined;
+
+  const endDateFormatted = this.toDate
+    ? `${this.toDate.year}-${this.pad(this.toDate.month)}-${this.pad(this.toDate.day)}`
+    : undefined;
+
+  const filters: FilterInvoices = {
+    startDate: startDateFormatted,
+    endDate: endDateFormatted,
+    categories: this.selectedCategories.length ? this.selectedCategories : undefined,
+  };
+
+
+    this.invoiceService.filterInvoices(filters).subscribe({
+      next: (invoices: Invoice[]) => {
+        this.invoices = invoices;
+      },
+      error: (error) => {
+        alert(error.error.message)
+      }
+    });
+  }
+
+  pad(value: number): string {
+    return value < 10 ? `0${value}` : `${value}`;
+  }
+
+  public cleanFilters() {
+    this.invoices = this.allInvoices;
+    this.startDate = '';
+    this.endDate = '';
+    this.selectedCategories = [];
   }
 }

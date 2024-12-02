@@ -10,10 +10,15 @@ import {
   Get,
   ParseIntPipe,
   Delete,
+  Res,
+  HttpStatus,
+  Query,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import * as multer from 'multer';
 import { InvoiceService } from './invoice.service';
+import { Response } from 'express';
+import { InvoiceFilterDTO } from './dto/invoice-filter.dto';
 
 @Controller('invoices')
 export class InvoiceController {
@@ -124,5 +129,34 @@ export class InvoiceController {
     );
 
     return result;
+  }
+
+  @Get('download/:id')
+  public async downloadFile(
+    @Param('id', ParseIntPipe) id: number,
+    @Res() res: Response,
+  ) {
+    try {
+      const { stream, fileName } = await this.invoiceService.getInvoiceFile(id);
+      res.setHeader(
+        'Content-Disposition',
+        `attachment; filename="${fileName}"`,
+      );
+      res.setHeader('Content-Type', 'application/pdf');
+
+      stream.pipe(res);
+    } catch (error) {
+      res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+        message: error.message || 'No se pudo descargar el archivo',
+      });
+    }
+  }
+
+  @Get('filter/filter')
+  public async filterInvoices(
+    @Query()
+    filters: InvoiceFilterDTO,
+  ) {
+    return await this.invoiceService.filterInvoices(filters);
   }
 }

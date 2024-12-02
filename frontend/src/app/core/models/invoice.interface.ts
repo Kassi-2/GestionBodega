@@ -13,3 +13,9 @@ export interface InvoiceCategory {
   invoice: Invoice;
   category: Category;
 }
+
+export interface FilterInvoices {
+  startDate?: string; 
+  endDate?: string; 
+  categories?: number[];
+}

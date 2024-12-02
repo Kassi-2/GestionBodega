@@ -23,6 +23,8 @@ import { FormsModule } from '@angular/forms';
 import { Product } from '../../../core/models/product.interface';
 import { UserService } from '../../../core/services/user.service';
 import Swal from 'sweetalert2';
+import { Category } from '../../../core/models/category.interface';
+import { CategoryService } from '../../../core/services/category.service';
 
 @Component({
   selector: 'app-lending-add',
@@ -44,6 +46,9 @@ export class LendingAddComponent implements OnInit {
   public pageStudents = 1;
   public pageProducts = 1;
   public pageSize = 15;
+  public categories: Category[] = [];
+  public allProducts: Product[] = [];
+  public selectedCategory!: number;
   selectedUserType: string = 'student';
   selectedUser: User | null = null;
   user!: User;
@@ -67,7 +72,8 @@ export class LendingAddComponent implements OnInit {
   constructor(
     private LendingService: LendingService,
     private productService: ProductService,
-    private userService: UserService
+    private userService: UserService,
+    private categoryService: CategoryService
   ) {}
 
   ngOnInit(): void {
@@ -94,7 +100,7 @@ export class LendingAddComponent implements OnInit {
         }
       }
     );
-
+    this.subscriptions.add(this.getAllCategories());
     this.subscriptions.add(this.getAllStudents());
     this.subscriptions.add(this.getAllTeachers());
     this.subscriptions.add(this.getAllAssistants());
@@ -108,12 +114,15 @@ export class LendingAddComponent implements OnInit {
    * @memberof LendingAddComponent
    */
   filteredList(): Product[] {
+                  
     const filteredProducts = this.products.filter(
       (product) =>
         product.name
           .toLowerCase()
           .includes(this.searchTermProducts.toLowerCase()) ||
         product.id.toString().includes(this.searchTermProducts.toLowerCase())
+        &&
+        product.categoryId === this.selectedCategory
     );
     return filteredProducts;
   }
@@ -206,7 +215,8 @@ export class LendingAddComponent implements OnInit {
     this.productService
       .getAvailableProducts()
       .subscribe((products: Product[]) => {
-        this.products = products;
+        this.allProducts = products;
+        this.filteredByCategory(this.selectedCategory);
       });
   }
   /**
@@ -363,6 +373,7 @@ export class LendingAddComponent implements OnInit {
    * @memberof LendingAddComponent
    */
   stepUp() {
+    console.log(this.contains);
     this.currentStep++;
     this.searchTermProducts = '';
     this.searchTermUsers = '';
@@ -571,7 +582,7 @@ export class LendingAddComponent implements OnInit {
    * @memberof LendingAddComponent
    */
   getProductById(productId: number): Product | undefined {
-    return this.products.find((product) => product.id === productId);
+    return this.allProducts.find((product) => product.id === productId);
   }
 
   /**
@@ -600,5 +611,27 @@ export class LendingAddComponent implements OnInit {
 
   deselectTeacher() {
     this.selectedTeacher = null; // Reseteamos la selección
+  }
+
+  private getAllCategories() {
+    this.categoryService.getAllCategories().subscribe({
+      next: (result) => {
+        this.categories = result;
+        this.selectedCategory = result[0].id;
+      },
+    });
+  }
+
+  public filteredByCategory(id: number) {
+    console.log('filtrar por', id);
+    this.selectedCategory = id;
+    this.products = this.allProducts.filter(
+      (product) => product.categoryId == id
+    );
+    console.log(this.products)
+  }
+
+  public selectedCategoryById(id: number) {
+    this.selectedCategory = id;
   }
 }
