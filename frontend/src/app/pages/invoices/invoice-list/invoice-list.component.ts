@@ -108,6 +108,7 @@ export class InvoiceListComponent implements OnInit, OnDestroy {
       error: (err) => {
         console.error('Error descargando la factura:', err);
         alert('No se pudo descargar la factura. Inténtalo de nuevo.');
+        Swal.close();
       },
     });
   }
