@@ -33,8 +33,8 @@
       <tr>
         <th scope="row" class="text-center">{{ lending.id }}</th>
         <td class="text-center">{{ lending.borrower.name || '-' }}</td>
-        <td class="text-center">{{ lending.date ? (lending.date | date: 'dd/MM/yyyy HH:mm') : '-' }}</td>
-        <td class="text-center">{{ lending.teacher.BorrowerId.name || '-' }}</td>
+        <td class="text-center">{{ lending.date | date: 'dd/MM/yyyy HH:mm' }}</td>
+        <td class="text-center">{{ lending.teacher.BorrowerId || '-' }}</td>
         <td class="text-center">
           <button
             type="button"
@@ -71,12 +71,19 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <p><strong>ID:</strong> {{ selectedLending?.id || '-' }}</p>
-        <p><strong>Nombre del prestatario:</strong> {{ selectedLending?.borrower?.name || '-' }}</p>
-        <p><strong>Fecha de creación:</strong> {{ selectedLending?.date | date: 'dd/MM/yyyy HH:mm'}}</p>
-        <p><strong>Profesor asignado:</strong> {{ selectedLending?.teacher?.BorrowerId?.name || '-' }}</p>
-        <p><strong>Detalles del préstamo:</strong> {{ selectedLending?.comments || 'Sin comentarios' }}</p>
+        <p><strong>ID:</strong> {{ selectedLending?.id }}.</p>
+        <p><strong>Nombre del prestatario:</strong> {{ selectedLending?.borrower.name }}.</p>
+        <p><strong>Fecha de creación:</strong> {{ selectedLending?.date | date:'dd/MM/yyyy HH:mm' }} hrs.</p>
+          @if (selectedLending?.teacherId != null) {
+            <p><strong>Profesor asignado:</strong>
 
+              {{ selectedLending?.teacher.BorrowerId.name }}.
+
+            </p>
+          }
+
+
+        <p><strong>Comentario: </strong> {{ selectedLending?.comments}}</p>
         <table class="table">
           <thead>
             <tr>
@@ -85,10 +92,10 @@
             </tr>
           </thead>
           <tbody>
-            @for (product of selectedLending?.lendingProducts || []; track product; let i = $index) {
+            @for (lending of selectedLending?.lendingProducts; track lending; let i = $index) {
             <tr>
-              <td class="text-center">{{ product?.product?.name || 'Producto desconocido' }}</td>
-              <td class="text-center">{{ product?.amount || 0 }}</td>
+              <td class="text-center">{{selectedLending?.lendingProducts[i].product.name}}</td>
+              <td class="text-center">{{selectedLending?.lendingProducts[i].amount}}</td>
             </tr>
             }
           </tbody>

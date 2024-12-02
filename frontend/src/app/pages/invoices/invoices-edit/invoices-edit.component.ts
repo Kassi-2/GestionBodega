@@ -12,11 +12,12 @@ import { ReactiveFormsModule } from '@angular/forms';
   standalone: true,
   imports: [ReactiveFormsModule],
   templateUrl: './invoices-edit.component.html',
-  styleUrl: './invoices-edit.component.css'
+  styleUrls: ['./invoices-edit.component.css']
 })
 export class InvoicesEditComponent {
   userForm!: FormGroup;
   public categories: Category[] = [];
+  private invoiceId!: number;
 
   constructor(
     private fb: FormBuilder,
@@ -47,24 +48,24 @@ export class InvoicesEditComponent {
       return;
     }
 
-    const invoice: newInvoice = {
+    const updatedInvoice: Invoice = {
+      id: this.invoiceId,
       purchaseOrderNumber: this.userForm.value.purchaseOrderNumber,
       shipmentDate: this.userForm.value.shipmentDate,
       registrationDate: this.userForm.value.registrationDate,
       invoiceCategory: this.userForm.value.categories.map((categoryId: number) => ({
-        invoice: null,
-        category: { id: categoryId } as Category
+        invoice: { id: this.invoiceId },
+        category: { id: categoryId } as Category,
       })),
-      file: this.userForm.value.invoiceFile
+      file: this.userForm.value.invoiceFile,
+      state: false
     };
 
-    console.log(invoice)
-
-    this.invoiceService.addInvoice(invoice).subscribe({
+    this.invoiceService.updateInvoice(updatedInvoice).subscribe({
       next: () => {
         Swal.fire({
-          title: '¡Factura creada!',
-          text: 'La factura ha sido creada con éxito.',
+          title: '¡Factura actualizada!',
+          text: 'La factura ha sido actualizada con éxito.',
           icon: 'success',
           timer: 1500,
           showConfirmButton: false,
@@ -73,7 +74,7 @@ export class InvoicesEditComponent {
       error: (error) => {
         Swal.fire({
           title: 'Error',
-          text: 'Hubo un error al crear la factura.',
+          text: 'Hubo un error al actualizar la factura.',
           icon: 'error',
           timer: 1500,
           showConfirmButton: false,
@@ -123,6 +124,50 @@ export class InvoicesEditComponent {
       this.userForm.get('invoiceFile')?.setErrors({ invalidFileType: true });
     }
   }
+
+  public invoiceForEdit(idInvoice: number): void {
+    // this.invoiceService.getInvoiceById(idInvoice).subscribe({
+    //   next: (invoices: Invoice[]) => {
+    //     if (invoices.length === 0) {
+    //       Swal.fire({
+    //         title: 'Error',
+    //         text: 'No se encontró la factura.',
+    //         icon: 'error',
+    //         timer: 1500,
+    //         showConfirmButton: false,
+    //       });
+    //       return;
+    //     }
+
+    //     const invoice = invoices[0];
+
+    //     this.userForm.patchValue({
+    //       purchaseOrderNumber: invoice.purchaseOrderNumber,
+    //       shipmentDate: invoice.shipmentDate,
+    //       registrationDate: invoice.registrationDate,
+    //       categories: invoice.invoiceCategory.map((cat) => cat.category.id),
+    //       invoiceFile: null,
+    //       state: invoice.state ?? false,
+    //     });
+
+    //     console.log('Formulario actualizado:', this.userForm.value);
+    //   },
+
+    //   error: (error) => {
+    //     Swal.fire({
+    //       title: 'Error',
+    //       text: 'No se pudieron cargar los datos de la factura.',
+    //       icon: 'error',
+    //       timer: 1500,
+    //       showConfirmButton: false,
+    //     });
+    //     console.error(error);
+    //   },
+    // });
+
+  }
+
+
 
   private getAllCategories(): void {
     this.categoryService.getAllCategories().subscribe({
