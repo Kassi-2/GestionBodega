@@ -12,7 +12,7 @@ export class InvoiceService {
     file: Express.Multer.File,
     purchaseOrderNumber: string,
     shipmentDate: string,
-    categoryIds: number[], 
+    categoryIds: number[],
     registrationDate: string
   ) {
     try {
@@ -23,7 +23,7 @@ export class InvoiceService {
       if (existingInvoice) {
         throw new BadRequestException('El número de orden de compra ya existe');
       }
-
+  
       for (const categoryId of categoryIds) {
         const existingCategory = await this.prisma.category.findUnique({
           where: { id: categoryId },
@@ -44,43 +44,42 @@ export class InvoiceService {
       );
   
       if (!uploadResult.success) {
-        throw new Error('Error al intentar subir el archivo');
+        throw new BadRequestException('Error al intentar subir el archivo');
       }
   
-      const newInvoice = await this.prisma.invoice.create({
+      return await this.prisma.invoice.create({
         data: {
           purchaseOrderNumber,
           shipmentDate: new Date(shipmentDate),
           registrationDate: registrationDate ? new Date(registrationDate) : new Date(),
           fileUrl: uploadResult.fileUrl,
           invoiceCategory: {
-            create: categoryIds.map((categoryId) => ({
-              categoryId,
-            })),
+            create: categoryIds.map((categoryId) => ({ categoryId })),
           },
         },
         include: {
           invoiceCategory: true,
         },
       });
-  
-      fs.unlinkSync(file.path); 
-      return newInvoice;
     } catch (error) {
       console.error('Error procesando el archivo:', error.message);
-      throw error instanceof BadRequestException
-        ? error
-        : new Error('No se pudo procesar el archivo');
+      if (error instanceof BadRequestException) {
+        throw error;
+      }
+      throw new Error('No se pudo procesar el archivo');
+    } finally {
+      if (file && fs.existsSync(file.path)) {
+        fs.unlinkSync(file.path); 
+      }
     }
   }
-
   async updateInvoice(
     id: number,
     purchaseOrderNumber?: string,
     shipmentDate?: string,
     registrationDate?: string,
     file?: Express.Multer.File,
-    categoryIds?: number[],
+    categoryIds?: number[]
   ) {
     try {
       const invoice = await this.prisma.invoice.findUnique({
@@ -89,20 +88,40 @@ export class InvoiceService {
       });
   
       if (!invoice) {
-        throw new Error('La factura no existe');
+        throw new BadRequestException('La factura no existe');
       }
   
       if (categoryIds && categoryIds.length === 0) {
-        throw new Error('Debe haber al menos una categoría asociada');
+        throw new BadRequestException('Debe haber al menos una categoría asociada');
+      }
+  
+      if (categoryIds && categoryIds.length > 0) {
+        const validCategories = await this.prisma.category.findMany({
+          where: { id: { in: categoryIds } },
+          select: { id: true },
+        });
+  
+        const validCategoryIds = validCategories.map((category) => category.id);
+        const invalidCategoryIds = categoryIds.filter(
+          (categoryId) => !validCategoryIds.includes(categoryId)
+        );
+  
+        if (invalidCategoryIds.length > 0) {
+          throw new BadRequestException(
+            `Las siguientes categorías no existen: ${invalidCategoryIds.join(', ')}`
+          );
+        }
       }
   
       const existingCategoryIds = invoice.invoiceCategory.map((ic) => ic.categoryId);
   
       const categoriesToRemove = existingCategoryIds.filter(
-        (categoryId) => !categoryIds?.includes(categoryId),
+        (categoryId) => !categoryIds?.includes(categoryId)
       );
   
-      const categoriesToAdd = categoryIds?.filter((categoryId) => !existingCategoryIds.includes(categoryId));
+      const categoriesToAdd = categoryIds?.filter(
+        (categoryId) => !existingCategoryIds.includes(categoryId)
+      );
   
       if (categoriesToRemove.length > 0) {
         await this.prisma.invoiceCategory.deleteMany({
@@ -130,36 +149,39 @@ export class InvoiceService {
         const uploadResult = await this.uploadToGoogleAppsScript(
           fileBase64,
           file.mimetype,
-          file.originalname,
+          file.originalname
         );
   
         if (!uploadResult.success) {
-          throw new Error('Error al intentar subir el archivo');
+          throw new BadRequestException('Error al intentar subir el archivo');
         }
   
         fileUrl = uploadResult.fileUrl;
-        fs.unlinkSync(file.path);
       }
   
-      const updatedInvoice = await this.prisma.invoice.update({
+      return await this.prisma.invoice.update({
         where: { id },
         data: {
           purchaseOrderNumber,
           shipmentDate: shipmentDate ? new Date(shipmentDate) : undefined,
           registrationDate: registrationDate ? new Date(registrationDate) : undefined,
-          fileUrl, 
+          fileUrl,
         },
         include: { invoiceCategory: true },
       });
-  
-      return updatedInvoice;
     } catch (error) {
       console.error('Error actualizando la factura:', error.message);
+      if (error instanceof BadRequestException) {
+        throw error;
+      }
       throw new Error('No se pudo actualizar la factura');
+    } finally {
+      if (file && fs.existsSync(file.path)) {
+        fs.unlinkSync(file.path);
+      }
     }
   }
   
-
   private async uploadToGoogleAppsScript(
     fileBase64: string,
     mimeType: string,
