@@ -8,6 +8,8 @@ import { PrismaService } from 'src/prisma/prisma.service';
 export class InvoiceService {
   constructor(private readonly prisma: PrismaService) {}
 
+  //agregar una factura, además se le asigna una categoría
+  //se crea un archivo localmente que es eliminado al terminar de ejecutar la función
   async processAndUploadFile(
     file: Express.Multer.File,
     purchaseOrderNumber: string,
@@ -73,6 +75,8 @@ export class InvoiceService {
       }
     }
   }
+  //editar una factura, se debe recibir siempre la o las categorías
+  //se crea un archivo localmente que es eliminado al terminar de ejecutar la función
   async updateInvoice(
     id: number,
     purchaseOrderNumber?: string,
@@ -181,7 +185,7 @@ export class InvoiceService {
       }
     }
   }
-  
+  //sube el archivo al drive
   private async uploadToGoogleAppsScript(
     fileBase64: string,
     mimeType: string,
