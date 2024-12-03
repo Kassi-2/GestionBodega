@@ -17,6 +17,9 @@ import { ProductInactiveComponent } from './pages/trash/product-inactive/product
 import { UserInactiveComponent } from './pages/trash/user-inactive/user-inactive.component';
 import { LendingAddQrComponent } from './pages/lending/lending-add-qr/lending-add-qr.component';
 import { CategoryListComponent } from './pages/categories/category-list/category-list.component';
+import { InvoiceListComponent } from './pages/invoices/invoice-list/invoice-list.component';
+import { InvoiceAddComponent } from './pages/invoices/invoice-add/invoice-add.component';
+import { UserManualViewComponent } from './shared/components/user-manual-view/user-manual-view.component';
 
 export const routes: Routes = [
   {
@@ -46,6 +49,11 @@ export const routes: Routes = [
       {
         path: 'inventory',
         component: ViewProductsComponent,
+        canActivate: [authGuard],
+      },
+      {
+        path: 'user-manual',
+        component: UserManualViewComponent,
         canActivate: [authGuard],
       },
       {
@@ -98,6 +106,12 @@ export const routes: Routes = [
         component: CategoryListComponent,
         canActivate: [authGuard],
       },
+      {
+        path: 'invoices',
+        component: InvoiceListComponent,
+        canActivate: [authGuard],
+      },
+
     ],
     canActivate: [authGuard],
   },

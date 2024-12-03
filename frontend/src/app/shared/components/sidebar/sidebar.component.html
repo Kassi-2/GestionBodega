@@ -24,24 +24,32 @@
         </div>
 
 
-          <div class="position-relative">
-            <button class="btn navbar-brand" type="button" id="userButton" data-bs-toggle="collapse" data-bs-target="#logoutBox" aria-expanded="false" aria-controls="logoutBox">
-                <i class="bi bi-person-circle"></i>
-            </button>
-            <div class="collapse position-absolute" id="logoutBox" style="right: 0; top: 50px;">
-                <div class="card" style="width: 180px;">
-                    <div class="card-body">
-                      <button class="btn btn-secondary mb-2" routerLink="/lendings/inactive">
-                        <i class="bi bi-clock-history"></i> Historial
-                    </button>
-                        <button class="btn btn-danger" (click)="logout()">
-                            <i class="bi bi-box-arrow-right"></i> Cerrar sesión
-                        </button>
-
-                    </div>
-                </div>
-            </div>
+        <div class="dropdown">
+          <button class="btn navbar-brand" type="button" id="userButton" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="bi bi-person-circle"></i>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userButton">
+            <li>
+              <a class="dropdown-item" routerLink="/lendings/inactive">
+                <i class="bi bi-clock-history"></i> Historial
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item" routerLink="/user-manual">
+                <i class="bi bi-book"></i> Manual de usuario
+              </a>
+            </li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+            <li>
+              <button class="dropdown-item text-danger" (click)="logout()">
+                <i class="bi bi-box-arrow-right"></i> Cerrar sesión
+              </button>
+            </li>
+          </ul>
         </div>
+
 
       </div>
       <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar" style="width: 250px;"
@@ -72,7 +80,7 @@
                       <a class="nav-link active" aria-current="page" data-bs-dismiss="offcanvas">Reportes</a>
                   </li>
                   <li class="nav-item">
-                      <a class="nav-link active" aria-current="page">Facturas</a>
+                    <a class="nav-link active" aria-current="page" routerLink="/invoices" data-bs-dismiss="offcanvas">Facturas</a>
                   </li>
               </ul>
           </div>

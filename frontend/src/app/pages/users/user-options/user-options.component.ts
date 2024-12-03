@@ -1,29 +1,38 @@
-import { Component } from '@angular/core';
-import { UsersImportComponent } from '../users-import/users-import.component';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { SearchService } from '../../../core/services/search.service';
 import { FormsModule } from '@angular/forms';
-import { UserAddComponent } from '../user-add/user-add.component';
-import { RouterLink } from '@angular/router';
-import { UserSendQrComponent } from '../user-send-qr/user-send-qr.component';
+import { ActivatedRoute, Router, RouterLink, RouterModule } from '@angular/router';
+import { CommonModule } from '@angular/common';
+
 
 @Component({
   selector: 'app-user-options',
   standalone: true,
-  imports: [UserAddComponent, UsersImportComponent, FormsModule, RouterLink, UserSendQrComponent
-  ],
+  imports: [FormsModule, CommonModule, RouterModule],
   templateUrl: './user-options.component.html',
   styleUrl: './user-options.component.css',
 })
 export class UserOptionsComponent {
   searchTerm: string = '';
+  selectedCategory!: string;
 
-  constructor(private searchService: SearchService) {}
-  /**
-   * Función que enía al servicio el término de búsqueda que ingresó el usuario para listar los usuarios que coincidan con lo ingresado.
-   *
-   * @memberof UserOptionsComponent
-   */
+  constructor(private searchService: SearchService, private router: Router, private cdr: ChangeDetectorRef,   private route: ActivatedRoute) {}
+
+  ngOnInit(): void {
+    this.route.url.subscribe(urlSegments => {
+      const currentCategory = urlSegments[1]?.path;
+      if (currentCategory) {
+        this.selectedCategory = currentCategory;
+      }
+    });
+  }
+
   onSearch() {
     this.searchService.updateSearchTerm(this.searchTerm);
+  }
+
+  selectCategory(category: string): void {
+    this.selectedCategory = category;
+    this.router.navigate([`/users/${category}`]);
   }
 }

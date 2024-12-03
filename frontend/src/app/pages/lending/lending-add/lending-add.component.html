@@ -217,6 +217,7 @@
       [boundaryLinks]="true"
     >
     </ngb-pagination>
+
   </div>
   }}
 </div>
@@ -242,7 +243,7 @@
 
 <div class="container mb-4">
   <div class="align-items-center justify-content-between">
-    <button (click)="stepDown()" class="btn btn-primary">
+    <button (click)="stepDown()" class="btn btn-primary" style="margin-left: 1.6%">
       <i class="bi bi-arrow-left"></i>
     </button>
 
@@ -517,7 +518,6 @@
           class="btn btn-primary"
           data-bs-toggle="modal"
           (click)="endAddLending()"
-          routerLink="/lendings/active"
         >
           Confirmar
         </button>

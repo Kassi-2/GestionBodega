@@ -1,0 +1,64 @@
+<div class="modal fade" id="addInvoiceModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Crear Factura</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+
+          <div class="mb-3">
+            <label for="orderNumber" class="form-label">N° Orden de Compra:</label>
+            <input type="text" id="orderNumber" class="form-control" formControlName="purchaseOrderNumber"
+              [class.is-invalid]="notValidOrderNumber" placeholder="Ingrese N° Orden de Compra">
+              @if (notValidOrderNumber) {
+                <small class="text-danger">Ingrese un número de orden de compra</small>
+              }
+
+          </div>
+
+          <div class="mb-3">
+            <label for="receiptDate" class="form-label">Fecha de Recibo:</label>
+            <input type="date" id="receiptDate" class="form-control" formControlName="registrationDate">
+              <small class="form-text">Se seleccionará por defecto la fecha actual, si desea puede modificarla.</small>
+          </div>
+
+          <div class="mb-3">
+            <label for="shipmentDate" class="form-label">Fecha de Envío:</label>
+            <input type="date" id="shipmentDate" class="form-control" formControlName="shipmentDate">
+            <small class="form-text">Se seleccionará por defecto la fecha actual, si desea puede modificarla.</small>
+          </div>
+
+          <div class="mb-3">
+            <label for="invoiceFile" class="form-label">Adjuntar Archivo PDF:</label>
+            <input type="file" class="form-control" id="invoiceFile" (change)="onFileSelected($event)" accept="application/pdf" formControlName="file">
+            @if (notValidFile) {
+              <small class="text-danger">Ingrese un archivo de la factura. </small>
+            }
+          </div>
+
+          <div class="mb-3">
+            <label for="categories" class="form-label">Seleccionar Categorías:</label>
+            <div id="categories">
+              @for(category of categories; track $index){
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" [value]="category.id" (change)="onCategoryChange($event, category.id)"
+                    [checked]="userForm.get('categories')?.value.includes(category.id)">
+                  <label class="form-check-label">{{ category.name }}</label>
+                </div>
+              }
+
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-primary" [disabled]="!userForm.valid">Confirmar</button>
+          </div>
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>
