@@ -7,9 +7,7 @@ import { HttpModule } from '@nestjs/axios';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @Module({
-  imports: [
-    HttpModule
-  ],
+  imports: [HttpModule, PrismaModule],
   controllers: [InvoiceController],
   providers: [InvoiceService, PrismaService],
 })

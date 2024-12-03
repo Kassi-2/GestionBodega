@@ -20,6 +20,7 @@ import { CategoryListComponent } from './pages/categories/category-list/category
 import { InvoiceListComponent } from './pages/invoices/invoice-list/invoice-list.component';
 import { InvoiceAddComponent } from './pages/invoices/invoice-add/invoice-add.component';
 import { UserManualViewComponent } from './shared/components/user-manual-view/user-manual-view.component';
+import { InvoiceOptionsComponent } from './pages/invoices/invoice-options/invoice-options.component';
 
 export const routes: Routes = [
   {
@@ -82,20 +83,20 @@ export const routes: Routes = [
         canActivate: [authGuard],
       },
       {
-      path: 'history-products/:id',
-      component: HistoryProductsComponent,
-      canActivate: [authGuard],
-     },
-     {
-      path: 'product-inactive',
-      component: ProductInactiveComponent,
-      canActivate: [authGuard],
-     },
-     {
-      path: 'user-inactive',
-      component: UserInactiveComponent,
-      canActivate: [authGuard],
-     },
+        path: 'history-products/:id',
+        component: HistoryProductsComponent,
+        canActivate: [authGuard],
+      },
+      {
+        path: 'product-inactive',
+        component: ProductInactiveComponent,
+        canActivate: [authGuard],
+      },
+      {
+        path: 'user-inactive',
+        component: UserInactiveComponent,
+        canActivate: [authGuard],
+      },
       {
         path: 'lending-add/qr',
         component: LendingAddQrComponent,
@@ -107,11 +108,10 @@ export const routes: Routes = [
         canActivate: [authGuard],
       },
       {
-        path: 'invoices',
-        component: InvoiceListComponent,
+        path: 'invoice',
+        component: InvoiceOptionsComponent,
         canActivate: [authGuard],
       },
-
     ],
     canActivate: [authGuard],
   },

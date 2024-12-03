@@ -10,7 +10,7 @@ export class InvoiceCreateDTO {
   @IsOptional()
   @IsDate()
   registrationDate?: Date;
-  
+
   @IsOptional()
   @IsInt()
   categoryId: number;

@@ -7,7 +7,6 @@ export interface Invoice {
   shipmentDate: Date;
   registrationDate: Date;
   invoiceCategory: InvoiceCategory[];
-  file: File
 }
 
 export interface InvoiceCategory {
@@ -15,6 +14,11 @@ export interface InvoiceCategory {
   category: Category;
 }
 
+export interface FilterInvoices {
+  startDate?: string; 
+  endDate?: string; 
+  categories?: number[];
+}
 export interface newInvoice {
   purchaseOrderNumber: string;
   shipmentDate: Date;

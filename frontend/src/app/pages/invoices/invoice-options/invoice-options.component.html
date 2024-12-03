@@ -1,0 +1,122 @@
+<div class="container-xl mt-2 text-center">
+  <h2>Facturas</h2>
+</div>
+<div class="container-xl mt-2">
+    <div class="d-flex justify-content-between align-items-center">
+        <div class="custom_input mx-1">
+          <svg xmlns="http://www.w3.org/2000/svg" class="svg_icon bi-search" viewBox="0 0 16 16">
+            <path
+              d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z">
+            </path>
+          </svg>
+          <input type="text" [(ngModel)]="searchTerm" placeholder="Buscar..." class="input" />
+        </div>
+
+      <div class="d-flex justify-content-start">
+        <div class="d-flex gap-4 mx-1">
+          <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal"
+          data-bs-target="#addInvoiceModal">
+          <i class="bi bi-person-plus"></i>
+          Agregar factura
+</button>
+
+        </div>
+        <div class="d-flex gap-4 mx-1">
+          <button type="button" class="btn btn-outline-success" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+            <i class="bi bi-sliders2"></i>
+            Filtrar
+          </button>
+          <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+            <div class="offcanvas-header justify-content-between">
+              <h5 class="offcanvas-title" id="offcanvasRightLabel">Filtrar</h5>
+              <div class="justify-content-end">
+                <a class="h5 offcanvas-title btn" data-bs-dismiss="offcanvas" (click)="cleanFilters()">Borrar todo</a>
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+              </div>
+            </div>
+            <hr>
+            <div class="offcanvas-body">
+              <h5>Fecha:</h5>
+              <form class="row row-cols-sm-auto my-1">
+                <div class="col-12">
+                  <div class="dp-hidden position-absolute">
+                    <div class="input-group">
+                      <input
+                        name="datepicker"
+                        class="form-control"
+                        ngbDatepicker
+                        #datepicker="ngbDatepicker"
+                        [autoClose]="'outside'"
+                        (dateSelect)="onDateSelection($event)"
+                        [displayMonths]="1"
+                        [dayTemplate]="t"
+                        outsideDays="hidden"
+                        [startDate]="fromDate!"
+                        tabindex="-1"
+                      />
+                      <ng-template #t let-date let-focused="focused">
+                        <span
+                          class="custom-day"
+                          [class.focused]="focused"
+                          [class.range]="isRange(date)"
+                          [class.faded]="isHovered(date) || isInside(date)"
+                          (mouseenter)="hoveredDate = date"
+                          (mouseleave)="hoveredDate = null"
+                        >
+                          {{ date.day }}
+                        </span>
+                      </ng-template>
+                    </div>
+                  </div>
+                  <div class="input-group">
+                    <input
+                      #dpFromDate
+                      class="form-control"
+                      placeholder="dd-mm-yyyy"
+                      name="dpFromDate"
+                      [value]="formatter.format(fromDate)"
+                      (input)="fromDate = validateInput(fromDate, dpFromDate.value)"
+                      [(ngModel)]="startDate"
+                      disabled
+                    />
+                    <button class="btn btn-outline-secondary bi bi-calendar3" (click)="datepicker.toggle()" type="button"></button>
+                  </div>
+                </div>
+                <div class="col-12">
+                  <div class="input-group">
+                    <input
+                      #dpToDate
+                      class="form-control"
+                      placeholder="dd-mm-yyyy"
+                      name="dpToDate"
+                      [value]="formatter.format(toDate)"
+                      (input)="toDate = validateInput(toDate, dpToDate.value)"
+                      [(ngModel)]="endDate"
+                      disabled/>
+                    <button class="btn btn-outline-secondary bi bi-calendar3" (click)="datepicker.toggle()" type="button"></button>
+                  </div>
+                </div>
+              </form>
+        
+              <h5>Categorías:</h5>
+                <div class="">
+                  <form class="px-1 py-1">
+                    @for (category of categories; track $index) {
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" (change)="toggleCategory(category.id)">
+                        <label class="form-check-label" for="flexCheckDefault">{{category.name}}</label>
+                      </div>
+                    }
+                  </form>
+                </div>
+            </div>
+
+            <button class="btn btn-dark mb-4 mx-2" data-bs-dismiss="offcanvas" (click)="filterInvoices()">Filtrar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+
+<app-invoice-list [invoices]="filteredList()"></app-invoice-list>
+<app-invoice-add></app-invoice-add>

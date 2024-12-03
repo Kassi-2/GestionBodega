@@ -1,8 +1,44 @@
-<button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal"
-          data-bs-target="#addInvoiceModal">
-          <i class="bi bi-person-plus"></i>
-          Agregar factura
-</button>
 
-<app-invoice-add></app-invoice-add>
 
+<div class="table-responsive-sm container-xl mt-3">
+  <table class="table table-striped-columns table-sm">
+    <thead>
+      <tr>
+        <th>Nº</th>
+        <th>fecha de envío</th>
+        <th>fecha de registro</th>
+        <th>Categoría(s)</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (invoice of invoices; track $index) {
+      <tr>
+        <td>{{invoice.purchaseOrderNumber}}</td>
+        <td>{{invoice.shipmentDate | date:'dd-MM-yyyy'}}</td>
+        <td> {{ invoice.registrationDate | date:'dd-MM-yyyy'}} </td>
+        <td> @for (category of invoice.invoiceCategory; track $index) {
+          {{ category.category.name }} <br>
+        } </td>
+        <td>
+          <div class="d-flex gap-2 justify-content-center">
+            <button type="button" class="btn btn-outline-primary btn-sm">
+                <i class="bi bi-file-earmark-arrow-down" (click)="downloadInvoice(invoice.id)"> Descargar</i>
+            </button>
+            <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal"
+              data-bs-target="#modalEditUser">
+              <i class="bi bi-pencil-square"> Editar</i>
+            </button>
+            <button type="button" class="btn btn-outline-danger btn-sm">
+              <i class="bi bi-x-square" (click)="deleteInvoice(invoice.id)"> Eliminar</i>
+            </button>
+          </div>
+        </td>
+      </tr>
+      }
+    </tbody>
+  </table>
+  <div class="d-flex justify-content-center">
+    <ngb-pagination [collectionSize]="invoices.length" [(page)]="page" [pageSize]="pageSize" [maxSize]="5" [rotate]="true" [ellipses]="false" [boundaryLinks]="true" />
+  </div>
+</div>

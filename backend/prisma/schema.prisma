@@ -65,7 +65,6 @@ model Product {
   category        Category         @relation(fields: [categoryId], references: [id])
   categoryId      Int
   lendingProducts LendingProduct[] @relation(name: "productLending")
-
   @@unique([name])
 }
 
@@ -94,6 +93,7 @@ model LendingProduct {
   @@id([lendingId, productId])
   @@unique([lendingId, productId])
 }
+
 
 enum LendingState {
   Active
