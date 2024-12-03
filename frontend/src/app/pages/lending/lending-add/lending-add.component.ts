@@ -6,7 +6,7 @@ import {
 } from './../../../core/models/lending.interface';
 import { ProductService } from './../../../core/services/product.service';
 import { LendingService } from './../../../core/services/lending.service';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import {
   UserStudent,
   UserAssitant,
@@ -14,7 +14,7 @@ import {
   User,
 } from '../../../core/models/user.interface';
 import { HttpClientModule } from '@angular/common/http';
-import { Router, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Degree } from '../../../core/models/degree.interface';
 import { NgbPagination } from '@ng-bootstrap/ng-bootstrap';
@@ -48,7 +48,8 @@ export class LendingAddComponent implements OnInit {
   public pageSize = 15;
   public categories: Category[] = [];
   public allProducts: Product[] = [];
-  public selectedCategory!: number;
+  public selectedCategory: string = 'student';
+  public categorySelected!: number;
   selectedUserType: string = 'student';
   selectedUser: User | null = null;
   user!: User;
@@ -66,6 +67,9 @@ export class LendingAddComponent implements OnInit {
   selectedTeacher: User | null = null;
   comments: string = '';
   lending!: newLending;
+  public selectedCategoryProducts!: number;
+
+
 
   private subscriptions: Subscription = new Subscription();
 
@@ -74,7 +78,8 @@ export class LendingAddComponent implements OnInit {
     private productService: ProductService,
     private userService: UserService,
     private router: Router,
-    private categoryService: CategoryService
+    private categoryService: CategoryService,
+    private cdr: ChangeDetectorRef,   private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
@@ -107,6 +112,13 @@ export class LendingAddComponent implements OnInit {
     this.subscriptions.add(this.getAllAssistants());
     this.subscriptions.add(this.getAllDegrees());
     this.subscriptions.add(this.getProducts());
+
+    this.route.url.subscribe(urlSegments => {
+      const currentCategory = urlSegments[1]?.path;
+      if (currentCategory) {
+        this.selectedCategory = currentCategory;
+      }
+    });
   }
   /**
    * Función para obtener los productos almacenados.
@@ -123,9 +135,16 @@ export class LendingAddComponent implements OnInit {
           .includes(this.searchTermProducts.toLowerCase()) ||
         product.id.toString().includes(this.searchTermProducts.toLowerCase())
         &&
-        product.categoryId === this.selectedCategory
+        product.categoryId === this.categorySelected
     );
     return filteredProducts;
+  }
+
+  selectProductsCategory(categoryId: number): void {
+    this.selectedCategoryProducts = categoryId;
+  }
+  selectCategory(category: string): void {
+    this.selectedCategory = category;
   }
   /**
    * Función para buscar el stock de un producto según su ID.
@@ -217,7 +236,7 @@ export class LendingAddComponent implements OnInit {
       .getAvailableProducts()
       .subscribe((products: Product[]) => {
         this.allProducts = products;
-        this.filteredByCategory(this.selectedCategory);
+        this.filteredByCategory(this.categorySelected);
       });
   }
   /**
@@ -618,19 +637,19 @@ export class LendingAddComponent implements OnInit {
     this.categoryService.getAllCategories().subscribe({
       next: (result) => {
         this.categories = result;
-        this.selectedCategory = result[0].id;
+        this.categorySelected = result[0].id;
       },
     });
   }
 
   public filteredByCategory(id: number) {
-    this.selectedCategory = id;
+    this.categorySelected = id;
     this.products = this.allProducts.filter(
       (product) => product.categoryId == id
     );
   }
 
   public selectedCategoryById(id: number) {
-    this.selectedCategory = id;
+    this.categorySelected = id;
   }
 }

@@ -12,7 +12,7 @@ import { UserSendQrComponent } from "../user-send-qr/user-send-qr.component";
 @Component({
   selector: 'app-user-options',
   standalone: true,
-  imports: [FormsModule, CommonModule, RouterModule, AddProductComponent, UserAddComponent, UsersImportComponent, UserSendQrComponent],
+  imports: [FormsModule, CommonModule, RouterModule, UserAddComponent, UsersImportComponent, UserSendQrComponent],
   templateUrl: './user-options.component.html',
   styleUrl: './user-options.component.css',
 })
