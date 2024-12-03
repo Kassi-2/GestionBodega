@@ -3,12 +3,16 @@ import { SearchService } from '../../../core/services/search.service';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { AddProductComponent } from "../../products/add-product/add-product.component";
+import { UserAddComponent } from "../user-add/user-add.component";
+import { UsersImportComponent } from "../users-import/users-import.component";
+import { UserSendQrComponent } from "../user-send-qr/user-send-qr.component";
 
 
 @Component({
   selector: 'app-user-options',
   standalone: true,
-  imports: [FormsModule, CommonModule, RouterModule],
+  imports: [FormsModule, CommonModule, RouterModule, AddProductComponent, UserAddComponent, UsersImportComponent, UserSendQrComponent],
   templateUrl: './user-options.component.html',
   styleUrl: './user-options.component.css',
 })
