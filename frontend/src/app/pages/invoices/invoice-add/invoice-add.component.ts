@@ -1,9 +1,10 @@
+import { InvoiceCategory } from './../../../../../../backend/node_modules/.prisma/client/index.d';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CategoryService } from '../../../core/services/category.service';
 import { Category } from '../../../core/models/category.interface';
 import { InvoiceService } from '../../../core/services/invoice.service';
-import { Invoice, newInvoice } from '../../../core/models/invoice.interface';
+import { NewInvoice } from '../../../core/models/invoice.interface';
 import Swal from 'sweetalert2';
 import { ReactiveFormsModule } from '@angular/forms';
 
@@ -47,18 +48,18 @@ export class InvoiceAddComponent implements OnInit {
       return;
     }
 
-    const invoice: newInvoice = {
+    const invoice: NewInvoice = {
       purchaseOrderNumber: this.userForm.value.purchaseOrderNumber,
       shipmentDate: this.userForm.value.shipmentDate,
       registrationDate: this.userForm.value.registrationDate,
-      invoiceCategory: this.userForm.value.categories.map((categoryId: number) => ({
-        invoice: null,
-        category: { id: categoryId } as Category
-      })),
+      invoiceCategory: this.userForm.value.categories,
+
       file: this.userForm.value.invoiceFile
     };
 
-    console.log(invoice)
+    const file = this.userForm.get('invoiceFile')?.value;
+
+
 
     this.invoiceService.addInvoice(invoice).subscribe({
       next: () => {

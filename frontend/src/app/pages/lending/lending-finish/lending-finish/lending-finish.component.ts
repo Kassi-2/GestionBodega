@@ -53,10 +53,8 @@ export class LendingFinishComponent {
   // Función para poder ver prestamos finalizados por una busqueda profunda
   handleSubmit() {
     if (this.inputValue.trim()) {
-      console.log('Texto enviado:', this.inputValue);
       this.lendingService.lendingForName(this.inputValue).subscribe((lending: Lending[]) => {
         this.lendingForName = lending;
-        console.log(this.lendingForName)
       });
       this.inputValue = '';
     } else {
@@ -102,7 +100,6 @@ export class LendingFinishComponent {
     this.lendingService.getLendingForEdit(id).subscribe((lending: Lending[]) => {
       this.selectedLending = { ...lending };
       this.getAllTeachers();
-      console.log(this.selectedLending)
     });
   }
 
@@ -127,7 +124,6 @@ export class LendingFinishComponent {
       if (result.isConfirmed) {
         this.lendingService.deleteLending(idLending).subscribe(() => {
           this.lending = this.lending.filter(lending => lending.id !== idLending);
-          console.log(this.lending.filter(lending => lending.id !== idLending))
           swalWithBootstrapButtons.fire({
             title: "¡Eliminado!",
             text: "El préstamo fue eliminado.",

@@ -116,9 +116,7 @@ export class LendingService {
   async getLendingByCreateDate(date: string): Promise<Lending[]> {
     const startDate = new Date(date);
     const endDate = new Date(startDate);
-    console.log(startDate);
     endDate.setDate(endDate.getDate() + 1);
-    console.log(endDate);
 
     const lendings = await this.prisma.lending.findMany({
       where: {
@@ -146,8 +144,6 @@ export class LendingService {
       },
     });
 
-    console.log(lendings);
-    console.log(JSON.stringify(lendings, null, 2));
 
     if (!lendings || lendings.length === 0) {
       throw new NotFoundException(`No se encontraron préstamos en ${date}`);

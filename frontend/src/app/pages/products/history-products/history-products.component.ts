@@ -40,7 +40,6 @@ export class HistoryProductsComponent {
     if (id !== null) {
       this.productId = id;
       this.idProduct = +id
-      console.log(this.productId)
       this.getHistory()
     } else {
       console.error('No se encontró el parámetro ID');
@@ -60,7 +59,6 @@ export class HistoryProductsComponent {
   private getHistory(): void {
     this.lendingService.getHistoryProducts(this.idProduct).subscribe((lending: Lending[]) => {
       this.lending = lending;
-      console.log(this.lending)
     });
   }
 

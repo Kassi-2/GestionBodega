@@ -17,6 +17,7 @@ import { LendingCreateDTO } from './dto/lending-create.dto';
 import { LendingFinalizeDTO } from './dto/lending-finalize.dto';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
 
+@UseGuards(AuthGuard)
 @Controller('lending')
 export class LendingController {
   constructor(private readonly lendingService: LendingService) {}
@@ -26,7 +27,9 @@ export class LendingController {
     return this.lendingService.getLendingById(Number(id));
   }
   @Get('finalized/:borrowerName')
-  async getFinalizedLendingsByBorrowerName(@Param('borrowerName') borrowerName: string){
+  async getFinalizedLendingsByBorrowerName(
+    @Param('borrowerName') borrowerName: string,
+  ) {
     return this.lendingService.getFinalizedLendingsByBorrowerName(borrowerName);
   }
 
@@ -92,19 +95,13 @@ export class LendingController {
     return this.lendingService.finalizeLending(Number(id), comments);
   }
 
-    @Delete('/delete/:id')
-    async deleteLending(@Param('id') id: string) {
-        return this.lendingService.deleteLending(Number(id));
-    }
-
-    @Delete('/delete-permanently/:id')
-    async deletePermanentlyLending(@Param('id') id: string) {
-        return this.lendingService.deletePermanentlyLending(Number(id));
-    }
-
-    @Get('finalized/:borrowerName')
-  async getFinalizedLendingsByBorrowerName(@Param('borrowerName') borrowerName: string){
-    return this.lendingService.getFinalizedLendingsByBorrowerName(borrowerName);
+  @Delete('/delete/:id')
+  async deleteLending(@Param('id') id: string) {
+    return this.lendingService.deleteLending(Number(id));
   }
 
+  @Delete('/delete-permanently/:id')
+  async deletePermanentlyLending(@Param('id') id: string) {
+    return this.lendingService.deletePermanentlyLending(Number(id));
+  }
 }

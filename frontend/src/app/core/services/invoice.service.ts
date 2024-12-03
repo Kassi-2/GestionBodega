@@ -1,13 +1,7 @@
-<<<<<<< HEAD
 import { Injectable } from '@angular/core';
-import { Invoice, newInvoice } from '../models/invoice.interface';
-import { HttpClient } from '@angular/common/http';
-=======
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { FilterInvoices, Invoice } from '../models/invoice.interface';
->>>>>>> origin/dev5-leandro
+import { FilterInvoices, Invoice, NewInvoice } from '../models/invoice.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -15,28 +9,48 @@ import { FilterInvoices, Invoice } from '../models/invoice.interface';
 export class InvoiceService {
 
   constructor(private http: HttpClient) { }
-<<<<<<< HEAD
-  private apiUrl = 'http://localhost:3000/invoice';
+  private apiUrl = 'http://localhost:3000/invoices';
 
-  public addInvoice(invoice: newInvoice){
-    return this.http.post<Invoice>(`${this.apiUrl}`, invoice);
-=======
-  private api = 'http://localhost:3000/invoices';
+  public addInvoice(data: NewInvoice) {
+    const formData = new FormData();
+
+    const shipmentDate = new Date(data.shipmentDate);
+    const registrationDate = new Date(data.registrationDate);
+
+    formData.append('purchaseOrderNumber', data.purchaseOrderNumber);
+    formData.append('shipmentDate', shipmentDate.toISOString().split('T')[0]); // Convertir a ISO String
+    if (registrationDate) {
+      formData.append('registrationDate', registrationDate.toISOString().split('T')[0]);
+    }
+
+    const categoryIds = data.invoiceCategory;
+    formData.append('categoryIds', JSON.stringify(categoryIds));
+
+
+
+    if (data.file) {
+      formData.append('file', data.file);
+    }
+
+
+    return this.http.post(`${this.apiUrl}/upload`, formData);
+  }
+
 
   public getAllInvoices(): Observable<Invoice[]> {
-    return this.http.get<Invoice[]>(`${this.api}`);
+    return this.http.get<Invoice[]>(`${this.apiUrl}`);
   }
 
   public getInvoiceById(id: number): Observable<Invoice> {
-    return this.http.get<Invoice>(`${this.api}/${id}`);
+    return this.http.get<Invoice>(`${this.apiUrl}/${id}`);
   }
 
   public deleteInvoice(id: number): Observable<Invoice> {
-    return this.http.delete<Invoice>(`${this.api}/${id}`);
+    return this.http.delete<Invoice>(`${this.apiUrl}/${id}`);
   }
 
   public downloadInvoice(invoiceId: number): Observable<Blob> {
-    return this.http.get(`${this.api}/download/${invoiceId}`, {
+    return this.http.get(`${this.apiUrl}/download/${invoiceId}`, {
       params: { id: invoiceId },
       responseType: 'blob', // Indica que la respuesta será un Blob
     });
@@ -56,15 +70,12 @@ export class InvoiceService {
         params = params.append('categories', category);
       });
     }
-    return this.http.get<Invoice[]>(`${this.api}/filter/filter`, { params });;
->>>>>>> origin/dev5-leandro
+    return this.http.get<Invoice[]>(`${this.apiUrl}/filter/filter`, { params });;
   }
-  public getInvoiceById(idInvoice: number): Observable<Invoice[]> {
-    return this.http.get<Invoice[]>(`${this.apiUrl}/lending-id/${idInvoice}`);
-  }
+
 
   public updateInvoice(invoice: Invoice): Observable<Invoice[]> {
     return this.http.get<Invoice[]>(`${this.apiUrl}/lending-id/${invoice}`);
   }
 }
-}
+

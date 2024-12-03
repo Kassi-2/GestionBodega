@@ -85,7 +85,6 @@ export class LoginComponent implements OnInit, OnDestroy {
           timer: 1500,
           showConfirmButton: false,
         });
-        console.log(error.message);
       },
     });
   }

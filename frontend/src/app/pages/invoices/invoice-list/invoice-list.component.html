@@ -26,8 +26,8 @@
                 <i class="bi bi-file-earmark-arrow-down" (click)="downloadInvoice(invoice.id)"> Descargar</i>
             </button>
             <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal"
-              data-bs-target="#modalEditUser">
-              <i class="bi bi-pencil-square"> Editar</i>
+              data-bs-target="#editInvoiceModal">
+              <i class="bi bi-pencil-square" (click)="setInvoiceId(invoice.id)"> Editar</i>
             </button>
             <button type="button" class="btn btn-outline-danger btn-sm">
               <i class="bi bi-x-square" (click)="deleteInvoice(invoice.id)"> Eliminar</i>
@@ -42,3 +42,7 @@
     <ngb-pagination [collectionSize]="invoices.length" [(page)]="page" [pageSize]="pageSize" [maxSize]="5" [rotate]="true" [ellipses]="false" [boundaryLinks]="true" />
   </div>
 </div>
+
+<app-invoices-edit [invoiceId]="invoiceId"></app-invoices-edit>
+
+

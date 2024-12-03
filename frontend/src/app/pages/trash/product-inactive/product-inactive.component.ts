@@ -59,7 +59,6 @@ export class ProductInactiveComponent {
   public getProductsEliminated(): void {
     this.productService.getProductsInactive().subscribe((products) => {
       this.allProducts = products;
-      console.log(this.allProducts)
     });
   }
 

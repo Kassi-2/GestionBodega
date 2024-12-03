@@ -5,11 +5,12 @@ import { Category } from '../../../core/models/category.interface';
 import { InvoiceService } from '../../../core/services/invoice.service';
 import Swal from 'sweetalert2';
 import { CommonModule } from '@angular/common';
+import { InvoicesEditComponent } from "../invoices-edit/invoices-edit.component";
 
 @Component({
   selector: 'app-invoice-list',
   standalone: true,
-  imports: [NgbPagination, CommonModule],
+  imports: [NgbPagination, CommonModule, InvoicesEditComponent],
   templateUrl: './invoice-list.component.html',
   styleUrl: './invoice-list.component.css',
 })
@@ -22,6 +23,7 @@ export class InvoiceListComponent implements OnInit, OnDestroy {
   @Input() invoices: Invoice[] = [];
   public page = 1;
   public pageSize = 10;
+  invoiceId!: number;
 
   public getCategories(invoice: Invoice) {
     let categories = '';
@@ -111,5 +113,9 @@ export class InvoiceListComponent implements OnInit, OnDestroy {
         Swal.close();
       },
     });
+  }
+
+  setInvoiceId(invoiceId: number){
+    this.invoiceId = invoiceId;
   }
 }

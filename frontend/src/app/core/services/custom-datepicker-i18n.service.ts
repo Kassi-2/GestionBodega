@@ -26,7 +26,7 @@ export class CustomDatepickerI18n extends NgbDatepickerI18n {
   }
 
   override getMonthShortName(month: number): string {
-    return I18N_VALUES[this.locale].months[month - 1].substring(0,5);
+    return I18N_VALUES[this.locale].months[month - 1].substring(0,3);
   }
 
   override getMonthFullName(month: number): string {

@@ -58,9 +58,7 @@ export class LendingActiveComponent {
 
     const selectedDate = new Date(input.value);
     const date = `${selectedDate.getFullYear()}-${selectedDate.getMonth()+1}-${selectedDate.getDate()+1}`
-    console.log(date)
     this.lendingService.lendingForDate(date).subscribe((lendings: Lending[]) => {
-      console.log(lendings); // Verifica la respuesta completa
       this.filteredLendings = lendings;
     });
   }
@@ -74,7 +72,6 @@ export class LendingActiveComponent {
     this.lendingService.getLending().subscribe((lending: Lending[]) => {
       this.lending = lending;
       this.filteredLendings = lending;
-      console.log(this.filteredLendings)
     });
   }
 
@@ -82,7 +79,6 @@ export class LendingActiveComponent {
   private getAllTeachers() {
     this.userService.getAllTeachers().subscribe((teachers: UserTeacher[]) => {
       this.teachers = teachers;
-      console.log(teachers)
     });
   }
 

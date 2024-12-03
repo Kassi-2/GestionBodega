@@ -17,14 +17,15 @@ import {
 import { JsonPipe } from '@angular/common';
 import { CustomDatepickerI18n } from '../../../core/services/custom-datepicker-i18n.service';
 import { CustomDateParserFormatter } from '../../../core/services/custom-date-parser-formatter.service';
+import { InvoiceAddComponent } from "../invoice-add/invoice-add.component";
 
 @Component({
   selector: 'app-invoice-options',
   standalone: true,
-  imports: [InvoiceListComponent, FormsModule, NgbDatepickerModule, JsonPipe],
+  imports: [InvoiceListComponent, FormsModule, NgbDatepickerModule, InvoiceAddComponent],
   templateUrl: './invoice-options.component.html',
   styleUrl: './invoice-options.component.css',
-  providers: [ 
+  providers: [
     { provide: NgbDatepickerI18n, useClass: CustomDatepickerI18n },
     { provide: NgbDateParserFormatter, useClass: CustomDateParserFormatter }
   ],

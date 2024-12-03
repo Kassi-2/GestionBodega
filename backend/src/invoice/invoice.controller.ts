@@ -57,7 +57,7 @@ export class InvoiceController {
     body: {
       purchaseOrderNumber: string;
       shipmentDate: string;
-      categoryIds: string[];
+      categoryIds: string;
       registrationDate?: string;
     },
   ) {
@@ -65,9 +65,14 @@ export class InvoiceController {
       throw new BadRequestException('Debe proporcionar un archivo');
     }
 
-    const categoryIds = body.categoryIds.map((categoryId) =>
-      parseInt(categoryId, 10),
-    );
+    let categoryIds: number[];
+    try {
+      categoryIds = JSON.parse(body.categoryIds).map((categoryId: string) =>
+        parseInt(categoryId, 10),
+      );
+    } catch (error) {
+      throw new BadRequestException('categoryIds debe ser un array válido');
+    }
 
     if (categoryIds.some(isNaN)) {
       throw new BadRequestException('categoryIds deben ser números válidos');

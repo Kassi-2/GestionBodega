@@ -191,7 +191,6 @@ export class AddProductComponent implements OnInit {
           }, 1500);
         },
         error: (error) => {
-          console.log(error);
           swalWithBootstrapButtons.fire({
             title: 'Error',
             text: 'El producto no se ha agregado. El nombre del producto está repetido u ocurrió un error.',

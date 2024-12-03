@@ -73,11 +73,8 @@ export class LendingAddComponent implements OnInit {
     private LendingService: LendingService,
     private productService: ProductService,
     private userService: UserService,
-<<<<<<< HEAD
-    private router: Router
-=======
+    private router: Router,
     private categoryService: CategoryService
->>>>>>> origin/dev5-leandro
   ) {}
 
   ngOnInit(): void {
@@ -118,7 +115,7 @@ export class LendingAddComponent implements OnInit {
    * @memberof LendingAddComponent
    */
   filteredList(): Product[] {
-                  
+
     const filteredProducts = this.products.filter(
       (product) =>
         product.name
@@ -377,7 +374,6 @@ export class LendingAddComponent implements OnInit {
    * @memberof LendingAddComponent
    */
   stepUp() {
-    console.log(this.contains);
     this.currentStep++;
     this.searchTermProducts = '';
     this.searchTermUsers = '';
@@ -422,7 +418,6 @@ export class LendingAddComponent implements OnInit {
 
     this.currentStep = 1;
 
-    console.log(this.lending);
 
     const swalWithBootstrapButtons = Swal.mixin({
       customClass: {
@@ -442,10 +437,8 @@ export class LendingAddComponent implements OnInit {
           showConfirmButton: false,
         });
 
-        console.log(response);
 
         response.lendingProducts.forEach((lendingProduct: LendingProduct) => {
-          console.log('entre a revisar');
           if (lendingProduct.product.stock <= lendingProduct.product.criticalStock) {
             const Toast = Swal.mixin({
               toast: true,
@@ -462,7 +455,6 @@ export class LendingAddComponent implements OnInit {
               icon: "success",
               title: `${lendingProduct.product.name} tiene poco stock`
             });
-            console.log('entre al if');
           }
         });
 
@@ -485,7 +477,6 @@ export class LendingAddComponent implements OnInit {
           showConfirmButton: false,
         });
 
-        console.log(error);
       },
     });
   }
@@ -514,7 +505,6 @@ export class LendingAddComponent implements OnInit {
 
     this.currentStep = 1;
 
-    console.log(this.lending);
 
     const swalWithBootstrapButtons = Swal.mixin({
       customClass: {
@@ -545,7 +535,6 @@ export class LendingAddComponent implements OnInit {
           showConfirmButton: false,
         });
 
-        console.log(error);
       },
     });
   }
@@ -635,12 +624,10 @@ export class LendingAddComponent implements OnInit {
   }
 
   public filteredByCategory(id: number) {
-    console.log('filtrar por', id);
     this.selectedCategory = id;
     this.products = this.allProducts.filter(
       (product) => product.categoryId == id
     );
-    console.log(this.products)
   }
 
   public selectedCategoryById(id: number) {

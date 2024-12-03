@@ -70,12 +70,10 @@ public onEvent(e: ScannerQRCodeResult[], action?: any): void {
       const qrCode = e[0]?.value;
 
       if (qrCode) {
-        console.log('Valor del QR:', qrCode);
 
 
         this.userService.readCode(qrCode).subscribe({
           next: (result: any) => {
-            console.log(result);
 
             if ('borrower' in result) {
               const borrower = result.borrower as User;

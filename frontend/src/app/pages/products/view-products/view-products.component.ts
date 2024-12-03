@@ -216,7 +216,6 @@ export class ViewProductsComponent implements OnInit {
       });
     }
 
-    console.log(this.forma.value.categoryId);
     const updatedProduct: Product = {
       id: this.selectedProductId,
       ...this.forma.value,
@@ -260,7 +259,6 @@ export class ViewProductsComponent implements OnInit {
   }
 
   public filteredByCategory(id: number) {
-    console.log('filtrar por', id);
     this.selectedCategory = id;
     this.products = this.allProducts.filter(
       (product) => product.categoryId == id

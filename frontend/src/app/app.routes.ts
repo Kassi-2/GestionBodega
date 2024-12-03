@@ -108,6 +108,11 @@ export const routes: Routes = [
         component: CategoryListComponent,
         canActivate: [authGuard],
       },
+      {
+        path: 'invoice',
+        component: InvoiceOptionsComponent,
+        canActivate: [authGuard],
+      },
     ],
     canActivate: [authGuard],
   },

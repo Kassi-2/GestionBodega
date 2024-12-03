@@ -56,7 +56,6 @@ export class UserInactiveComponent {
   private getStudentsEliminated(): void {
     this.userService.getAllStudentsEliminated().subscribe((user: User[]) => {
       this.user = user
-      console.log(user)
     });
   }
 

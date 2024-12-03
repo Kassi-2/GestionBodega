@@ -36,7 +36,6 @@ export class ProductService {
    * @memberof ProductService
    */
   updateProduct(id: number, updatedProduct: Product): Observable<Product> {
-    console.log(updatedProduct);
     return this.http.put<Product>(`${this.apiUrl}/${id}`, updatedProduct);
   }
   /**
@@ -67,7 +66,6 @@ export class ProductService {
    * @memberof ProductService
    */
   addProduct(product: NewProduct) {
-    console.log(product);
     return this.http.post(`${this.apiUrl}`, product);
   }
 
@@ -93,11 +91,9 @@ export class ProductService {
   }
   setIdProduct(id: number){
     this.idProduct.next(id)
-    console.log(this.idProduct.asObservable())
   }
 
   getIdProduct(){
-    console.log(this.idProduct.asObservable())
     return this.idProduct.asObservable();
   }
 }

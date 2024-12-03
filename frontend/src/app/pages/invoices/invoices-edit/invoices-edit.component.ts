@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CategoryService } from '../../../core/services/category.service';
 import { Category } from '../../../core/models/category.interface';
 import { InvoiceService } from '../../../core/services/invoice.service';
-import { Invoice, newInvoice } from '../../../core/models/invoice.interface';
+import { EditedInvoice, Invoice, NewInvoice } from '../../../core/models/invoice.interface';
 import Swal from 'sweetalert2';
 import { ReactiveFormsModule } from '@angular/forms';
 
@@ -17,7 +17,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 export class InvoicesEditComponent {
   userForm!: FormGroup;
   public categories: Category[] = [];
-  private invoiceId!: number;
+  @Input() invoiceId!: number;
+
 
   constructor(
     private fb: FormBuilder,
@@ -48,7 +49,7 @@ export class InvoicesEditComponent {
       return;
     }
 
-    const updatedInvoice: Invoice = {
+    const updatedInvoice: EditedInvoice = {
       id: this.invoiceId,
       purchaseOrderNumber: this.userForm.value.purchaseOrderNumber,
       shipmentDate: this.userForm.value.shipmentDate,
@@ -126,44 +127,33 @@ export class InvoicesEditComponent {
   }
 
   public invoiceForEdit(idInvoice: number): void {
-    // this.invoiceService.getInvoiceById(idInvoice).subscribe({
-    //   next: (invoices: Invoice[]) => {
-    //     if (invoices.length === 0) {
-    //       Swal.fire({
-    //         title: 'Error',
-    //         text: 'No se encontró la factura.',
-    //         icon: 'error',
-    //         timer: 1500,
-    //         showConfirmButton: false,
-    //       });
-    //       return;
-    //     }
+    this.invoiceService.getInvoiceById(idInvoice).subscribe({
+       next: (invoiceResult: Invoice) => {
 
-    //     const invoice = invoices[0];
+        this.userForm.patchValue({
+          purchaseOrderNumber: invoiceResult.purchaseOrderNumber,
+          shipmentDate: invoiceResult.shipmentDate,
+          registrationDate: invoiceResult.registrationDate,
+          invoiceCategory: this.userForm.value.categories.map((categoryId: number) => ({
+            invoice: null,
+            category: { id: categoryId } as Category
+          })),          invoiceFile: null,
+          state: invoiceResult.state ?? false,
+        });
 
-    //     this.userForm.patchValue({
-    //       purchaseOrderNumber: invoice.purchaseOrderNumber,
-    //       shipmentDate: invoice.shipmentDate,
-    //       registrationDate: invoice.registrationDate,
-    //       categories: invoice.invoiceCategory.map((cat) => cat.category.id),
-    //       invoiceFile: null,
-    //       state: invoice.state ?? false,
-    //     });
+      },
 
-    //     console.log('Formulario actualizado:', this.userForm.value);
-    //   },
-
-    //   error: (error) => {
-    //     Swal.fire({
-    //       title: 'Error',
-    //       text: 'No se pudieron cargar los datos de la factura.',
-    //       icon: 'error',
-    //       timer: 1500,
-    //       showConfirmButton: false,
-    //     });
-    //     console.error(error);
-    //   },
-    // });
+      error: (error) => {
+        Swal.fire({
+          title: 'Error',
+          text: 'No se pudieron cargar los datos de la factura.',
+          icon: 'error',
+          timer: 1500,
+          showConfirmButton: false,
+        });
+        console.error(error);
+      },
+    });
 
   }
 
