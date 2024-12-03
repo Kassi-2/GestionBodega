@@ -1,9 +1,9 @@
-import { Component, Input, input, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, Input, ChangeDetectorRef,SimpleChanges, OnInit } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { CategoryService } from '../../../core/services/category.service';
 import { Category } from '../../../core/models/category.interface';
 import { InvoiceService } from '../../../core/services/invoice.service';
-import { EditedInvoice, Invoice, NewInvoice } from '../../../core/models/invoice.interface';
+import { EditedInvoice, Invoice, InvoiceCategory, NewInvoice } from '../../../core/models/invoice.interface';
 import Swal from 'sweetalert2';
 import { ReactiveFormsModule } from '@angular/forms';
 
@@ -14,59 +14,79 @@ import { ReactiveFormsModule } from '@angular/forms';
   templateUrl: './invoices-edit.component.html',
   styleUrls: ['./invoices-edit.component.css']
 })
-export class InvoicesEditComponent {
-  userForm!: FormGroup;
+export class InvoicesEditComponent implements OnInit{
   public categories: Category[] = [];
-  @Input() invoiceId!: number;
+  @Input() invoiceId!: Invoice;
+  public today = new Date();
+
+  public formattedDate = this.today.toISOString().split('T')[0];
+
+  public invoiceForm: FormGroup = new FormGroup({
+      purchaseOrderNumber: new FormControl(['', Validators.required]),
+      shipmentDate: new FormControl([this.formattedDate, Validators.required]),
+      registrationDate: new FormControl([this.formattedDate, Validators.required]),
+      invoiceFile: new FormControl([null, Validators.required]),
+      categories: new FormControl([[], Validators.required]),
+
+  })
+
 
 
   constructor(
     private fb: FormBuilder,
     private categoryService: CategoryService,
-    private invoiceService: InvoiceService
+    private invoiceService: InvoiceService,
+    private cdr: ChangeDetectorRef
+
   ) {}
 
   ngOnInit(): void {
-    const today = new Date();
-    today.setDate(today.getDate() - 1);
-    const formattedDate = today.toISOString().split('T')[0];
-
-
-    this.userForm = this.fb.group({
-      purchaseOrderNumber: ['', Validators.required],
-      shipmentDate: [formattedDate, Validators.required],
-      registrationDate: [formattedDate, Validators.required],
-      invoiceFile: [null, Validators.required],
-      categories: [[], Validators.required],
-    });
-
     this.getAllCategories();
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['invoiceId'] && this.invoiceId) {
+      this.patchFormValues(this.invoiceId);
+    }
+  }
+
+  patchFormValues(invoiceId: Invoice) {
+    console.log('12', invoiceId);
+    this.invoiceForm.patchValue({
+      id: invoiceId.id,
+      purchaseOrderNumber: invoiceId.purchaseOrderNumber,
+      shipmentDate: this.formatDate(invoiceId.shipmentDate),
+      registrationDate: this.formatDate(invoiceId.registrationDate),
+      categories: invoiceId.invoiceCategory.map((invoiceCategory: InvoiceCategory) => invoiceCategory.category.id),
+    });
+
+  }
+
+
   onSubmit(): void {
-    if (this.userForm.invalid) {
-      this.userForm.markAllAsTouched();
+    if (this.invoiceForm.invalid) {
+      this.invoiceForm.markAllAsTouched();
       return;
     }
 
-    const updatedInvoice: EditedInvoice = {
-      id: this.invoiceId,
-      purchaseOrderNumber: this.userForm.value.purchaseOrderNumber,
-      shipmentDate: this.userForm.value.shipmentDate,
-      registrationDate: this.userForm.value.registrationDate,
-      invoiceCategory: this.userForm.value.categories.map((categoryId: number) => ({
-        invoice: { id: this.invoiceId },
-        category: { id: categoryId } as Category,
-      })),
-      file: this.userForm.value.invoiceFile,
-      state: false
+    const invoice: EditedInvoice = {
+      purchaseOrderNumber: this.invoiceForm.value.purchaseOrderNumber,
+      shipmentDate: this.invoiceForm.value.shipmentDate,
+      registrationDate: this.invoiceForm.value.registrationDate,
+      invoiceCategory: this.invoiceForm.value.categories,
+
+      file: this.invoiceForm.value.invoiceFile
     };
 
-    this.invoiceService.updateInvoice(updatedInvoice).subscribe({
+    const file = this.invoiceForm.get('invoiceFile')?.value;
+
+
+
+    this.invoiceService.updateInvoice(this.invoiceId.id ,invoice).subscribe({
       next: () => {
         Swal.fire({
-          title: '¡Factura actualizada!',
-          text: 'La factura ha sido actualizada con éxito.',
+          title: '¡Factura creada!',
+          text: 'La factura ha sido creada con éxito.',
           icon: 'success',
           timer: 1500,
           showConfirmButton: false,
@@ -75,7 +95,7 @@ export class InvoicesEditComponent {
       error: (error) => {
         Swal.fire({
           title: 'Error',
-          text: 'Hubo un error al actualizar la factura.',
+          text: 'Hubo un error al crear la factura.',
           icon: 'error',
           timer: 1500,
           showConfirmButton: false,
@@ -85,23 +105,64 @@ export class InvoicesEditComponent {
     });
   }
 
+
+  private loadInvoiceData(invoiceId: number): void {
+    this.invoiceService.getInvoiceById(invoiceId).subscribe({
+      next: (invoice: Invoice) => {
+        const shipmentDate = this.formatDate(invoice.shipmentDate);
+        const registrationDate = this.formatDate(invoice.registrationDate);
+
+        const categoryIds = invoice.invoiceCategory.map((invoiceCategory: InvoiceCategory) => invoiceCategory.category.id);
+
+        this.invoiceForm.patchValue({
+          purchaseOrderNumber: invoice.purchaseOrderNumber,
+          shipmentDate: shipmentDate,
+          registrationDate: registrationDate,
+          invoiceFile: null,
+          categories: categoryIds,
+        });
+      },
+      error: (error) => {
+        Swal.fire({
+          title: 'Error',
+          text: 'No se pudieron cargar los datos de la factura.',
+          icon: 'error',
+          timer: 1500,
+          showConfirmButton: false,
+        });
+        console.error(error);
+      },
+    });
+  }
+
+
+
+  formatDate(date: Date): string {
+    const d = new Date(date);
+    const day = ('0' + d.getDate()).slice(-2);
+    const month = ('0' + (d.getMonth() + 1)).slice(-2); // los meses comienzan desde 0
+    const year = d.getFullYear();
+    return `${year}-${month}-${day}`;
+  }
+
+
   get notValidpurchaseOrderNumber() {
     return (
-      this.userForm.get('purchaseOrderNumber')?.invalid &&
-      this.userForm.get('purchaseOrderNumber')?.touched
+      this.invoiceForm.get('purchaseOrderNumber')?.invalid &&
+      this.invoiceForm.get('purchaseOrderNumber')?.touched
     );
   }
 
   get notValidFile() {
     return (
-      this.userForm.get('file')?.invalid &&
-      this.userForm.get('file')?.touched
+      this.invoiceForm.get('file')?.invalid &&
+      this.invoiceForm.get('file')?.touched
     );
   }
 
 
   onCategoryChange(event: any, categoryId: number): void {
-    const selectedCategories = this.userForm.get('categories')?.value as number[];
+    const selectedCategories = this.invoiceForm.get('categories')?.value as number[];
 
     if (event.target.checked) {
       selectedCategories.push(categoryId);
@@ -111,30 +172,31 @@ export class InvoicesEditComponent {
         selectedCategories.splice(index, 1);
       }
     }
-    this.userForm.patchValue({ categories: selectedCategories });
-    this.userForm.get('categories')?.updateValueAndValidity();
+    this.invoiceForm.patchValue({ categories: selectedCategories });
+    this.invoiceForm.get('categories')?.updateValueAndValidity();
   }
 
   onFileSelected(event: any): void {
     const file = event.target.files[0];
     if (file && file.type === 'application/pdf') {
-      this.userForm.patchValue({ invoiceFile: file });
-      this.userForm.get('invoiceFile')?.setErrors(null);
+      this.invoiceForm.patchValue({ invoiceFile: file });
+      this.invoiceForm.get('invoiceFile')?.setErrors(null);
     } else {
-      this.userForm.patchValue({ invoiceFile: null });
-      this.userForm.get('invoiceFile')?.setErrors({ invalidFileType: true });
+      this.invoiceForm.patchValue({ invoiceFile: null });
+      this.invoiceForm.get('invoiceFile')?.setErrors({ invalidFileType: true });
     }
   }
 
   public invoiceForEdit(idInvoice: number): void {
+
     this.invoiceService.getInvoiceById(idInvoice).subscribe({
        next: (invoiceResult: Invoice) => {
 
-        this.userForm.patchValue({
+        this.invoiceForm.patchValue({
           purchaseOrderNumber: invoiceResult.purchaseOrderNumber,
           shipmentDate: invoiceResult.shipmentDate,
           registrationDate: invoiceResult.registrationDate,
-          invoiceCategory: this.userForm.value.categories.map((categoryId: number) => ({
+          invoiceCategory: this.invoiceForm.value.categories.map((categoryId: number) => ({
             invoice: null,
             category: { id: categoryId } as Category
           })),          invoiceFile: null,
@@ -171,11 +233,11 @@ export class InvoicesEditComponent {
   }
 
   get notValidOrderNumber() {
-    return this.userForm.get('purchaseOrderNumber')?.invalid && this.userForm.get('purchaseOrderNumber')?.touched;
+    return this.invoiceForm.get('purchaseOrderNumber')?.invalid && this.invoiceForm.get('purchaseOrderNumber')?.touched;
   }
 
   get notValidCategories() {
-    return this.userForm.get('categories')?.invalid && this.userForm.get('categories')?.touched;
+    return this.invoiceForm.get('categories')?.invalid && this.invoiceForm.get('categories')?.touched;
   }
 
 }

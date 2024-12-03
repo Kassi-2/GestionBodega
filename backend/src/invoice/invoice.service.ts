@@ -36,6 +36,11 @@ export class InvoiceService {
     try {
       const invoice = await this.prismaService.invoice.findUnique({
         where: { id, state: true },
+        include: {
+          invoiceCategory: {
+            select: { category: true },
+          },
+        },
       });
 
       if (!invoice) {

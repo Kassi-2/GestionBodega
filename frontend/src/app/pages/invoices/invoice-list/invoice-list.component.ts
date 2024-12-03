@@ -24,6 +24,8 @@ export class InvoiceListComponent implements OnInit, OnDestroy {
   public page = 1;
   public pageSize = 10;
   invoiceId!: number;
+  invoiceEdit!: Invoice;
+
 
   public getCategories(invoice: Invoice) {
     let categories = '';
@@ -32,6 +34,13 @@ export class InvoiceListComponent implements OnInit, OnDestroy {
       categories = categories + category.category.name + '\n';
     });
     return categories;
+  }
+
+  public getInvoice(id: number): void{
+    this.invoiceService.getInvoiceById(id).subscribe((invoice: Invoice) =>{
+      this.invoiceEdit = invoice
+      console.log(this.invoiceEdit)
+    })
   }
 
   public deleteInvoice(id: number) {

@@ -27,7 +27,7 @@
             </button>
             <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal"
               data-bs-target="#editInvoiceModal">
-              <i class="bi bi-pencil-square" (click)="setInvoiceId(invoice.id)"> Editar</i>
+              <i class="bi bi-pencil-square" (click)="getInvoice(invoice.id)"> Editar</i>
             </button>
             <button type="button" class="btn btn-outline-danger btn-sm">
               <i class="bi bi-x-square" (click)="deleteInvoice(invoice.id)"> Eliminar</i>
@@ -43,6 +43,6 @@
   </div>
 </div>
 
-<app-invoices-edit [invoiceId]="invoiceId"></app-invoices-edit>
+<app-invoices-edit [invoiceId]="invoiceEdit"></app-invoices-edit>
 
 
