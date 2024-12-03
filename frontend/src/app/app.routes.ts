@@ -21,6 +21,7 @@ import { InvoiceListComponent } from './pages/invoices/invoice-list/invoice-list
 import { InvoiceAddComponent } from './pages/invoices/invoice-add/invoice-add.component';
 import { UserManualViewComponent } from './shared/components/user-manual-view/user-manual-view.component';
 import { InvoiceOptionsComponent } from './pages/invoices/invoice-options/invoice-options.component';
+import { InvoicesEditComponent } from './pages/invoices/invoices-edit/invoices-edit.component';
 
 export const routes: Routes = [
   {
@@ -105,11 +106,6 @@ export const routes: Routes = [
       {
         path: 'category',
         component: CategoryListComponent,
-        canActivate: [authGuard],
-      },
-      {
-        path: 'invoice',
-        component: InvoiceOptionsComponent,
         canActivate: [authGuard],
       },
     ],

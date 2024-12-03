@@ -102,4 +102,9 @@ export class LendingController {
         return this.lendingService.deletePermanentlyLending(Number(id));
     }
 
+    @Get('finalized/:borrowerName')
+  async getFinalizedLendingsByBorrowerName(@Param('borrowerName') borrowerName: string){
+    return this.lendingService.getFinalizedLendingsByBorrowerName(borrowerName);
+  }
+
 }

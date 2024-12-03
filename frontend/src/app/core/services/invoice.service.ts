@@ -59,4 +59,12 @@ export class InvoiceService {
     return this.http.get<Invoice[]>(`${this.api}/filter/filter`, { params });;
 >>>>>>> origin/dev5-leandro
   }
+  public getInvoiceById(idInvoice: number): Observable<Invoice[]> {
+    return this.http.get<Invoice[]>(`${this.apiUrl}/lending-id/${idInvoice}`);
+  }
+
+  public updateInvoice(invoice: Invoice): Observable<Invoice[]> {
+    return this.http.get<Invoice[]>(`${this.apiUrl}/lending-id/${invoice}`);
+  }
+}
 }

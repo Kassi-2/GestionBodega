@@ -31,6 +31,7 @@ export class LendingFinishComponent {
   public pageSize = 10;
   public pageLending = 1;
   public pageSizeLending = 10;
+  lendingForName: Lending[] = []
 
 
   constructor(private lendingService: LendingService, private userService: UserService) {}
@@ -53,15 +54,10 @@ export class LendingFinishComponent {
   handleSubmit() {
     if (this.inputValue.trim()) {
       console.log('Texto enviado:', this.inputValue);
-      this.lendingService.getFilteredLendings(this.inputValue).subscribe(
-        (lending: Lending[]) => {
-          this.lending = lending;
-          this.showList = true;
-        },
-        (error) => {
-          console.error('Error al obtener los préstamos filtrados:', error);
-        }
-      );
+      this.lendingService.lendingForName(this.inputValue).subscribe((lending: Lending[]) => {
+        this.lendingForName = lending;
+        console.log(this.lendingForName)
+      });
       this.inputValue = '';
     } else {
       console.log('Por favor, ingresa un valor.');
