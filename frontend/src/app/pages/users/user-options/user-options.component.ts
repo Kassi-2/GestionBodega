@@ -23,12 +23,6 @@ export class UserOptionsComponent {
   constructor(private searchService: SearchService, private router: Router, private cdr: ChangeDetectorRef,   private route: ActivatedRoute) {}
 
   ngOnInit(): void {
-    this.route.url.subscribe(urlSegments => {
-      const currentCategory = urlSegments[1]?.path;
-      if (currentCategory) {
-        this.selectedCategory = currentCategory;
-      }
-    });
   }
 
   onSearch() {
