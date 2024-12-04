@@ -99,15 +99,14 @@ export class CategoryService {
         );
       }
 
-      console.log(
-        existCategory.products.forEach((product) => {
-          if (product.state === true) {
-            throw new BadRequestException(
-              'La categoría que se intenta eliminar tiene productos asociados',
-            );
-          }
-        }),
-      );
+      existCategory.products.forEach((product) => {
+        if (product.state === true) {
+          throw new BadRequestException(
+            'La categoría que se intenta eliminar tiene productos asociados',
+          );
+        }
+      });
+
       const deletedCategory = await this.prismaService.category.update({
         where: { id: id },
         data: { name: existCategory.name + existCategory.id, state: false },

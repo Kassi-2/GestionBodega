@@ -394,6 +394,18 @@ export class LendingService {
       : allFungible
         ? LendingState.Finalized
         : LendingState.Active;
+
+    data.products.forEach(async (productData) => {
+      await this.prisma.product.update({
+        where: { id: productData.productId },
+        data: {
+          stock: {
+            decrement: productData.amount,
+          },
+        },
+      });
+    });
+
     const lending = await this.prisma.lending.create({
       data: {
         BorrowerId: data.BorrowerId,
@@ -417,18 +429,6 @@ export class LendingService {
         },
       },
     });
-
-    for (const productData of data.products) {
-      await this.prisma.product.update({
-        where: { id: productData.productId },
-        data: {
-          stock: {
-            decrement: productData.amount,
-          },
-        },
-      });
-    }
-
     return lending;
   }
 

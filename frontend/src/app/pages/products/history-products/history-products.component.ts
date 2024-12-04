@@ -8,6 +8,7 @@ import { LendingService } from '../../../core/services/lending.service';
 import { UserService } from '../../../core/services/user.service';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { ProductService } from '../../../core/services/product.service';
+import { Product } from '../../../core/models/product.interface';
 
 @Component({
   selector: 'app-history-products',
@@ -25,7 +26,7 @@ export class HistoryProductsComponent {
   public filteredLending: Lending[] = [];
   public page = 1;
   public pageSize = 10;
-  private idProduct!: number;
+  public product!: Product;
   public productId!: number;
 
   constructor(
@@ -38,7 +39,8 @@ export class HistoryProductsComponent {
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
     this.productId = id ? +id : 0;
-    this.getHistory()
+    this.getProduct();
+    this.getHistory();
     
   }
 
@@ -70,6 +72,17 @@ export class HistoryProductsComponent {
     this.lendingService.getLendingForEdit(id).subscribe((lending: Lending) => {
       this.selectedLending = lending;
       this.getAllTeachers();
+    });
+  }
+
+  public getProduct() {
+    this.productService.getProductForEdit(this.productId).subscribe({
+      next: (result: Product) => {
+        this.product = result;
+      },
+      error: (error) => {
+        alert(error.message);
+      }
     });
   }
 }
