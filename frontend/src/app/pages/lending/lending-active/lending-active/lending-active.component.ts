@@ -99,7 +99,7 @@ export class LendingActiveComponent {
 
   // Función para mostrar los detalles del prestamos
   openLendingDetails(id: number): void {
-    this.lendingService.getLendingForEdit(id).subscribe((lending: Lending[]) => {
+    this.lendingService.getLendingForEdit(id).subscribe((lending: Lending) => {
       this.resetLending = lending;
       this.selectedLending = { ...lending }; // Crea una copia del préstamo
       this.auxiliaryComments = this.selectedLending.comments; // Inicializa con el valor actual

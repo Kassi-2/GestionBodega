@@ -1,4 +1,4 @@
-<h1 class="titulo">Historial del producto</h1>
+<h1 class="titulo">Historial de {{product.name}}</h1>
 
 
 <div class="d-flex gap-4" style = "margin-left: 118px;">
@@ -34,7 +34,7 @@
         <th scope="row" class="text-center">{{ lending.id }}</th>
         <td class="text-center">{{ lending.borrower.name || '-' }}</td>
         <td class="text-center">{{ lending.date | date: 'dd/MM/yyyy HH:mm' }}</td>
-        <td class="text-center">{{ lending.teacher.BorrowerId || '-' }}</td>
+        <td class="text-center">{{ lending.teacher ? lending.teacher.BorrowerId.name : '-' }}</td>
         <td class="text-center">
           <button
             type="button"

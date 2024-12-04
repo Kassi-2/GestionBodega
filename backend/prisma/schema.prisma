@@ -71,6 +71,7 @@ model Product {
 model Lending {
   id              Int              @id @default(autoincrement())
   state           LendingState     @default(Active)
+  hasProblems     Boolean          @default(false)
   date            DateTime         @default(now())
   finalizeDate    DateTime?
   eliminateDate   DateTime?
@@ -122,6 +123,7 @@ model AlertLending {
 
 model Category {
   id              Int               @id @default(autoincrement())
+  state           Boolean           @default(true)
   name            String            @unique
   products        Product[]
   invoiceCategory InvoiceCategory[] @relation(name: "categoryInvoice")
