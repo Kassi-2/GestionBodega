@@ -2,7 +2,6 @@ import {
   BadRequestException,
   Injectable,
   InternalServerErrorException,
-  NotFoundException,
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CategoryUpdateDTO } from './dto/category-update.dto';
@@ -15,6 +14,9 @@ export class CategoryService {
   public async getAllCategories() {
     try {
       return await this.prismaService.category.findMany({
+        where: {
+          state: true,
+        },
         orderBy: {
           id: 'asc',
         },
@@ -27,7 +29,7 @@ export class CategoryService {
   public async getCategoryByCode(id: number) {
     try {
       const existCategory = await this.prismaService.category.findUnique({
-        where: { id: id },
+        where: { id: id, state: true },
       });
       if (!existCategory) {
         throw new BadRequestException(
@@ -66,7 +68,7 @@ export class CategoryService {
   public async updateCategoryByCode(id: number, category: CategoryUpdateDTO) {
     try {
       const existCategory = await this.prismaService.category.findUnique({
-        where: { id: id },
+        where: { id: id, state: true },
       });
       if (!existCategory) {
         throw new BadRequestException(
@@ -88,7 +90,8 @@ export class CategoryService {
   public async deleteCategory(id: number) {
     try {
       const existCategory = await this.prismaService.category.findUnique({
-        where: { id: id },
+        where: { id: id, state: true },
+        include: { products: true },
       });
       if (!existCategory) {
         throw new BadRequestException(
@@ -96,17 +99,22 @@ export class CategoryService {
         );
       }
 
-      const deletedCategory = await this.prismaService.category.delete({
+      console.log(
+        existCategory.products.forEach((product) => {
+          if (product.state === true) {
+            throw new BadRequestException(
+              'La categoría que se intenta eliminar tiene productos asociados',
+            );
+          }
+        }),
+      );
+      const deletedCategory = await this.prismaService.category.update({
         where: { id: id },
+        data: { name: existCategory.name + existCategory.id, state: false },
       });
 
       return deletedCategory;
     } catch (error) {
-      if (error.code === 'P2003') {
-        throw new NotFoundException(
-          'La categoría que se intenta eliminar tiene productos asociados',
-        );
-      }
       throw new InternalServerErrorException(error);
     }
   }
