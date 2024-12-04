@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { FilterInvoices, Invoice, NewInvoice } from '../models/invoice.interface';
+import { EditedInvoice, FilterInvoices, Invoice, NewInvoice } from '../models/invoice.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -74,8 +74,8 @@ export class InvoiceService {
   }
 
 
-  public updateInvoice(invoice: Invoice): Observable<Invoice[]> {
-    return this.http.get<Invoice[]>(`${this.apiUrl}/lending-id/${invoice}`);
+  public updateInvoice(invoiceId: number,invoice: EditedInvoice): Observable<Invoice> {
+    return this.http.put<Invoice>(`${this.apiUrl}/update/${invoiceId}`, invoice);
   }
 }
 

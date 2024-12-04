@@ -1,4 +1,3 @@
-import { InvoiceCategory } from './../../../../../../backend/node_modules/.prisma/client/index.d';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CategoryService } from '../../../core/services/category.service';
@@ -15,7 +14,7 @@ import { ReactiveFormsModule } from '@angular/forms';
   templateUrl: './invoice-add.component.html',
 })
 export class InvoiceAddComponent implements OnInit {
-  userForm!: FormGroup;
+  invoiceForm!: FormGroup;
   public categories: Category[] = [];
 
 
@@ -31,7 +30,7 @@ export class InvoiceAddComponent implements OnInit {
     const formattedDate = today.toISOString().split('T')[0];
 
 
-    this.userForm = this.fb.group({
+    this.invoiceForm = this.fb.group({
       purchaseOrderNumber: ['', Validators.required],
       shipmentDate: [formattedDate, Validators.required],
       registrationDate: [formattedDate, Validators.required],
@@ -43,64 +42,83 @@ export class InvoiceAddComponent implements OnInit {
   }
 
   onSubmit(): void {
-    if (this.userForm.invalid) {
-      this.userForm.markAllAsTouched();
+    if (this.invoiceForm.invalid) {
+      this.invoiceForm.markAllAsTouched();
       return;
     }
 
     const invoice: NewInvoice = {
-      purchaseOrderNumber: this.userForm.value.purchaseOrderNumber,
-      shipmentDate: this.userForm.value.shipmentDate,
-      registrationDate: this.userForm.value.registrationDate,
-      invoiceCategory: this.userForm.value.categories,
+      purchaseOrderNumber: this.invoiceForm.value.purchaseOrderNumber,
+      shipmentDate: this.invoiceForm.value.shipmentDate,
+      registrationDate: this.invoiceForm.value.registrationDate,
+      invoiceCategory: this.invoiceForm.value.categories,
 
-      file: this.userForm.value.invoiceFile
+      file: this.invoiceForm.value.invoiceFile
     };
 
-    const file = this.userForm.get('invoiceFile')?.value;
+    const file = this.invoiceForm.get('invoiceFile')?.value;
 
 
+    Swal.fire({
+      title: `Guardando la factura: ${invoice.purchaseOrderNumber}`,
+      text: 'Espere mientras se procesa el guardado' ,
+      icon: 'info',
+      showConfirmButton: false,
+      allowOutsideClick: false,
+    });
+
+    Swal.showLoading();
 
     this.invoiceService.addInvoice(invoice).subscribe({
       next: () => {
+        Swal.close();
+
         Swal.fire({
-          title: '¡Factura creada!',
-          text: 'La factura ha sido creada con éxito.',
+          title: 'Factura agregada',
+          text: `Factura agregada exitosamente al sistema.`,
           icon: 'success',
           timer: 1500,
           showConfirmButton: false,
         });
+        setTimeout(() => {
+          location.reload();
+        }, 1500);
       },
-      error: (error) => {
+      error: () => {
+        Swal.close();
+
         Swal.fire({
           title: 'Error',
-          text: 'Hubo un error al crear la factura.',
+          text: 'Ocurrió un error al almacenar la factura',
           icon: 'error',
           timer: 1500,
           showConfirmButton: false,
         });
-        console.error(error);
-      },
+      }
     });
   }
 
+
+
+
+
   get notValidpurchaseOrderNumber() {
     return (
-      this.userForm.get('purchaseOrderNumber')?.invalid &&
-      this.userForm.get('purchaseOrderNumber')?.touched
+      this.invoiceForm.get('purchaseOrderNumber')?.invalid &&
+      this.invoiceForm.get('purchaseOrderNumber')?.touched
     );
   }
 
   get notValidFile() {
     return (
-      this.userForm.get('file')?.invalid &&
-      this.userForm.get('file')?.touched
+      this.invoiceForm.get('file')?.invalid &&
+      this.invoiceForm.get('file')?.touched
     );
   }
 
 
   onCategoryChange(event: any, categoryId: number): void {
-    const selectedCategories = this.userForm.get('categories')?.value as number[];
+    const selectedCategories = this.invoiceForm.get('categories')?.value as number[];
 
     if (event.target.checked) {
       selectedCategories.push(categoryId);
@@ -110,18 +128,18 @@ export class InvoiceAddComponent implements OnInit {
         selectedCategories.splice(index, 1);
       }
     }
-    this.userForm.patchValue({ categories: selectedCategories });
-    this.userForm.get('categories')?.updateValueAndValidity();
+    this.invoiceForm.patchValue({ categories: selectedCategories });
+    this.invoiceForm.get('categories')?.updateValueAndValidity();
   }
 
   onFileSelected(event: any): void {
     const file = event.target.files[0];
     if (file && file.type === 'application/pdf') {
-      this.userForm.patchValue({ invoiceFile: file });
-      this.userForm.get('invoiceFile')?.setErrors(null);
+      this.invoiceForm.patchValue({ invoiceFile: file });
+      this.invoiceForm.get('invoiceFile')?.setErrors(null);
     } else {
-      this.userForm.patchValue({ invoiceFile: null });
-      this.userForm.get('invoiceFile')?.setErrors({ invalidFileType: true });
+      this.invoiceForm.patchValue({ invoiceFile: null });
+      this.invoiceForm.get('invoiceFile')?.setErrors({ invalidFileType: true });
     }
   }
 
@@ -137,10 +155,10 @@ export class InvoiceAddComponent implements OnInit {
   }
 
   get notValidOrderNumber() {
-    return this.userForm.get('purchaseOrderNumber')?.invalid && this.userForm.get('purchaseOrderNumber')?.touched;
+    return this.invoiceForm.get('purchaseOrderNumber')?.invalid && this.invoiceForm.get('purchaseOrderNumber')?.touched;
   }
 
   get notValidCategories() {
-    return this.userForm.get('categories')?.invalid && this.userForm.get('categories')?.touched;
+    return this.invoiceForm.get('categories')?.invalid && this.invoiceForm.get('categories')?.touched;
   }
 }

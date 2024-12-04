@@ -15,7 +15,7 @@ export class UserManualViewComponent implements OnInit {
   constructor(private sanitizer: DomSanitizer) {}
 
   ngOnInit() {
-    const pdfPath = 'assets/pdf/estudiantes-2024-11-26.pdf';
+    const pdfPath = 'assets/pdf/Manual de usuario Kinectura.pdf';
     this.pdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(pdfPath);
   }
 }

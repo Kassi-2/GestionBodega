@@ -28,8 +28,6 @@ export interface NewInvoice {
 }
 
 export interface EditedInvoice {
-  id: number;
-  state: boolean;
   purchaseOrderNumber: string;
   shipmentDate: Date;
   registrationDate: Date;

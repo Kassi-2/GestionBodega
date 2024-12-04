@@ -6,7 +6,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+        <form [formGroup]="invoiceForm" (ngSubmit)="onSubmit()">
 
           <div class="mb-3">
             <label for="orderNumber" class="form-label">N° Orden de Compra:</label>
@@ -44,7 +44,7 @@
               @for(category of categories; track $index){
                 <div class="form-check">
                   <input class="form-check-input" type="checkbox" [value]="category.id" (change)="onCategoryChange($event, category.id)"
-                    [checked]="userForm.get('categories')?.value.includes(category.id)">
+                    [checked]="invoiceForm.get('categories')?.value.includes(category.id)">
                   <label class="form-check-label">{{ category.name }}</label>
                 </div>
               }
@@ -54,7 +54,7 @@
 
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-            <button type="submit" class="btn btn-primary" [disabled]="!userForm.valid">Confirmar</button>
+            <button type="submit" class="btn btn-primary" [disabled]="!invoiceForm.valid">Confirmar</button>
           </div>
         </form>
 

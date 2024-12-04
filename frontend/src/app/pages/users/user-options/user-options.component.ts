@@ -3,12 +3,16 @@ import { SearchService } from '../../../core/services/search.service';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { AddProductComponent } from "../../products/add-product/add-product.component";
+import { UserAddComponent } from "../user-add/user-add.component";
+import { UsersImportComponent } from "../users-import/users-import.component";
+import { UserSendQrComponent } from "../user-send-qr/user-send-qr.component";
 
 
 @Component({
   selector: 'app-user-options',
   standalone: true,
-  imports: [FormsModule, CommonModule, RouterModule],
+  imports: [FormsModule, CommonModule, RouterModule, UserAddComponent, UsersImportComponent, UserSendQrComponent],
   templateUrl: './user-options.component.html',
   styleUrl: './user-options.component.css',
 })
@@ -19,12 +23,6 @@ export class UserOptionsComponent {
   constructor(private searchService: SearchService, private router: Router, private cdr: ChangeDetectorRef,   private route: ActivatedRoute) {}
 
   ngOnInit(): void {
-    this.route.url.subscribe(urlSegments => {
-      const currentCategory = urlSegments[1]?.path;
-      if (currentCategory) {
-        this.selectedCategory = currentCategory;
-      }
-    });
   }
 
   onSearch() {
