@@ -27,6 +27,5 @@ export class LendingOptionsComponent {
 
   selectCategory(category: string): void {
     this.selectedCategory = category;
-
   }
 }

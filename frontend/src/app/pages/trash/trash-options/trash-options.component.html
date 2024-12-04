@@ -1,15 +1,22 @@
-<div class="d-flex justify-content-center mt-2">
-  <ul class="nav mb-0">
-    <li class="nav-item">
-      <a class="nav-link link-dark" routerLink="/lendings/inactive" data-bs-dismiss="offcanvas">Préstamos eliminados</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link link-dark" routerLink="/user-inactive" data-bs-dismiss="offcanvas">Usuarios eliminados</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link link-dark" routerLink="/product-inactive" data-bs-dismiss="offcanvas">Productos eliminados</a>
-    </li>
-
-  </ul>
-
+<div class="category-buttons d-flex justify-content-center gap-3 mt-3 mb-3">
+  <div class="category-card"
+  [ngClass]="{'active-category': selectedCategory === 'lendings'}"
+  (click)="selectCategory('lendings')"
+  routerLink="/lendings/inactive">
+  <p>Préstamos eliminados</p>
 </div>
+
+  <div class="category-card"
+  [ngClass]="{'active-category': selectedCategory === 'users'}"
+       (click)="selectCategory('users')"
+       routerLink="/user-inactive">
+    <p>Usuarios eliminados</p>
+  </div>
+  <div class="category-card"
+  [ngClass]="{'active-category': selectedCategory === 'products'}"
+       (click)="selectCategory('products')"
+       routerLink="/product-inactive">
+    <p>Productos eliminados</p>
+  </div>
+</div>
+
