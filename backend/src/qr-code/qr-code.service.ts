@@ -1,13 +1,17 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Inject, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import * as QRCode from 'qrcode';
 import * as nodemailer from 'nodemailer';
 import * as jwt from 'jsonwebtoken';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class QrCodeService {
-  private readonly jwtSecret = "gestion";
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    @Inject('MAIL_TRANSPORTER') private readonly transporter: nodemailer.Transporter,
+    @Inject('JWT_SECRET2') private readonly jwtSecret: string,
+  ) {}
 
   async generateRutToken(rut: string): Promise<string> {
     try {
@@ -38,16 +42,7 @@ export class QrCodeService {
 
       const base64Data = qrCodeLink.replace(/^data:image\/png;base64,/, "");
 
-      const transporter = nodemailer.createTransport({
-        host: 'smtp.sendgrid.net',
-        port: 587,
-        auth: {
-          user: 'apikey',
-          pass: '', 
-        },
-      });
-
-      await transporter.sendMail({
+      await this.transporter.sendMail({
         from: "spam.panol.mecanica@gmail.com",
         to: borrower.mail,
         subject: "Código QR para realizar préstamos en el pañol",
@@ -83,15 +78,7 @@ export class QrCodeService {
 
         const base64Data = qrCodeLink.replace(/^data:image\/png;base64,/, "");
 
-        const transporter = nodemailer.createTransport({
-          host: 'smtp.sendgrid.net',
-          port: 587,
-          auth: {
-            user: 'apikey', 
-            pass: "", 
-          },
-        });
-        await transporter.sendMail({
+        await this.transporter.sendMail({
             from: "spam.panol.mecanica@gmail.com", 
             to: mail, 
             subject: "Código QR para realizar préstamos en el pañol",
