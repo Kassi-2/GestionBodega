@@ -26,7 +26,7 @@ export class HistoryProductsComponent {
   public page = 1;
   public pageSize = 10;
   private idProduct!: number;
-  public productId!: string;
+  public productId!: number;
 
   constructor(
     private route: ActivatedRoute,
@@ -37,14 +37,9 @@ export class HistoryProductsComponent {
 
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
-    if (id !== null) {
-      this.productId = id;
-      this.idProduct = +id
-      this.getHistory()
-    } else {
-      console.error('No se encontró el parámetro ID');
-    }
-    this.getHistory();
+    this.productId = id ? +id : 0;
+    this.getHistory()
+    
   }
 
 
@@ -57,8 +52,9 @@ export class HistoryProductsComponent {
   }
 
   private getHistory(): void {
-    this.lendingService.getHistoryProducts(this.idProduct).subscribe((lending: Lending[]) => {
+    this.lendingService.getHistoryProducts(this.productId).subscribe((lending: Lending[]) => {
       this.lending = lending;
+      console.log(lending)
     });
   }
 
@@ -71,8 +67,8 @@ export class HistoryProductsComponent {
   }
 
   openLendingDetails(id: number): void {
-    this.lendingService.getLendingForEdit(id).subscribe((lending: Lending[]) => {
-      this.selectedLending = { ...lending };
+    this.lendingService.getLendingForEdit(id).subscribe((lending: Lending) => {
+      this.selectedLending = lending;
       this.getAllTeachers();
     });
   }

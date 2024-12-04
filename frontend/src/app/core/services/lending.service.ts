@@ -21,8 +21,8 @@ export class LendingService {
     return this.http.get<Lending[]>(`${this.apiUrl}/active-lending`);
   }
 
-  public getLendingForEdit(id: number): Observable<Lending[]> {
-    return this.http.get<Lending[]>(`${this.apiUrl}/lending-id/${id}`);
+  public getLendingForEdit(id: number): Observable<Lending> {
+    return this.http.get<Lending>(`${this.apiUrl}/lending-id/${id}`);
   }
 
   public deleteLending(id: number): Observable<Lending> {

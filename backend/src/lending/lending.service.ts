@@ -545,7 +545,16 @@ export class LendingService {
         },
         include: {
           borrower: true,
-          teacher: true,
+          teacher: {
+            select: {
+              BorrowerId: {
+                select: {
+                  name: true,
+                  rut: true,
+                },
+              },
+            },
+          },
           lendingProducts: {
             include: {
               product: true,
