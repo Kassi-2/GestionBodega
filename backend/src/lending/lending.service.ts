@@ -309,74 +309,94 @@ export class LendingService {
     });
   }
 
-  //actualiza el estado del préstamo de pending a active
+  //actualiza el estado del préstamo de pending a active, si el préstamo tenía solo productos
+  //fungibles, el préstamo se actualiza a finalized
   async updateActivePending(lendingId: number): Promise<Lending> {
     const lending = await this.prisma.lending.findUnique({
       where: { id: lendingId },
+      include: {
+        lendingProducts: {
+          include: {
+            product: true,
+          },
+        },
+      },
     });
+  
     if (!lending) {
       throw new NotFoundException('Ese préstamo no existe');
     }
+    const allFungible = lending.lendingProducts.every((lendingProduct) => lendingProduct.product.fungible
+    );
+  
+    const newState = allFungible ? LendingState.Finalized : LendingState.Active;
     const updateLending = await this.prisma.lending.update({
       where: { id: lendingId },
       data: {
-        state: LendingState.Active,
+        state: newState,
+        finalizeDate: allFungible ? new Date() : null, 
       },
     });
+  
     return updateLending;
-  }
+  }  
 
   //crea un préstamo, verificando que los producto agregados, el prestatario,
   //el profesor, que es opcional, sean válidos y que la cantidad del stock solicitado
   //sea menor o igual al stock del producto. Crea el préstamo con estado active si es
   //que no se asignó ningún profesor, si se asignó uno, se crea con estado pending
+  //si el préstamo tiene solo productos fungibles, se crea automáticamente con estado finalized
   async createLending(data: LendingCreateDTO) {
     if (data.teacherId) {
       const teacher = await this.prisma.teacher.findUnique({
         where: { id: data.teacherId },
       });
-
+  
       if (!teacher) {
         throw new NotFoundException('Ese profesor no existe');
       }
     }
-
+  
     const borrower = await this.prisma.borrower.findUnique({
       where: { id: data.BorrowerId },
     });
-
+  
     if (!borrower) {
       throw new NotFoundException('Ese prestatario no existe');
     }
-
+  
+    let allFungible = true;
+  
     for (const productData of data.products) {
       const product = await this.prisma.product.findUnique({
         where: { id: productData.productId },
       });
-
+  
       if (!product) {
         throw new NotFoundException(
           `El producto ${productData.productId} no existe`,
         );
       }
-
+  
       if (productData.amount > product.stock) {
         throw new BadRequestException(
-          `La cantidad del producto ${productData.productId} solicitado excede el stock disponible)`,
+          `La cantidad del producto ${productData.productId} solicitado excede el stock disponible`,
         );
       }
+  
+      if (!product.fungible) {
+        allFungible = false;
+      }
     }
-
-    const lendingState = data.teacherId
-      ? LendingState.Pending
-      : LendingState.Active;
-
+  
+    const lendingState = data.teacherId ? LendingState.Pending : allFungible ? LendingState.Finalized : LendingState.Active;
     const lending = await this.prisma.lending.create({
       data: {
         BorrowerId: data.BorrowerId,
         teacherId: data.teacherId,
         comments: data.comments,
         state: lendingState,
+        finalizeDate: allFungible && !data.teacherId ? new Date() : null,
         lendingProducts: {
           create: data.products.map((product) => ({
             productId: product.productId,
@@ -392,7 +412,7 @@ export class LendingService {
         },
       },
     });
-
+  
     for (const productData of data.products) {
       await this.prisma.product.update({
         where: { id: productData.productId },
@@ -403,8 +423,11 @@ export class LendingService {
         },
       });
     }
+  
     return lending;
   }
+  
+  
 
   //cambia el estado de un préstamo activo o pending a finalizado,
   //además le asigna le fecha en la que se finalizó y devuelve los
