@@ -65,7 +65,7 @@ export class ProductInactiveComponent {
 
   // Función para mostrar los detalles del prestamo
   openLendingDetails(id: number) {
-    this.lendingService.getLendingForEdit(id).subscribe((lending: Lending[]) => {
+    this.lendingService.getLendingForEdit(id).subscribe((lending: Lending) => {
       this.selectedLending = { ...lending };
     });
   }

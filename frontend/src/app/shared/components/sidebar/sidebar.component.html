@@ -1,9 +1,9 @@
 <nav class="navbar navbar" style="background-color: #f79123;">
   <div class="container-fluid">
-    <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
-    aria-controls="offcanvasNavbar" aria-label="Toggle navigation" style="background-color: transparent; border: none; outline: none;">
+    <button class="navbar-toggler menu" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
+      aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon" style="background-color: transparent;"></span>
-</button>
+    </button>
 
 
         <a class="navbar-brand"></a>
@@ -56,9 +56,8 @@
           aria-labelledby="offcanvasNavbarLabel">
           <div class="offcanvas-header" style="background-color: #f79123;">
               <div class="container-fluid">
-
                   <div class="row justify-content-center">
-                      <a class="navbar-brand">
+                      <a class="navbar-brand" routerLink="/lendings/active">
                           <img src="assets/images/logo-departamento-mecanica.png" class="container-fluid rounded-5 rounded-top-0"
                               height="210" width="150" alt="Logo">
                       </a>
@@ -68,13 +67,16 @@
           <div class="offcanvas-body">
               <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
                   <li class="nav-item">
-                      <a class="nav-link active" aria-current="page" routerLink="/inventory" data-bs-dismiss="offcanvas">Inventario</a>
+                      <a class="nav-link active" aria-current="page" routerLink="/inventory" data-bs-dismiss="offcanvas"><i class="bi bi-box-seam"></i> Inventario</a>
                   </li>
                   <li class="nav-item">
-                      <a class="nav-link active" aria-current="page" routerLink="/lendings/active" data-bs-dismiss="offcanvas">Préstamos</a>
+                      <a class="nav-link active" aria-current="page" routerLink="/lendings/active" data-bs-dismiss="offcanvas"><i class="bi bi-arrow-left-right"></i> Préstamos</a>
                   </li>
                   <li class="nav-item">
-                      <a class="nav-link active" aria-current="page" routerLink="/users/students" data-bs-dismiss="offcanvas">Usuarios</a>
+                      <a class="nav-link active" aria-current="page" routerLink="/users/students" data-bs-dismiss="offcanvas"><i class="bi bi-people"></i> Usuarios</a>
+                  </li>
+                  <li class="nav-item">
+                      <a class="nav-link active" aria-current="page" data-bs-dismiss="offcanvas">Reportes</a>
                   </li>
                   <li class="nav-item">
                       <a class="nav-link active" aria-current="page" routerLink="/invoice" data-bs-dismiss="offcanvas">Facturas</a>

@@ -8,6 +8,7 @@ import { LendingService } from '../../../core/services/lending.service';
 import { UserService } from '../../../core/services/user.service';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { ProductService } from '../../../core/services/product.service';
+import { Product } from '../../../core/models/product.interface';
 
 @Component({
   selector: 'app-history-products',
@@ -25,8 +26,8 @@ export class HistoryProductsComponent {
   public filteredLending: Lending[] = [];
   public page = 1;
   public pageSize = 10;
-  private idProduct!: number;
-  public productId!: string;
+  public product!: Product;
+  public productId!: number;
 
   constructor(
     private route: ActivatedRoute,
@@ -37,14 +38,10 @@ export class HistoryProductsComponent {
 
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
-    if (id !== null) {
-      this.productId = id;
-      this.idProduct = +id
-      this.getHistory()
-    } else {
-      console.error('No se encontró el parámetro ID');
-    }
+    this.productId = id ? +id : 0;
+    this.getProduct();
     this.getHistory();
+    
   }
 
 
@@ -57,8 +54,9 @@ export class HistoryProductsComponent {
   }
 
   private getHistory(): void {
-    this.lendingService.getHistoryProducts(this.idProduct).subscribe((lending: Lending[]) => {
+    this.lendingService.getHistoryProducts(this.productId).subscribe((lending: Lending[]) => {
       this.lending = lending;
+      console.log(lending)
     });
   }
 
@@ -71,9 +69,20 @@ export class HistoryProductsComponent {
   }
 
   openLendingDetails(id: number): void {
-    this.lendingService.getLendingForEdit(id).subscribe((lending: Lending[]) => {
-      this.selectedLending = { ...lending };
+    this.lendingService.getLendingForEdit(id).subscribe((lending: Lending) => {
+      this.selectedLending = lending;
       this.getAllTeachers();
+    });
+  }
+
+  public getProduct() {
+    this.productService.getProductForEdit(this.productId).subscribe({
+      next: (result: Product) => {
+        this.product = result;
+      },
+      error: (error) => {
+        alert(error.message);
+      }
     });
   }
 }
