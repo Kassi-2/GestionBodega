@@ -144,7 +144,6 @@ export class LendingService {
       },
     });
 
-
     if (!lendings || lendings.length === 0) {
       throw new NotFoundException(`No se encontraron préstamos en ${date}`);
     }
@@ -322,24 +321,25 @@ export class LendingService {
         },
       },
     });
-  
+
     if (!lending) {
       throw new NotFoundException('Ese préstamo no existe');
     }
-    const allFungible = lending.lendingProducts.every((lendingProduct) => lendingProduct.product.fungible
+    const allFungible = lending.lendingProducts.every(
+      (lendingProduct) => lendingProduct.product.fungible,
     );
-  
+
     const newState = allFungible ? LendingState.Finalized : LendingState.Active;
     const updateLending = await this.prisma.lending.update({
       where: { id: lendingId },
       data: {
         state: newState,
-        finalizeDate: allFungible ? new Date() : null, 
+        finalizeDate: allFungible ? new Date() : null,
       },
     });
-  
+
     return updateLending;
-  }  
+  }
 
   //crea un préstamo, verificando que los producto agregados, el prestatario,
   //el profesor, que es opcional, sean válidos y que la cantidad del stock solicitado
@@ -351,51 +351,56 @@ export class LendingService {
       const teacher = await this.prisma.teacher.findUnique({
         where: { id: data.teacherId },
       });
-  
+
       if (!teacher) {
         throw new NotFoundException('Ese profesor no existe');
       }
     }
-  
+
     const borrower = await this.prisma.borrower.findUnique({
       where: { id: data.BorrowerId },
     });
-  
+
     if (!borrower) {
       throw new NotFoundException('Ese prestatario no existe');
     }
-  
+
     let allFungible = true;
-  
+
     for (const productData of data.products) {
       const product = await this.prisma.product.findUnique({
         where: { id: productData.productId },
       });
-  
+
       if (!product) {
         throw new NotFoundException(
           `El producto ${productData.productId} no existe`,
         );
       }
-  
+
       if (productData.amount > product.stock) {
         throw new BadRequestException(
           `La cantidad del producto ${productData.productId} solicitado excede el stock disponible`,
         );
       }
-  
+
       if (!product.fungible) {
         allFungible = false;
       }
     }
-  
-    const lendingState = data.teacherId ? LendingState.Pending : allFungible ? LendingState.Finalized : LendingState.Active;
+
+    const lendingState = data.teacherId
+      ? LendingState.Pending
+      : allFungible
+        ? LendingState.Finalized
+        : LendingState.Active;
     const lending = await this.prisma.lending.create({
       data: {
         BorrowerId: data.BorrowerId,
         teacherId: data.teacherId,
         comments: data.comments,
         state: lendingState,
+        hasProblems: false,
         finalizeDate: allFungible && !data.teacherId ? new Date() : null,
         lendingProducts: {
           create: data.products.map((product) => ({
@@ -412,7 +417,7 @@ export class LendingService {
         },
       },
     });
-  
+
     for (const productData of data.products) {
       await this.prisma.product.update({
         where: { id: productData.productId },
@@ -423,11 +428,9 @@ export class LendingService {
         },
       });
     }
-  
+
     return lending;
   }
-  
-  
 
   //cambia el estado de un préstamo activo o pending a finalizado,
   //además le asigna le fecha en la que se finalizó y devuelve los
@@ -598,6 +601,34 @@ export class LendingService {
 
     return this.prisma.lending.delete({
       where: { id: lendingId },
+    });
+  }
+
+  public async markAsProblematic(lendingId: number): Promise<Lending> {
+    const lending = await this.prisma.lending.findUnique({
+      where: { id: lendingId },
+    });
+    if (!lending) {
+      throw new NotFoundException(`El prestamo ${lendingId} no fue encotrado`);
+    }
+
+    return await this.prisma.lending.update({
+      where: { id: lendingId },
+      data: { hasProblems: true },
+    });
+  }
+
+  public async unmarkAsProblematic(lendingId: number): Promise<Lending> {
+    const lending = await this.prisma.lending.findUnique({
+      where: { id: lendingId },
+    });
+    if (!lending) {
+      throw new NotFoundException(`El prestamo ${lendingId} no fue encontrado`);
+    }
+
+    return await this.prisma.lending.update({
+      where: { id: lendingId },
+      data: { hasProblems: false },
     });
   }
 }

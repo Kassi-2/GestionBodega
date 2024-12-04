@@ -71,6 +71,7 @@ model Product {
 model Lending {
   id              Int              @id @default(autoincrement())
   state           LendingState     @default(Active)
+  hasProblems     Boolean          @default(false)
   date            DateTime         @default(now())
   finalizeDate    DateTime?
   eliminateDate   DateTime?

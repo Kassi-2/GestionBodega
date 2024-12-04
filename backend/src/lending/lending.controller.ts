@@ -23,11 +23,11 @@ export class LendingController {
   constructor(private readonly lendingService: LendingService) {}
 
   @Get('lending-id/:id')
-  async getLendingById(@Param('id') id: string) {
+  public async getLendingById(@Param('id') id: string) {
     return this.lendingService.getLendingById(Number(id));
   }
   @Get('finalized/:borrowerName')
-  async getFinalizedLendingsByBorrowerName(
+  public async getFinalizedLendingsByBorrowerName(
     @Param('borrowerName') borrowerName: string,
   ) {
     return this.lendingService.getFinalizedLendingsByBorrowerName(borrowerName);
@@ -103,5 +103,15 @@ export class LendingController {
   @Delete('/delete-permanently/:id')
   async deletePermanentlyLending(@Param('id') id: string) {
     return this.lendingService.deletePermanentlyLending(Number(id));
+  }
+
+  @Put(':id/mark-as-problematic')
+  public async markAsProblematic(@Param('id', ParseIntPipe) id: number) {
+    return await this.lendingService.markAsProblematic(id);
+  }
+
+  @Put(':id/unmark-as-problematic')
+  public async unmarkAsProblematic(@Param('id', ParseIntPipe) id: number) {
+    return await this.lendingService.unmarkAsProblematic(id);
   }
 }
