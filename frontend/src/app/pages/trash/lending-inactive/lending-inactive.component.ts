@@ -46,7 +46,7 @@ export class LendingInactiveComponent {
     const input = event.target as HTMLInputElement;
     const selectedDate = new Date(input.value);
     const date = `${selectedDate.getFullYear()}-${selectedDate.getMonth()}-${selectedDate.getDate()}`
-    this.lendingService.lendingForDate(date).subscribe((lending: Lending[]) => {
+    this.lendingService.lendingInactiveForDate(date).subscribe((lending: Lending[]) => {
       this.lending = lending;
     });
   }

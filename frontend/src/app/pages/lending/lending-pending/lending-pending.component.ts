@@ -84,15 +84,6 @@ export class LendingPendingComponent {
     return filteredLendings;
   }
 
-  // Funcion para poder mostrar prestamos eliminados por fecha
-  selectDate(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    const selectedDate = new Date(input.value);
-    const date = `${selectedDate.getFullYear()}-${selectedDate.getMonth()}-${selectedDate.getDate()}`
-    this.lendingService.lendingForDate(date).subscribe((lending: Lending[]) => {
-      this.lending = lending;
-    });
-  }
 
   // Funcion para poder mostrar todos los prestamos eliminados
   private getLending(): void {

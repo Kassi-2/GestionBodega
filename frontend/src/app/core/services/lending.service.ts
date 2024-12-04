@@ -44,7 +44,19 @@ export class LendingService {
     return this.http.get<Lending[]>(`${this.apiUrl}/eliminated-lending`);
   }
 
-  public lendingForDate(date: string): Observable<Lending[]> {
+  public lendingActiveForDate(date: string): Observable<Lending[]> {
+    return this.http.get<Lending[]>(`${this.apiUrl}/lending-create-date/${date}`);
+  }
+
+  public lendingPendingForDate(date: string): Observable<Lending[]> {
+    return this.http.get<Lending[]>(`${this.apiUrl}/lending-create-date/${date}`);
+  }
+
+  public lendingFinishForDate(date: string): Observable<Lending[]> {
+    return this.http.get<Lending[]>(`${this.apiUrl}/lending-finalize-date/${date}`);
+  }
+
+  public lendingInactiveForDate(date: string): Observable<Lending[]> {
     return this.http.get<Lending[]>(`${this.apiUrl}/lending-create-date/${date}`);
   }
 

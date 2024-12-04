@@ -56,16 +56,16 @@ export class LendingActiveComponent {
       this.getLending();
       return;
     }
-
     const selectedDate = new Date(input.value);
     const date = `${selectedDate.getFullYear()}-${selectedDate.getMonth()+1}-${selectedDate.getDate()+1}`
-    this.lendingService.lendingForDate(date).subscribe((lendings: Lending[]) => {
+    this.lendingService.lendingActiveForDate(date).subscribe((lendings: Lending[]) => {
       this.filteredLendings = lendings;
+      console.log(lendings)
     });
   }
 
   openDatePicker(datePicker: HTMLInputElement) {
-    datePicker.showPicker(); // Para algunos navegadores, podría no ser necesario
+    datePicker.showPicker();
   }
 
 

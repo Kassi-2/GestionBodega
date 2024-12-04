@@ -74,10 +74,15 @@ export class LendingFinishComponent {
   // Funcion para poder mostrar prestamos finalizados por fecha
   selectDate(event: Event): void {
     const input = event.target as HTMLInputElement;
+    if (!input.value) {
+      this.getLending();
+      return;
+    }
     const selectedDate = new Date(input.value);
-    const date = `${selectedDate.getFullYear()}-${selectedDate.getMonth()}-${selectedDate.getDate()}`
-    this.lendingService.lendingForDate(date).subscribe((lending: Lending[]) => {
-      this.lending = lending;
+    const date = `${selectedDate.getFullYear()}-${selectedDate.getMonth()+1}-${selectedDate.getDate()+1}`
+    this.lendingService.lendingActiveForDate(date).subscribe((lendings: Lending[]) => {
+      this.lending = lendings;
+      console.log(lendings)
     });
   }
 
