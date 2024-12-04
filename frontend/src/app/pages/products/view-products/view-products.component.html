@@ -90,7 +90,9 @@
           <div id="collapse{{ i }}" class="accordion-collapse collapse" [attr.aria-labelledby]="'heading' + i"
             data-bs-parent="#accordionExample">
             <div id="info" class="accordion-body">
-              <p><strong>Descripción:</strong> {{ product.description }}</p>
+              @if(product.description){
+                <p><strong>Descripción:</strong> {{ product.description }}</p>
+              }
               <p><strong>Tipo de producto: </strong>
               @if (product.fungible) {
                 Fungible
