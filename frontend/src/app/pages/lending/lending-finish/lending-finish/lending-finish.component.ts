@@ -85,6 +85,7 @@ export class LendingFinishComponent {
   private getLending(): void {
     this.lendingService.getLendingFinish().subscribe((lending: Lending[]) => {
       this.lending = lending
+      console.log(lending)
     });
   }
 
@@ -131,6 +132,9 @@ export class LendingFinishComponent {
             timer: 1500,
             showConfirmButton: false,
           });
+          setTimeout(() => {
+            location.reload()
+          }, 1500);
         });
       } else if (
         result.dismiss === Swal.DismissReason.cancel
@@ -144,6 +148,49 @@ export class LendingFinishComponent {
         });
       }
     });
+  }
+
+  solveProblem(lendingId: number){
+
+    const swalWithBootstrapButtons = Swal.mixin({
+      customClass: {
+        confirmButton: 'btn btn-success',
+        cancelButton: 'btn btn-danger me-2',
+      },
+      buttonsStyling: false,
+    });
+
+    this.lendingService.updateLendingDisrepair(lendingId).subscribe({
+      next:() => {
+        swalWithBootstrapButtons.fire({
+          title: '¡Préstamo actualizado!',
+          text: 'Se marcó como resuelto del problema del préstamo.',
+          icon: 'success',
+          timer: 1500,
+          showConfirmButton: false,
+        });
+
+        setTimeout(() => {
+          location.reload()
+        }, 1500);
+      },
+      error: (error) => {
+        swalWithBootstrapButtons.fire({
+          title: 'Error',
+          text: `El préstamo no se pudo actualizar, error: ${error.error.message}`,
+          icon: 'error',
+          timer: 1500,
+          showConfirmButton: false,
+        });
+        console.log(error)
+      }
+
+    }
+
+
+
+
+    )
   }
 
 }

@@ -32,6 +32,7 @@ export class LendingActiveComponent {
   public page = 1;
   public pageSize = 10;
   auxiliaryComments: any;
+  hasProblemsLending: boolean = false;
 
 
 
@@ -64,8 +65,9 @@ export class LendingActiveComponent {
   }
 
   openDatePicker(datePicker: HTMLInputElement) {
-    datePicker.showPicker(); // Compatible con navegadores modernos
+    datePicker.showPicker(); // Para algunos navegadores, podría no ser necesario
   }
+
 
   // Funcion para poder mostrar todos los prestamos activos
   getLending(): void {
@@ -115,7 +117,7 @@ export class LendingActiveComponent {
 
 
   // Función para poder finalizar un prestamo activo
-  finishLending(idLending: number, comments: string): void {
+  finishLending(idLending: number, comments: string, hasProblems: boolean): void {
 
     const swalWithBootstrapButtons = Swal.mixin({
       customClass: {
@@ -136,7 +138,11 @@ export class LendingActiveComponent {
       if (result.isConfirmed) {
         this.selectedLending.comments = this.auxiliaryComments;
         this.lendingService.lendingFinish(idLending, comments).subscribe(() => {
-        this.lending = this.lending.filter(lending => lending.id !== idLending);
+          this.lending = this.lending.filter(lending => lending.id !== idLending);
+          if (hasProblems){
+            this.lendingService.markAsProblematic(idLending).subscribe()
+
+          }
         swalWithBootstrapButtons.fire({
           title: "¡Finalizado!",
           text: "El préstamo fue finalizado con éxito.",

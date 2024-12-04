@@ -64,8 +64,12 @@ export class LendingService {
     return this.http.get<Lending[]>(`${this.apiUrl}/finalized/${name}`);
   }
 
-  public updateLendingDisrepair(id: number): Observable<Lending> {
-    return this.http.put<Lending>(`${this.apiUrl}/active-pending/${id}`, {});
+  public updateLendingDisrepair(id: number) {
+    return this.http.put<Lending>(`${this.apiUrl}/${id}/unmark-as-problematic`, {});
+  }
+
+  public markAsProblematic(id: number){
+    return this.http.put<Lending>(`${this.apiUrl}/${id}/mark-as-problematic`, {});
   }
 
   /**

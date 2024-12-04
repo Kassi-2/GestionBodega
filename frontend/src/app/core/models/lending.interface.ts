@@ -12,6 +12,7 @@ export interface Lending {
   teacher: Teacher;
   teacherId?: number;
   lendingProducts: LendingProduct[];
+  hasProblems: boolean;
 }
 
 export interface Borrower{
