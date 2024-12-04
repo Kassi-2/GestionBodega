@@ -196,6 +196,13 @@ export class UserAddComponent implements OnInit, OnDestroy {
     const degree = this.degrees.find((d) => d.code == code);
     return degree?.name;
   }
+
+  onInput() {
+    const control = this.userForm.get('rut');
+    if (control) {
+      control.setValue(control.value.replace(/[^0-9\-]/g, ''), { emitEvent: false });
+    }
+  }
 }
 /**
  * Función que verifica la validación del rut ingresado por el usuario.

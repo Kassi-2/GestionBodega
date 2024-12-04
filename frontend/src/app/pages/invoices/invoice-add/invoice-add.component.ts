@@ -17,7 +17,6 @@ export class InvoiceAddComponent implements OnInit {
   invoiceForm!: FormGroup;
   public categories: Category[] = [];
 
-
   constructor(
     private fb: FormBuilder,
     private categoryService: CategoryService,
@@ -28,7 +27,6 @@ export class InvoiceAddComponent implements OnInit {
     const today = new Date();
     today.setDate(today.getDate() - 1);
     const formattedDate = today.toISOString().split('T')[0];
-
 
     this.invoiceForm = this.fb.group({
       purchaseOrderNumber: ['', Validators.required],
@@ -53,15 +51,14 @@ export class InvoiceAddComponent implements OnInit {
       registrationDate: this.invoiceForm.value.registrationDate,
       invoiceCategory: this.invoiceForm.value.categories,
 
-      file: this.invoiceForm.value.invoiceFile
+      file: this.invoiceForm.value.invoiceFile,
     };
 
     const file = this.invoiceForm.get('invoiceFile')?.value;
 
-
     Swal.fire({
       title: `Guardando la factura: ${invoice.purchaseOrderNumber}`,
-      text: 'Espere mientras se procesa el guardado' ,
+      text: 'Espere mientras se procesa el guardado',
       icon: 'info',
       showConfirmButton: false,
       allowOutsideClick: false,
@@ -84,23 +81,19 @@ export class InvoiceAddComponent implements OnInit {
           location.reload();
         }, 1500);
       },
-      error: () => {
+      error: (error) => {
         Swal.close();
 
         Swal.fire({
           title: 'Error',
-          text: 'Ocurrió un error al almacenar la factura',
+          text: error.error.message,
           icon: 'error',
-          timer: 1500,
+          timer: 2000,
           showConfirmButton: false,
         });
-      }
+      },
     });
   }
-
-
-
-
 
   get notValidpurchaseOrderNumber() {
     return (
@@ -116,9 +109,9 @@ export class InvoiceAddComponent implements OnInit {
     );
   }
 
-
   onCategoryChange(event: any, categoryId: number): void {
-    const selectedCategories = this.invoiceForm.get('categories')?.value as number[];
+    const selectedCategories = this.invoiceForm.get('categories')
+      ?.value as number[];
 
     if (event.target.checked) {
       selectedCategories.push(categoryId);
@@ -155,10 +148,16 @@ export class InvoiceAddComponent implements OnInit {
   }
 
   get notValidOrderNumber() {
-    return this.invoiceForm.get('purchaseOrderNumber')?.invalid && this.invoiceForm.get('purchaseOrderNumber')?.touched;
+    return (
+      this.invoiceForm.get('purchaseOrderNumber')?.invalid &&
+      this.invoiceForm.get('purchaseOrderNumber')?.touched
+    );
   }
 
   get notValidCategories() {
-    return this.invoiceForm.get('categories')?.invalid && this.invoiceForm.get('categories')?.touched;
+    return (
+      this.invoiceForm.get('categories')?.invalid &&
+      this.invoiceForm.get('categories')?.touched
+    );
   }
 }

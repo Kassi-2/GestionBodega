@@ -5,7 +5,7 @@ import { Category } from '../../../core/models/category.interface';
 import { InvoiceService } from '../../../core/services/invoice.service';
 import Swal from 'sweetalert2';
 import { CommonModule } from '@angular/common';
-import { InvoicesEditComponent } from "../invoices-edit/invoices-edit.component";
+import { InvoicesEditComponent } from '../invoices-edit/invoices-edit.component';
 
 @Component({
   selector: 'app-invoice-list',
@@ -26,7 +26,6 @@ export class InvoiceListComponent implements OnInit, OnDestroy {
   invoiceId!: number;
   invoiceEdit!: Invoice;
 
-
   public getCategories(invoice: Invoice) {
     let categories = '';
 
@@ -36,17 +35,18 @@ export class InvoiceListComponent implements OnInit, OnDestroy {
     return categories;
   }
 
-  public getInvoice(id: number): void{
-    this.invoiceService.getInvoiceById(id).subscribe((invoice: Invoice) =>{
-      this.invoiceEdit = invoice
-      console.log(this.invoiceEdit)
-    })
+  public getInvoice(id: number): void {
+    this.invoiceService.getInvoiceById(id).subscribe((invoice: Invoice) => {
+      this.invoiceEdit = invoice;
+      console.log(this.invoiceEdit);
+    });
   }
 
   public deleteInvoice(id: number) {
+    const invoice = this.invoices.find((f) => f.id === id);
     Swal.fire({
       title: '¿Estás seguro?',
-      text: `!Estás a punto de eliminar a la categoría ${id}!.`,
+      text: `!Estás a punto de eliminar la factura ${invoice?.purchaseOrderNumber}!.`,
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: 'Sí, estoy seguro',
@@ -109,10 +109,10 @@ export class InvoiceListComponent implements OnInit, OnDestroy {
         window.URL.revokeObjectURL(url);
         Swal.close();
         Swal.fire({
-          title: 'Agregada!',
+          title: 'Descargada!',
           text: `La factura ${invoice?.purchaseOrderNumber} ha sido descargada de forma exitosa`,
           icon: 'success',
-          timer: 1500,
+          timer: 3000,
           showConfirmButton: false,
         });
       },
@@ -124,7 +124,7 @@ export class InvoiceListComponent implements OnInit, OnDestroy {
     });
   }
 
-  setInvoiceId(invoiceId: number){
+  setInvoiceId(invoiceId: number) {
     this.invoiceId = invoiceId;
   }
 }

@@ -13,7 +13,7 @@
               ngbPopover="Run sin puntos, con guión y dígito verificador. Ejemplo: 12345678-9"
               popoverTitle="Formato de RUN">?</button>
             </div>
-            <input [class.is-invalid]='notValidRut' type="text" class="form-control" id="run" formControlName="rut"
+            <input [class.is-invalid]='notValidRut' type="text" class="form-control" id="run" (input)="onInput()" formControlName="rut"
               placeholder="Rut">
             @if (notValidRut) {
               <small class="text-danger">Ingrese un rut.</small>

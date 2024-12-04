@@ -216,7 +216,6 @@ export class InvoiceService {
         },
       });
     } catch (error) {
-      console.error('Error procesando el archivo:', error.message);
       if (error instanceof BadRequestException) {
         throw error;
       }
