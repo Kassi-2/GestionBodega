@@ -84,6 +84,7 @@ export class InvoicesEditComponent implements OnInit{
 
     this.invoiceService.updateInvoice(this.invoiceId.id ,invoice).subscribe({
       next: () => {
+        console.log(invoice)
         Swal.fire({
           title: '¡Factura creada!',
           text: 'La factura ha sido creada con éxito.',
@@ -91,6 +92,9 @@ export class InvoicesEditComponent implements OnInit{
           timer: 1500,
           showConfirmButton: false,
         });
+        // setTimeout(() => {
+        //   location.reload()
+        // }, 1500);
       },
       error: (error) => {
         Swal.fire({

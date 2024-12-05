@@ -18,7 +18,7 @@ export class InvoiceService {
     const registrationDate = new Date(data.registrationDate);
 
     formData.append('purchaseOrderNumber', data.purchaseOrderNumber);
-    formData.append('shipmentDate', shipmentDate.toISOString().split('T')[0]); // Convertir a ISO String
+    formData.append('shipmentDate', shipmentDate.toISOString().split('T')[0]);
     if (registrationDate) {
       formData.append('registrationDate', registrationDate.toISOString().split('T')[0]);
     }
@@ -52,7 +52,7 @@ export class InvoiceService {
   public downloadInvoice(invoiceId: number): Observable<Blob> {
     return this.http.get(`${this.apiUrl}/download/${invoiceId}`, {
       params: { id: invoiceId },
-      responseType: 'blob', // Indica que la respuesta será un Blob
+      responseType: 'blob',
     });
   }
 
@@ -74,8 +74,33 @@ export class InvoiceService {
   }
 
 
-  public updateInvoice(invoiceId: number,invoice: EditedInvoice): Observable<Invoice> {
-    return this.http.put<Invoice>(`${this.apiUrl}/update/${invoiceId}`, invoice);
+  // public updateInvoice(invoiceId: number,invoice: EditedInvoice): Observable<Invoice> {
+  //   return this.http.put<Invoice>(`${this.apiUrl}/update/${invoiceId}`, invoice);
+  // }
+
+  public updateInvoice(invoiceId: number , data: EditedInvoice) {
+    const formData = new FormData();
+
+    const shipmentDate = new Date(data.shipmentDate);
+    const registrationDate = new Date(data.registrationDate);
+
+    formData.append('purchaseOrderNumber', data.purchaseOrderNumber);
+    formData.append('shipmentDate', shipmentDate.toISOString().split('T')[0]);
+    if (registrationDate) {
+      formData.append('registrationDate', registrationDate.toISOString().split('T')[0]);
+    }
+
+    const categoryIds = data.invoiceCategory;
+    formData.append('categoryIds', JSON.stringify(categoryIds));
+
+
+
+    if (data.file) {
+      formData.append('file', data.file);
+    }
+
+
+    return this.http.post(`${this.apiUrl}/update/${invoiceId}`, formData);
   }
 }
 
