@@ -406,6 +406,20 @@ input[type="number"]::-webkit-outer-spin-button {
   box-shadow: none;
   }
 
+/* Ocultar flechas en todos los navegadores compatibles */
+input[type="number"] {
+  -moz-appearance: textfield;    /* Firefox */
+  -webkit-appearance: none;      /* Chrome, Safari, Edge */
+  appearance: textfield;         /* Propiedad estándar */
+}
+
+/* Ocultar flechas específicas de WebKit (Chrome, Safari, Edge) */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
   .titulo {
   text-align: center;
   color: #333;
