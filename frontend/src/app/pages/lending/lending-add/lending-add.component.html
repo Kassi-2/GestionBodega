@@ -291,7 +291,7 @@
                         "
                         min="0"
                         [max]="product.stock"
-                        
+
                       />
 
                       <button
@@ -408,10 +408,13 @@
   <textarea
     id="comments"
     class="form-control"
-    style="width: 90%"
     [(ngModel)]="comments"
     rows="3"
     placeholder="Escribe tus comentarios aquí..."
+    style = "resize: none; width: 100%;
+    max-width: 300px;
+    min-width: 90%;
+    box-sizing: border-box;"
   ></textarea>
 </div>
 
