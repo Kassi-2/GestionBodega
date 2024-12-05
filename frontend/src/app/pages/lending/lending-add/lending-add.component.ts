@@ -459,24 +459,26 @@ export class LendingAddComponent implements OnInit {
         let delay = 0;
 
         response.lendingProducts.forEach((lendingProduct: LendingProduct) => {
-          setTimeout(() => {
-            const Toast = Swal.mixin({
-              toast: true,
-              position: "top-end",
-              showConfirmButton: false,
-              timer: 3000,
-              timerProgressBar: true,
-              didOpen: (toast) => {
-                toast.onmouseenter = Swal.stopTimer;
-                toast.onmouseleave = Swal.resumeTimer;
-              }
-            });
-            Toast.fire({
-              icon: "warning",
-              title: `${lendingProduct.product.name} tiene poco stock`
-            });
-          }, delay);
-          delay += 3000; // Incrementa el retraso para la próxima alerta
+          if (lendingProduct.product.stock <= lendingProduct.product.criticalStock) {
+            setTimeout(() => {
+              const Toast = Swal.mixin({
+                toast: true,
+                position: "top-end",
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                  toast.onmouseenter = Swal.stopTimer;
+                  toast.onmouseleave = Swal.resumeTimer;
+                }
+              });
+              Toast.fire({
+                icon: "warning",
+                title: `${lendingProduct.product.name} tiene poco stock`
+              });
+            }, delay);
+            delay += 3000;
+          }
         
         });
 
