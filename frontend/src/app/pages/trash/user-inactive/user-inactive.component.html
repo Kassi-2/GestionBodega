@@ -18,7 +18,6 @@
         <th scope="col" class="text-center">Nombre</th>
         <th scope="col" class="text-center">Carrera</th>
         <th scope="col" class="text-center">Contactos</th>
-        <th scope="col" class="text-center">Acciones</th>
       </tr>
     </thead>
     <tbody>
@@ -28,15 +27,6 @@
         <td class="text-center">{{student.name}}</td>
         <td class="text-center">{{ student.student ? (student.student.degree.name) : "-"}}</td>
         <td class="text-center"> {{student.mail}} <br> @if (student.phoneNumber != 0 && student.phoneNumber) { +56 {{student.phoneNumber}} }
-
-        <td class="text-center">
-          <div class="d-flex gap-2 justify-content-center">
-            <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-toggle = "modal"
-              data-bs-target="#modalEditUser" disabled>
-              <i class="bi bi-pencil-square"> Historial</i>
-            </button>
-          </div>
-        </td>
       </tr>
       }
     </tbody>

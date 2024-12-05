@@ -57,7 +57,10 @@ export class AlertsComponent implements OnInit, OnDestroy {
       const currentHour = now.getHours();
       if (currentHour >= 17 && localStorage.getItem('alert') === 'false') {
         this.sendAlert();
-      } else if ((currentHour < 17 && localStorage.getItem('alert') === 'true') || !localStorage.getItem('alert')) {
+      } else if (
+        (currentHour < 17 && localStorage.getItem('alert') === 'true') ||
+        !localStorage.getItem('alert')
+      ) {
         localStorage.setItem('alert', 'false');
       }
     };

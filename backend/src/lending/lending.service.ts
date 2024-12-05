@@ -151,6 +151,49 @@ export class LendingService {
     return lendings;
   }
 
+  //obtiene los préstamos de acuerdo a una fecha en la que se elimino un préstamo
+  //sin importar la hora
+  async getLendingByInactiveDate(date: string): Promise<Lending[]> {
+    const startDate = new Date(date);
+    const endDate = new Date(startDate);
+    endDate.setDate(endDate.getDate() + 1);
+    console.log(startDate);
+    console.log(endDate);
+
+    const lendings = await this.prisma.lending.findMany({
+      where: {
+        state: LendingState.Inactive,
+        eliminateDate: {
+          lt: endDate,
+          gte: startDate,
+        },
+      },
+      include: {
+        borrower: {
+          select: {
+            name: true,
+          },
+        },
+        teacher: {
+          select: {
+            BorrowerId: {
+              select: {
+                name: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    console.log(lendings);
+    if (!lendings || lendings.length === 0) {
+      throw new NotFoundException(`No se encontraron préstamos en ${date}`);
+    }
+
+    return lendings;
+  }
+
   //obtiene los préstamos de acuerdo a una fecha en la que finalizó un préstamo
   //sin imortar la hora del día
   async getLendingByFinalizeDate(finalizeDate: string): Promise<Lending[]> {

@@ -1,4 +1,4 @@
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import {
@@ -16,7 +16,7 @@ import { AddProductComponent } from '../add-product/add-product.component';
 import { NgbPagination } from '@ng-bootstrap/ng-bootstrap';
 import { CategoryService } from '../../../core/services/category.service';
 import { Category } from '../../../core/models/category.interface';
-import { HistoryProductsComponent } from "../history-products/history-products.component";
+import { HistoryProductsComponent } from '../history-products/history-products.component';
 
 @Component({
   selector: 'app-view-products',
@@ -29,7 +29,7 @@ import { HistoryProductsComponent } from "../history-products/history-products.c
     HttpClientModule,
     NgbPagination,
     RouterLink,
-],
+  ],
   templateUrl: './view-products.component.html',
   styleUrls: ['./view-products.component.css'],
   providers: [ProductService],
@@ -58,7 +58,8 @@ export class ViewProductsComponent implements OnInit {
   constructor(
     private productService: ProductService,
     private fb: FormBuilder,
-    private categoryService: CategoryService
+    private categoryService: CategoryService,
+    private router: Router
   ) {
     this.createForm();
   }
@@ -204,8 +205,6 @@ export class ViewProductsComponent implements OnInit {
     });
   }
 
-
-
   // Editar un producto de la lista (muestra una alerta de confirmar la edición) y se asegura que la información
   // enviada del formuario cumpla con las restricciones, como puede ser que el nombre no se repita con otro producto
   // o que el formulario fuese invalido según sus validaciones.
@@ -265,4 +264,9 @@ export class ViewProductsComponent implements OnInit {
     );
   }
 
+  public navigate(id: number) {
+    this.router.navigate([`history-products/${id}`], {
+      queryParams: { url: 'inventory' },
+    });
+  }
 }

@@ -57,7 +57,7 @@ export class LendingService {
   }
 
   public lendingInactiveForDate(date: string): Observable<Lending[]> {
-    return this.http.get<Lending[]>(`${this.apiUrl}/lending-create-date/${date}`);
+    return this.http.get<Lending[]>(`${this.apiUrl}/lending-inactive-date/${date}`);
   }
 
   public lendingFinish(id: number, comments: string): Observable<Lending> {

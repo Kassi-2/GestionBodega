@@ -34,7 +34,7 @@ export class AlertService {
         const amount = await this.prismaService.lending.count({
           where: { state: LendingState.Active },
         });
-        const description = `El día ${alertDate.getDate()}-${alertDate.getMonth() + 1}-${alertDate.getFullYear()} hubieron ${amount} prestamos sin devolver`;
+        const description = `El día ${alertDate.getDate()}-${alertDate.getMonth() + 1}-${alertDate.getFullYear()} hubieron ${amount} préstamos sin devolver`;
         const createdAlert = this.prismaService.alert.create({
           data: {
             date: alertDate,

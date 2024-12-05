@@ -106,6 +106,7 @@ export class ProductService {
       return await this.prisma.product.findMany({
         where: {
           stock: { gt: 0 },
+          state: true,
         },
         orderBy: {
           name: 'asc',

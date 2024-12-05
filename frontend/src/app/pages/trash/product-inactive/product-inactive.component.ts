@@ -10,15 +10,14 @@ import { UserService } from '../../../core/services/user.service';
 import { TrashOptionsComponent } from '../trash-options/trash-options.component';
 import { ProductService } from '../../../core/services/product.service';
 import { Product } from '../../../core/models/product.interface';
-
-
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-product-inactive',
   standalone: true,
   imports: [TrashOptionsComponent, CommonModule, FormsModule, NgbPagination],
   templateUrl: './product-inactive.component.html',
-  styleUrl: './product-inactive.component.css'
+  styleUrl: './product-inactive.component.css',
 })
 export class ProductInactiveComponent {
   selectedLending: any;
@@ -30,7 +29,11 @@ export class ProductInactiveComponent {
   public page = 1;
   public pageSize = 10;
 
-  constructor(private lendingService: LendingService, private productService: ProductService) {}
+  constructor(
+    private lendingService: LendingService,
+    private productService: ProductService,
+    private router: Router
+  ) {}
 
   ngOnInit() {
     this.getProductsEliminated();
@@ -38,13 +41,11 @@ export class ProductInactiveComponent {
 
   // Función para poder ver los prestamos eliminados filtrados por nombre
   filteredList(): product[] {
-    const filteredLendings = this.allProducts.filter(
-      (product) =>
-        product.name.toLowerCase().includes(this.searchTerm.toLowerCase())
+    const filteredLendings = this.allProducts.filter((product) =>
+      product.name.toLowerCase().includes(this.searchTerm.toLowerCase())
     );
     return filteredLendings;
   }
-
 
   // Funcion para poder mostrar todos los prestamos eliminados
   public getProductsEliminated(): void {
@@ -53,7 +54,6 @@ export class ProductInactiveComponent {
     });
   }
 
-
   // Función para mostrar los detalles del prestamo
   openLendingDetails(id: number) {
     this.lendingService.getLendingForEdit(id).subscribe((lending: Lending) => {
@@ -61,4 +61,7 @@ export class ProductInactiveComponent {
     });
   }
 
+  public historyProduct(id: number) {
+    this.router.navigate([`history-products/${id}`], { queryParams: { url: 'product-inactive' }});
+  }
 }

@@ -38,6 +38,11 @@ export class LendingController {
     return this.lendingService.getLendingByCreateDate(date);
   }
 
+  @Get('lending-inactive-date/:date')
+  async getLendingByInactiveDate(@Param('date') date: string) {
+    return this.lendingService.getLendingByInactiveDate(date);
+  }
+
   @Get('lending-finalize-date/:finalizeDate')
   async getLendingByFinalizeDate(@Param('finalizeDate') finalizeDate: string) {
     return this.lendingService.getLendingByFinalizeDate(finalizeDate);
