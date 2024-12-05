@@ -89,51 +89,40 @@ export class InvoiceController {
   }
 
   @Put('update/:id')
-  @UseInterceptors(
-    FileInterceptor('file', {
-      storage: multer.diskStorage({
-        destination: './uploads',
-        filename: (req, file, callback) => {
-          const filename = `${Date.now()}-${file.originalname}`;
-          callback(null, filename);
-        },
-      }),
-    }),
-  )
+  @UseInterceptors(FileInterceptor('file'))
   async updateInvoice(
-    @Param('id') id: string,
-    @Body()
-    body: {
-      purchaseOrderNumber?: string;
-      shipmentDate?: string;
-      registrationDate?: string;
-      categoryIds?: string[];
-    },
-    @UploadedFile() file: Express.Multer.File,
+    @Param('id', ParseIntPipe) id: number,
+    @Body() body: any, 
+    @UploadedFile() file?: Express.Multer.File, 
   ) {
-    const parsedId = parseInt(id, 10);
-    if (isNaN(parsedId)) {
-      throw new BadRequestException('El ID debe ser un número válido');
+    try {
+      console.log('ID recibido:', id);
+      console.log('Cuerpo recibido:', body);
+      console.log('Archivo recibido:', file);
+
+      let categoryIds: number[] = [];
+      if (body.categoryIds) {
+        try {
+          categoryIds = JSON.parse(body.categoryIds);
+        } catch (error) {
+          throw new BadRequestException(
+            'El formato de categoryIds no es válido. Debe ser un arreglo de números.',
+          );
+        }
+      }
+
+      return await this.invoiceService.updateInvoice(
+        id,
+        body.purchaseOrderNumber,
+        body.shipmentDate,
+        body.registrationDate,
+        file,
+        categoryIds,
+      );
+    } catch (error) {
+      console.error('Error al actualizar la factura:', error.message);
+      throw error;
     }
-
-    const categoryIds = body.categoryIds
-      ? body.categoryIds.map((categoryId) => parseInt(categoryId, 10))
-      : undefined;
-
-    if (categoryIds && categoryIds.some((categoryId) => isNaN(categoryId))) {
-      throw new BadRequestException('categoryIds deben ser números válidos');
-    }
-
-    const result = await this.invoiceService.updateInvoice(
-      parsedId,
-      body.purchaseOrderNumber,
-      body.shipmentDate,
-      body.registrationDate,
-      file,
-      categoryIds,
-    );
-
-    return result;
   }
 
   @Get('download/:id')

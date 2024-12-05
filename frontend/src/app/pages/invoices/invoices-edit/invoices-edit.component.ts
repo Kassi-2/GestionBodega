@@ -69,37 +69,36 @@ export class InvoicesEditComponent implements OnInit{
       return;
     }
 
-    const invoice: EditedInvoice = {
-      purchaseOrderNumber: this.invoiceForm.value.purchaseOrderNumber,
-      shipmentDate: this.invoiceForm.value.shipmentDate,
-      registrationDate: this.invoiceForm.value.registrationDate,
-      invoiceCategory: this.invoiceForm.value.categories,
-
-      file: this.invoiceForm.value.invoiceFile
-    };
+    const formData = new FormData();
+    formData.append('purchaseOrderNumber', this.invoiceForm.value.purchaseOrderNumber);
+    formData.append('shipmentDate', this.invoiceForm.value.shipmentDate);
+    formData.append('registrationDate', this.invoiceForm.value.registrationDate);
+    formData.append('categoryIds', JSON.stringify(this.invoiceForm.value.categories));
 
     const file = this.invoiceForm.get('invoiceFile')?.value;
+    if (file) {
+      formData.append('file', file);
+    }
 
-
-
-    this.invoiceService.updateInvoice(this.invoiceId.id ,invoice).subscribe({
+    this.invoiceService.updateInvoice(this.invoiceId.id, formData).subscribe({
       next: () => {
-        console.log(invoice)
+        console.log('Form values:', this.invoiceForm.value);
+        setTimeout(() => {
+          location.reload()
+        }, 1500);
+
         Swal.fire({
-          title: '¡Factura creada!',
-          text: 'La factura ha sido creada con éxito.',
+          title: '¡Factura actualizada!',
+          text: 'La factura ha sido actualizada con éxito.',
           icon: 'success',
           timer: 1500,
           showConfirmButton: false,
         });
-        // setTimeout(() => {
-        //   location.reload()
-        // }, 1500);
       },
       error: (error) => {
         Swal.fire({
           title: 'Error',
-          text: 'Hubo un error al crear la factura.',
+          text: 'Hubo un error al actualizar la factura.',
           icon: 'error',
           timer: 1500,
           showConfirmButton: false,
@@ -108,6 +107,7 @@ export class InvoicesEditComponent implements OnInit{
       },
     });
   }
+
 
 
   private loadInvoiceData(invoiceId: number): void {

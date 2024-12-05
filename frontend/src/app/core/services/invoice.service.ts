@@ -78,29 +78,10 @@ export class InvoiceService {
   //   return this.http.put<Invoice>(`${this.apiUrl}/update/${invoiceId}`, invoice);
   // }
 
-  public updateInvoice(invoiceId: number , data: EditedInvoice) {
-    const formData = new FormData();
-
-    const shipmentDate = new Date(data.shipmentDate);
-    const registrationDate = new Date(data.registrationDate);
-
-    formData.append('purchaseOrderNumber', data.purchaseOrderNumber);
-    formData.append('shipmentDate', shipmentDate.toISOString().split('T')[0]);
-    if (registrationDate) {
-      formData.append('registrationDate', registrationDate.toISOString().split('T')[0]);
-    }
-
-    const categoryIds = data.invoiceCategory;
-    formData.append('categoryIds', JSON.stringify(categoryIds));
-
-
-
-    if (data.file) {
-      formData.append('file', data.file);
-    }
-
-
-    return this.http.post(`${this.apiUrl}/update/${invoiceId}`, formData);
+  public updateInvoice(invoiceId: number, formData: FormData): Observable<Invoice> {
+    return this.http.put<Invoice>(`${this.apiUrl}/update/${invoiceId}`, formData);
   }
+
+
 }
 
