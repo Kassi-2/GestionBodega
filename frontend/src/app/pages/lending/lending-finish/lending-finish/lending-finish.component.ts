@@ -80,7 +80,7 @@ export class LendingFinishComponent {
     }
     const selectedDate = new Date(input.value);
     const date = `${selectedDate.getFullYear()}-${selectedDate.getMonth()+1}-${selectedDate.getDate()+1}`
-    this.lendingService.lendingActiveForDate(date).subscribe((lendings: Lending[]) => {
+    this.lendingService.lendingFinishForDate(date).subscribe((lendings: Lending[]) => {
       this.lending = lendings;
       console.log(lendings)
     });
