@@ -96,20 +96,20 @@ export class AuthService {
     return { message: 'Correo de recuperación enviado' };
   }
 
-  public async verifyCode(code: string, mail: string) {
-    const user = await this.prismaService.user.findUnique({
-      where: { mail: mail },
+  public async verifyCode(code: string) {
+    const user = await this.prismaService.user.findFirst({
+      where: { resetPasswordToken: code },
     });
 
     if (!user) {
-      throw new BadRequestException('Correo no registrado');
+      throw new BadRequestException('Enlace no válido');
     }
 
-    if (user.confrimationCode !== code) {
-      throw new BadRequestException('Código no válido');
+    if (user.resetPasswordToken !== code) {
+      throw new BadRequestException('Enlace no válido');
     }
 
-    return { message: 'Código válido' };
+    return { message: 'Enlace válido' };
   }
 
   public async resetPassword(token: string, newPassword: string) {

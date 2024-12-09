@@ -81,7 +81,7 @@ export class AuthService {
       const currentTime = Math.floor(Date.now() / 1000);
       return decodedToken.exp < currentTime;
     } catch (error) {
-      console.log(error)
+      console.log(error);
       return true;
     }
   }
@@ -98,14 +98,29 @@ export class AuthService {
     return token;
   }
 
-   public requestPasswordReset(mail: string): Observable<{ message: string }> {
-    return this.http.post<{ message: string }>(`${this.apiUrl}/request-password-reset`, { mail });
+  public requestPasswordReset(mail: string): Observable<{ message: string }> {
+    return this.http.post<{ message: string }>(
+      `${this.apiUrl}/request-password-reset`,
+      { mail }
+    );
   }
 
-  public resetPassword(token: string, newPassword: string): Observable<{ message: string }> {
-    return this.http.post<{ message: string }>(`${this.apiUrl}/reset-password`, {
+  public resetPassword(
+    token: string,
+    newPassword: string
+  ): Observable<{ message: string }> {
+    return this.http.post<{ message: string }>(
+      `${this.apiUrl}/reset-password`,
+      {
+        token,
+        newPassword,
+      }
+    );
+  }
+
+  public verifyCode(token: string) {
+    return this.http.post<{ message: string }>(`${this.apiUrl}/verify-code`, {
       token,
-      newPassword,
     });
   }
 }
