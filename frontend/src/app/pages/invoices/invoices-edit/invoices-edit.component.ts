@@ -80,33 +80,46 @@ export class InvoicesEditComponent implements OnInit{
       formData.append('file', file);
     }
 
+    Swal.fire({
+      title: `Actualizando la factura`,
+      text: 'Espere mientras se procesa el guardado',
+      icon: 'info',
+      showConfirmButton: false,
+      allowOutsideClick: false,
+    });
+
+    Swal.showLoading();
+
+
     this.invoiceService.updateInvoice(this.invoiceId.id, formData).subscribe({
       next: () => {
-        console.log('Form values:', this.invoiceForm.value);
-        setTimeout(() => {
-          location.reload()
-        }, 1500);
+        Swal.close();
 
         Swal.fire({
-          title: '¡Factura actualizada!',
-          text: 'La factura ha sido actualizada con éxito.',
+          title: 'Factura actualizada',
+          text: `Factura actualizada exitosamente en el sistema.`,
           icon: 'success',
           timer: 1500,
           showConfirmButton: false,
         });
+        setTimeout(() => {
+          location.reload();
+        }, 1500);
       },
       error: (error) => {
+        Swal.close();
+
         Swal.fire({
           title: 'Error',
-          text: 'Hubo un error al actualizar la factura.',
+          text: error.error.message,
           icon: 'error',
-          timer: 1500,
+          timer: 2000,
           showConfirmButton: false,
         });
-        console.error(error);
-      },
-    });
+      }
+    })
   }
+
 
 
 

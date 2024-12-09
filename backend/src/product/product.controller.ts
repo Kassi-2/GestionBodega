@@ -65,7 +65,7 @@ export class ProductController {
         'El stock debe ser un número igual o mayor a 0',
       );
     }
-    if (request.criticalStock < 1) {
+    if (request.criticalStock < 0) {
       throw new BadRequestException(
         'El stock crítico debe ser un número igual o mayor a 1',
       );
