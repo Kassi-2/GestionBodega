@@ -130,9 +130,13 @@ model Category {
 }
 
 model User {
-  mail     String @id
+  id Int          @id @default(autoincrement())
+  mail     String @unique
   username String @unique
   password String
+  resetPasswordToken  String?
+  resetPasswordExpires DateTime?
+  confrimationCode String?
 }
 
 model Invoice {
