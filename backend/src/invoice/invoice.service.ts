@@ -145,6 +145,7 @@ export class InvoiceService {
 
     return this.prismaService.invoice.findMany({
       where: {
+        state: true,
         AND: conditions,
       },
       include: {
