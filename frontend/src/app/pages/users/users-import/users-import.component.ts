@@ -72,7 +72,7 @@ export class UsersImportComponent implements OnInit, OnDestroy {
         error: (error) => {
           swalWithBootstrapButtons.fire({
             title: 'Error',
-            text: 'Ocurrió un error en la importación, verifique el tipo de archivo ingresado o solicite ayuda.',
+            text: error.error.message,
             icon: 'error',
             timer: 1500,
             showConfirmButton: false,

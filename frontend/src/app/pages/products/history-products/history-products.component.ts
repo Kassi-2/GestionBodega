@@ -44,7 +44,7 @@ export class HistoryProductsComponent {
     this.getProduct();
     this.getHistory();
     this.route.queryParams.subscribe((params) => {
-      this.url = params; // { id: 1, name: 'test' }
+      this.url = params;
     });
   }
 

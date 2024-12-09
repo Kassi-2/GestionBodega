@@ -4,7 +4,8 @@ import { AuthService } from './auth.service';
 import { PrismaModule } from 'src/prisma/prisma.module';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthGuard } from './guards/auth.guard';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import * as nodemailer from 'nodemailer';
 
 @Module({
   imports: [
@@ -17,6 +18,24 @@ import { ConfigModule } from '@nestjs/config';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, AuthGuard],
+  providers: [
+    AuthService,
+    AuthGuard,
+    {
+      provide: 'MAIL_TRANSPORTER',
+      useFactory: (configService: ConfigService) => {
+        return nodemailer.createTransport({
+          host: 'smtp.sendgrid.net',
+          port: 587,
+          auth: {
+            user: 'apikey',
+            pass: configService.get<string>('API_KEY'),
+          },
+        });
+      },
+      inject: [ConfigService],
+    },
+  ],
+  exports: ['MAIL_TRANSPORTER'],
 })
 export class AuthModule {}

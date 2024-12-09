@@ -89,7 +89,17 @@ export class InvoiceController {
   }
 
   @Put('update/:id')
-  @UseInterceptors(FileInterceptor('file'))
+  @UseInterceptors(
+    FileInterceptor('file', {
+      storage: multer.diskStorage({
+        destination: './uploads',
+        filename: (req, file, callback) => {
+          const filename = `${Date.now()}-${file.originalname}`;
+          callback(null, filename);
+        },
+      }),
+    }),
+  )
   async updateInvoice(
     @Param('id', ParseIntPipe) id: number,
     @Body() body: any, 
