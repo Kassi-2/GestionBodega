@@ -301,13 +301,30 @@ export class UserService {
 
       const users = XLSX.utils.sheet_to_json(sheet);
 
-      const processedUsers = users.map((user) => ({
-        rut: user['Rut'].toUpperCase(),
-        name: user['Nombre'].toUpperCase(),
-        mail: user['E-mail'] ? user['E-mail'].toLowerCase() : undefined,
-        phoneNumber: user['Fono'],
-        role: user['Rol'],
-      }));
+      const processedUsers = users.map((user) => {
+        if (!user['Rol'] && type === UserType.Assistant) {
+          throw new BadRequestException(
+            'Los usuarios de tipo asistentes deben tener un rol asignado',
+          );
+        }
+        if (!user['Rut']) {
+          throw new BadRequestException(
+            'Todos los usuarios deben tener un RUT en su casilla asignada',
+          );
+        }
+        if (!user['Nombre']) {
+          throw new BadRequestException(
+            'Todos los usuarios deben tener un nombre en su casilla asignada',
+          );
+        }
+        return {
+          rut: user['Rut'].toUpperCase(),
+          name: user['Nombre'].toUpperCase(),
+          mail: user['E-Dmail'] ? user['E-mail'].toLowerCase() : undefined,
+          phoneNumber: user['Fono'],
+          role: user['Rol'],
+        };
+      });
 
       switch (type) {
         case UserType.Student:
