@@ -1,0 +1,22 @@
+
+
+<div class="category-buttons d-flex justify-content-center gap-3 mt-3 mb-3">
+  <div class="category-card"
+       [ngClass]="{'active-category': selectedCategory === 'active'}"
+       (click)="selectCategory('active')"
+       routerLink="/lendings/active">
+    <p>Préstamos activos</p>
+  </div>
+  <div class="category-card"
+       [ngClass]="{'active-category': selectedCategory === 'pending'}"
+       (click)="selectCategory('pending')"
+       routerLink="/lendings/pending">
+    <p>Préstamos pendientes</p>
+  </div>
+  <div class="category-card"
+       [ngClass]="{'active-category': selectedCategory === 'finish'}"
+       (click)="selectCategory('finish')"
+       routerLink="/lendings/finish">
+    <p>Préstamos finalizados</p>
+  </div>
+</div>

@@ -1,0 +1,11 @@
+.btn-primary {
+    background-color: #f79123;
+    border: #f79123;
+  }
+
+  .titulo {
+    text-align: center;
+    color: #333;
+    font-size: 45px;
+    margin-top: 20px;
+  }

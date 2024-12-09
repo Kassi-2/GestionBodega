@@ -1,0 +1,63 @@
+
+<div class="modal fade" id="modalQrUser" tabindex="-1" data-bs-backdrop="static" aria-labelledby="exampleModalLabel" aria-hidden="true"
+  >
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Información QR</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="removeBlur()"></button>
+      </div>
+      <div class="modal-body">
+        @if (user) {
+        <div>
+          <p>Nombre del usuario: {{ user.name }}</p>
+          <div class="text-center">
+            <canvas #qrCanvas></canvas>
+          </div>
+          <div class="text-center mt-4">
+            <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-target="#modalSendQr" data-bs-toggle="modal">Enviar código
+              QR al correo</button>
+          </div>
+        </div>
+        }
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="modalSendQr" tabindex="-1" aria-labelledby="sendQrLabel" aria-hidden="true"
+(shown.bs.modal)="validateEmail(user.mail || '')">
+<div class="modal-dialog">
+<div class="modal-content">
+ <div class="modal-header">
+   <h1 class="modal-title fs-5" id="sendQrLabel">Enviar QR por Correo</h1>
+   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="removeBlur()"></button>
+ </div>
+
+ <div class="modal-body">
+  <div *ngIf="user?.mail; else emailInputTemplate">
+    <p>¿Desea enviar el código QR al correo electrónico registrado?</p>
+    <div>
+      <input class="form-control" [value]="user.mail" #emailInput type="text" (input)="validateEmail(emailInput.value)">
+    </div>
+    <div class="text-center mt-4">
+      <button type="button" class="btn btn-outline-primary me-3" [disabled]="!isEmailValid" data-bs-dismiss="modal" (click)="sendQr(emailInput.value); removeBlur()">Enviar</button>
+      <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" (click)="removeBlur()">Cancelar</button>
+    </div>
+  </div>
+
+  <ng-template #emailInputTemplate>
+    <p>Ingrese un correo temporal para enviar el código QR:</p>
+    <input class="form-control" #emailInput type="text" (input)="validateEmail(emailInput.value)">
+    <div class="text-center mt-4">
+      <button type="button" class="btn btn-outline-primary me-3" [disabled]="!isEmailValid" data-bs-dismiss="modal" (click)="sendQr(emailInput.value); removeBlur()">Enviar</button>
+      <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" (click)="removeBlur()">Cancelar</button>
+    </div>
+  </ng-template>
+
+</div>
+</div>
+</div>
+</div>
+

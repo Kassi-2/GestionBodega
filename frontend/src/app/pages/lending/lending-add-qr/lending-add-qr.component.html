@@ -1,0 +1,23 @@
+<div class="container-fluid d-flex justify-content-center align-items-center vh-50 p-0 bg-gradient">
+  <div class="position-relative d-flex justify-content-center align-items-center" style="width: 1000px; height: 700px;">
+    <ngx-scanner-qrcode
+      #action="scanner"
+      [config]="config"
+      (event)="onEvent($event, action)"
+      class="w-200 h-200"
+    ></ngx-scanner-qrcode>
+
+    <div class="position-absolute top-50 start-50 translate-middle text-center text-light">
+      <h4 class="mb-1 font-weight-bold">Alinea el código QR</h4>
+      <p class="mb-0 fs-6">Si no lo lee, intenta bajar el brillo de la pantalla.</p>
+    </div>
+  </div>
+
+  <div class="position-fixed bottom-0 start-50 translate-middle-x mb-4">
+    <button
+      class="btn btn-lg btn-secondary btn-back"
+      routerLink='/lending-add'>
+      Cancelar
+    </button>
+  </div>
+</div>

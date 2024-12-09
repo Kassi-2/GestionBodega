@@ -1,0 +1,86 @@
+<nav class="navbar navbar" style="background-color: #f79123;">
+  <div class="container-fluid">
+    <button class="navbar-toggler menu" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
+      aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon" style="background-color: transparent;"></span>
+    </button>
+
+
+        <a class="navbar-brand"></a>
+        <div div class="d-flex flex-row">
+            <button class="btn navbar-brand" type="button" routerLink="/lending-add">
+                <i class="bi bi-plus-circle"></i>
+            </button>
+            <div div class="dropdown">
+                <button class="btn navbar-brand" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-bell position-relative">
+                        @if (unreadCount > 0){
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill text-bg-danger">{{unreadCount}}</span>
+                        }
+
+                    </i>
+            </button>
+            <app-alerts></app-alerts>
+        </div>
+
+
+        <div class="dropdown">
+          <button class="btn navbar-brand" type="button" id="userButton" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="bi bi-person-circle"></i>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userButton">
+            <li>
+              <a class="dropdown-item" routerLink="/lendings/inactive">
+                <i class="bi bi-clock-history"></i> Historial
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item" routerLink="/user-manual">
+                <i class="bi bi-book"></i> Manual de usuario
+              </a>
+            </li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+            <li>
+              <button class="dropdown-item text-danger" (click)="logout()">
+                <i class="bi bi-box-arrow-right"></i> Cerrar sesión
+              </button>
+            </li>
+          </ul>
+        </div>
+
+
+      </div>
+      <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar" style="width: 250px;"
+          aria-labelledby="offcanvasNavbarLabel">
+          <div class="offcanvas-header" style="background-color: #f79123;">
+              <div class="container-fluid">
+                  <div class="row justify-content-center">
+                      <a class="navbar-brand" routerLink="/lendings/active">
+                          <img src="assets/images/logo-departamento-mecanica.png" class="container-fluid rounded-5 rounded-top-0"
+                              height="210" width="150" alt="Logo">
+                      </a>
+                  </div>
+              </div>
+          </div>
+          <div class="offcanvas-body">
+              <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                  <li class="nav-item">
+                      <a class="nav-link active" aria-current="page" routerLink="/inventory" data-bs-dismiss="offcanvas"><i class="bi bi-box-seam me-2"></i>Inventario</a>
+                  </li>
+                  <li class="nav-item">
+                      <a class="nav-link active" aria-current="page" routerLink="/lendings/active" data-bs-dismiss="offcanvas"><i class="bi bi-arrow-left-right me-2"></i>Préstamos</a>
+                  </li>
+                  <li class="nav-item">
+                      <a class="nav-link active" aria-current="page" routerLink="/users/students" data-bs-dismiss="offcanvas"><i class="bi bi-people me-2"></i>Usuarios</a>
+                  </li>
+                  <li class="nav-item">
+                      <a class="nav-link active" aria-current="page" routerLink="/invoice" data-bs-dismiss="offcanvas"><i class="bi bi-receipt me-2"></i>Facturas</a>
+                  </li>
+              </ul>
+          </div>
+      </div>
+  </div>
+</nav>
+

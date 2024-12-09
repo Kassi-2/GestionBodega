@@ -1,0 +1,49 @@
+<div class="container-xl mt-3">
+  <div class="d-flex justify-content-between align-items-center mt-4">
+    <div class="input-group search-bar" style="width: 50%;">
+      <span class="input-group-text bg-white text-orange">
+        <i class="bi bi-search"></i>
+      </span>
+      <input type="text" placeholder="Buscar..." [(ngModel)]="searchTerm" (input)="onSearch()"  class="form-control border-0" />
+    </div>
+
+    <div class="d-flex gap-3">
+      <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#modalAddUser">
+        <i class="bi bi-person-plus"></i> Agregar Usuario
+      </button>
+      <button type="button" class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#modalSendToEveryoneQr">
+        <i class="bi bi-qr-code"></i> Distribuir QR
+      </button>
+      <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#modalImportUsers">
+        <i class="bi bi-filetype-xlsx"></i> Importar Usuarios
+      </button>
+    </div>
+  </div>
+
+  <h4 class="subtitulo">Seleccione el tipo de usuario que desea mostrar:</h4>
+
+
+
+  <div class="category-buttons d-flex justify-content-center gap-3 mt-3">
+    <div class="category-card"
+         [ngClass]="{'active-category': selectedCategory === 'students'}"
+         (click)="selectCategory('students')">
+      <p>Estudiantes</p>
+    </div>
+    <div class="category-card"
+         [ngClass]="{'active-category': selectedCategory === 'teachers'}"
+         (click)="selectCategory('teachers')">
+      <p>Profesores</p>
+    </div>
+    <div class="category-card"
+         [ngClass]="{'active-category': selectedCategory === 'assistants'}"
+         (click)="selectCategory('assistants')">
+      <p>Asistentes</p>
+    </div>
+  </div>
+
+</div>
+
+<app-user-add></app-user-add>
+<app-users-import></app-users-import>
+<app-user-send-qr></app-user-send-qr>

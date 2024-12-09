@@ -1,0 +1,25 @@
+<div class="modal fade" id="modalSendToEveryoneQr" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Enviar códigos QR masivamente</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <div class="text-center">
+            <p>Se enviarán los códigos QR a todos los usuarios registrados en el sistema.</p>
+          </div>
+          <div class="alert alert-danger" role="alert">
+            Este proceso es costoso, trate de realizarlo la menor cantidad de veces posibles. Este proceso puede demorar si hay muchos alumnos registrados</div>
+          <div class="text-center">
+            <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal" (click)="sendToEveryoneQr()"
+            >Enviar códigos QR a todos</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+

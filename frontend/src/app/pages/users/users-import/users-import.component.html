@@ -1,0 +1,42 @@
+<div class="modal fade" id="modalImportUsers" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" [formGroup]="form">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Importar Usuarios</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="formGroupExampleInput" class="form-label">Tipo de Usuario</label>
+            <select class="form-control form-select" formControlName="type" aria-label="Large select example">
+              <option value="Student">Alumnos</option>
+              <option value="Teacher">Profesores</option>
+              <option value="Assistant">Asistentes</option>
+            </select>
+          </div>
+          @if (this.form.get('type')?.value == "Student") {
+          <div class="mb-3">
+            <label for="formGroupExampleInput" class="form-label">Carrera</label>
+            <select class="form-control form-select" formControlName="degree" aria-label="Large select example">
+              @for (degree of degrees; track $index) {
+              <option value={{degree.code}}>{{degree.name}}</option>
+              }
+            </select>
+          </div>
+          }
+          <div class="mb-3">
+            <label for="formFile" class="form-label" id="file">Archivo xlsx</label>
+            <button type="button" class="myButton" placement="end"
+              ngbPopover="Para importar un archivo excel con la información de los usuarios, es necesario tener como mínimo las siguientes columnas: 'Rut' y 'Nombre'. Si los usuarios a importar son de tipo Asistente, debe tener una columna de tipo 'Rol'. "
+              popoverTitle="Formato de importación:">?</button>
+            <input class="form-control" type="file" id="formFile" formControlName="file" (change)="onFileChange($event)">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button class="btn btn-primary" data-bs-target="" data-bs-toggle="modal" (click)="import()"
+            [disabled]="!form.valid">Importar Usuarios</button>
+        </div>
+      </div>
+    </div>
+  </div>

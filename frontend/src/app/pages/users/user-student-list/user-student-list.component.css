@@ -1,0 +1,12 @@
+.titulo{
+    text-align: center;
+      margin-top:20px;
+}
+
+.blur-background {
+  filter: blur(5px);
+  transition: filter 0.3s ease;
+}
+
+
+

@@ -1,0 +1,22 @@
+<div class="category-buttons d-flex justify-content-center gap-3 mt-3 mb-3">
+  <div class="category-card"
+  [ngClass]="{'active-category': selectedCategory === 'lendings'}"
+  (click)="selectCategory('lendings')"
+  routerLink="/lendings/inactive">
+  <p>Préstamos eliminados</p>
+</div>
+
+  <div class="category-card"
+  [ngClass]="{'active-category': selectedCategory === 'users'}"
+       (click)="selectCategory('users')"
+       routerLink="/user-inactive">
+    <p>Usuarios eliminados</p>
+  </div>
+  <div class="category-card"
+  [ngClass]="{'active-category': selectedCategory === 'products'}"
+       (click)="selectCategory('products')"
+       routerLink="/product-inactive">
+    <p>Productos eliminados</p>
+  </div>
+</div>
+

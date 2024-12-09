@@ -1,0 +1,139 @@
+.custom_input {
+    display: flex;
+    align-items: center;
+    position: relative;
+    max-width: 200%;
+  }
+
+  .search-bar {
+    max-width: 500px;
+    border: 1px solid orange;
+    border-radius: 30px; /* Bordes redondeados */
+    overflow: hidden; /* Para redondear los bordes internos */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Sombra suave */
+  }
+
+  .input-group-text {
+    background-color: white;
+    border-right: none;
+  }
+
+  .form-control {
+    border: none;
+    box-shadow: none; /* Quita el borde por defecto */
+  }
+
+  .form-control::placeholder {
+    color: #b0b0b0; /* Color del placeholder */
+  }
+
+  .text-orange {
+    color: orange; /* Color de la lupa */
+  }
+
+    .subtitulo{
+      margin-top: 20px;
+    }
+
+    .category-card {
+      position: relative; /* Necesario para la posición de la línea */
+      padding-bottom: 5px; /* Espacio para la línea */
+      cursor: pointer;
+      transition: color 0.3s;
+    }
+
+    .category-card p {
+      margin: 0;
+      font-weight: bold;
+      color: #555; /* Color del texto */
+    }
+
+    .category-card::after {
+      content: ''; /* Necesario para mostrar la línea */
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0; /* Oculto por defecto */
+      height: 3px; /* Grosor de la línea */
+      background-color: #F79123; /* Color de la línea */
+      transition: width 0.3s ease-in-out;
+    }
+
+    .category-card.active-category::after, /* Línea completa para la categoría activa */
+    .category-card:hover::after {          /* Línea al pasar el cursor */
+      width: 100%;
+    }
+
+    .category-card.active-category p,
+    .category-card:hover p {
+      color: #F79123; /* Cambia el color del texto en la categoría activa o al hacer hover */
+    }
+
+
+  .input {
+    font-size: 18px;
+    padding: 5px 10px;
+    width: 100%;
+    padding-left: 35px;
+    outline: none;
+    background: #FFFFFF;
+    color: #000000;
+    border: 1px solid #666666;
+    border-radius: 40px;
+    box-shadow: 3px 3px 2px 0px #E2E2E2;
+    transition: 0.3s ease;
+
+  }
+
+  .input:focus {
+    background: #F2F2F2;
+    border: 1px solid #F79123;
+    border-radius: 40px;
+  }
+
+  .input::placeholder {
+    color: #DDDDDD;
+  }
+
+  .svg_icon {
+    position: absolute;
+    left: 5%;
+    fill: #F79123;
+    width: 18px;
+    height: 18px;
+  }
+
+  .d-flex.gap-4 {
+    gap: 1rem;
+  }
+
+  .subtitulo{
+    margin-top: 20px;
+  }
+
+
+  .dp-hidden {
+    width: 0;
+    margin: 0;
+    border: none;
+    padding: 0;
+  }
+  .custom-day {
+    text-align: center;
+    padding: 0.185rem 0.25rem;
+    display: inline-block;
+    height: 2rem;
+    width: 2rem;
+  }
+  .custom-day.focused {
+    background-color: #e6e6e6;
+  }
+  .custom-day.range,
+  .custom-day:hover {
+    background-color: rgb(2, 117, 216);
+    color: white;
+  }
+  .custom-day.faded {
+    background-color: rgba(2, 117, 216, 0.5);
+  }
+

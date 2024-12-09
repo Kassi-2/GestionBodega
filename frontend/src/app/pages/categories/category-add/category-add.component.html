@@ -1,0 +1,24 @@
+<div class="modal fade" id="modalAddCategory" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" [formGroup]="categoryForm">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Registrar Categoría</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="formGroupExampleInput" class="form-label">Nombre</label>
+            <input [class.is-invalid]='notValidName' type="text" class="form-control" id="formGroupExampleInput"
+              formControlName="name" placeholder="Nombre">
+            @if (notValidName) {
+              <small class="text-danger">Ingrese un nombre.</small>
+            }
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" data-bs-dismiss="modal" (click)="clearForm()">Cancelar</button>
+          <button class="btn btn-primary" style = "background-color: #F79123; border-color: #F79123" [disabled]="!categoryForm.valid" (click)="createCategory()">Registrar</button>
+        </div>
+      </div>
+    </div>
+</div>

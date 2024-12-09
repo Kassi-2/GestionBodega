@@ -1,0 +1,46 @@
+<h1 class = "titulo">Lista de productos eliminados</h1>
+
+<app-trash-options></app-trash-options>
+<div class="custom_input" style="justify-content: center">
+  <div class="input-group search-bar" style="width: 50%;">
+    <span class="input-group-text bg-white text-orange">
+      <i class="bi bi-search"></i>
+    </span>
+    <input type="text" [(ngModel)]="searchTerm" placeholder="Buscar..." class="form-control border-0" />
+  </div>
+
+</div>
+<div class="table-responsive-sm container-xl" style="margin-top: 20px;">
+  <table class="table table-striped">
+    <thead class="table-light">
+      <tr>
+        <th scope="col" class="text-center">Código</th>
+        <th scope="col" class="text-center">Nombre</th>
+        <th scope="col" class="text-center">Descripción</th>
+        <th scope="col" class="text-center">Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (product of filteredList() | slice: (page-1) * pageSize : page * pageSize;track product;let i = $index) {
+      <tr>
+        <th scope="row" class="text-center">{{product.id}}</th>
+        <td class="text-center">{{product.name}}</td>
+        <td class="text-center">{{ product.description ? (product.description) : "-"}}</td>
+
+        <td class="text-center">
+          <div class="d-flex gap-2 justify-content-center">
+            <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-toggle = "modal"
+              data-bs-target="#modalEditUser" (click)="historyProduct(product.id)">
+              <i class="bi bi-pencil-square"> Historial</i>
+            </button>
+          </div>
+        </td>
+      </tr>
+      }
+    </tbody>
+  </table>
+  <div class="d-flex justify-content-center mt-4">
+    <ngb-pagination [collectionSize]="allProducts.length" [(page)]="page" [pageSize]="pageSize" [maxSize]="5" [rotate]="true" [ellipses]="false" [boundaryLinks]="true"></ngb-pagination>
+  </div>
+</div>
+
