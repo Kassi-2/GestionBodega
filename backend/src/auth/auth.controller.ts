@@ -18,4 +18,17 @@ export class AuthController {
   public async login(@Body() request: LoginDTO) {
     return await this.authService.login(request);
   }
+
+  @Post('/request-password-reset')
+  async requestPasswordReset(@Body('mail') mail: string) {
+    return this.authService.requestPasswordReset(mail);
+  }
+
+  @Post('/reset-password')
+  async resetPassword(
+    @Body('token') token: string,
+    @Body('newPassword') newPassword: string,
+  ) {
+    return this.authService.resetPassword(token, newPassword);
+  }
 }

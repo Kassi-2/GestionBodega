@@ -75,10 +75,15 @@ export class AuthService {
    * @return {*}  {boolean} - `true` si el token ha expirado; `false` si el token es válido.
    * @memberof AuthService
    */
-  private isTokenExpired(token: string): boolean {
-    const decodedToken: any = jwtDecode(token);
-    const currentTime = Math.floor(Date.now() / 1000);
-    return decodedToken.exp < currentTime;
+  public isTokenExpired(token: string): boolean {
+    try {
+      const decodedToken: any = jwtDecode(token);
+      const currentTime = Math.floor(Date.now() / 1000);
+      return decodedToken.exp < currentTime;
+    } catch (error) {
+      console.log(error)
+      return true;
+    }
   }
 
   /**
@@ -91,5 +96,16 @@ export class AuthService {
   public getToken() {
     const token = localStorage.getItem('token');
     return token;
+  }
+
+   public requestPasswordReset(mail: string): Observable<{ message: string }> {
+    return this.http.post<{ message: string }>(`${this.apiUrl}/request-password-reset`, { mail });
+  }
+
+  public resetPassword(token: string, newPassword: string): Observable<{ message: string }> {
+    return this.http.post<{ message: string }>(`${this.apiUrl}/reset-password`, {
+      token,
+      newPassword,
+    });
   }
 }

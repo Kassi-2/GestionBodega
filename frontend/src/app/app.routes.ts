@@ -22,6 +22,8 @@ import { InvoiceAddComponent } from './pages/invoices/invoice-add/invoice-add.co
 import { UserManualViewComponent } from './shared/components/user-manual-view/user-manual-view.component';
 import { InvoiceOptionsComponent } from './pages/invoices/invoice-options/invoice-options.component';
 import { InvoicesEditComponent } from './pages/invoices/invoices-edit/invoices-edit.component';
+import { ResetPasswordComponent } from './pages/auth/reset-password/reset-password.component';
+import { RequestResetPasswordComponent } from './pages/auth/request-reset-password/request-reset-password.component';
 
 export const routes: Routes = [
   {
@@ -116,7 +118,8 @@ export const routes: Routes = [
     ],
     canActivate: [authGuard],
   },
-
+  { path: 'request-reset-password', component: RequestResetPasswordComponent, canActivate: [loginGuard] },
+  { path: 'reset-password/:token', component: ResetPasswordComponent, canActivate: [loginGuard] },
   { path: 'auth/login', component: LoginComponent, canActivate: [loginGuard] },
   { path: '**', redirectTo: 'lendings/active' },
 ];

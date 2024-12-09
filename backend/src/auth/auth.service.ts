@@ -1,15 +1,18 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { LoginDTO } from './dto/login.dto';
 import { RegisterDTO } from './dto/register.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
+import * as nodemailer from 'nodemailer';
 
 @Injectable()
 export class AuthService {
   constructor(
     private prismaService: PrismaService,
     private jwtService: JwtService,
+    @Inject('MAIL_TRANSPORTER')
+    private readonly transporter: nodemailer.Transporter,
   ) {}
 
   // Iniciar sesión para un usuario existente
@@ -57,5 +60,92 @@ export class AuthService {
       },
     });
     return user;
+  }
+
+  public async requestPasswordReset(email: string) {
+    const user = await this.prismaService.user.findUnique({
+      where: { mail: email },
+    });
+
+    if (!user) {
+      throw new BadRequestException('Correo no registrado');
+    }
+
+    const resetToken = await this.jwtService.signAsync(
+      { userId: user.id },
+      { expiresIn: '1h' }, // Token válido por 1 hora
+    );
+
+    await this.prismaService.user.update({
+      where: { id: user.id },
+      data: {
+        resetPasswordToken: resetToken,
+        resetPasswordExpires: new Date(Date.now() + 3600000),
+      },
+    });
+
+    const resetLink = `http://localhost:4200/reset-password/${resetToken}`;
+    console.log(resetLink);
+    await this.transporter.sendMail({
+      from: 'spam.panol.mecanica@gmail.com',
+      to: email,
+      subject: 'Recuperación de contraseña',
+      text: `Haz clic en el siguiente enlace para restablecer tu contraseña: ${resetLink}`,
+    });
+
+    return { message: 'Correo de recuperación enviado' };
+  }
+
+  public async verifyCode(code: string, mail: string) {
+    const user = await this.prismaService.user.findUnique({
+      where: { mail: mail },
+    });
+
+    if (!user) {
+      throw new BadRequestException('Correo no registrado');
+    }
+
+    if (user.confrimationCode !== code) {
+      throw new BadRequestException('Código no válido');
+    }
+
+    return { message: 'Código válido' };
+  }
+
+  public async resetPassword(token: string, newPassword: string) {
+    let payload;
+    try {
+      console.log(token);
+      payload = await this.jwtService.verifyAsync(token);
+      console.log(payload);
+    } catch (error) {
+      throw new BadRequestException('Token inválido o expirado', error);
+    }
+
+    const user = await this.prismaService.user.findUnique({
+      where: { id: payload.userId },
+    });
+
+    if (!user || user.resetPasswordToken !== token) {
+      throw new BadRequestException('Token no válido');
+    }
+
+    if (new Date() > new Date(user.resetPasswordExpires)) {
+      throw new BadRequestException('Token expirado');
+    }
+
+    const saltOrRounds = 10;
+    const hashedPassword = await bcrypt.hash(newPassword, saltOrRounds);
+
+    await this.prismaService.user.update({
+      where: { id: user.id },
+      data: {
+        password: hashedPassword,
+        resetPasswordToken: null,
+        resetPasswordExpires: null,
+      },
+    });
+
+    return { message: 'Contraseña restablecida correctamente' };
   }
 }
