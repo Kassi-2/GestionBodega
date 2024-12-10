@@ -84,7 +84,7 @@ export class AuthService {
       },
     });
 
-    const resetLink = `http://localhost:4200/reset-password/${resetToken}`;
+    const resetLink = `http://localhost/bodega/reset-password/${resetToken}`;
     console.log(resetLink);
     await this.transporter.sendMail({
       from: 'spam.panol.mecanica@gmail.com',
@@ -115,9 +115,7 @@ export class AuthService {
   public async resetPassword(token: string, newPassword: string) {
     let payload;
     try {
-      console.log(token);
       payload = await this.jwtService.verifyAsync(token);
-      console.log(payload);
     } catch (error) {
       throw new BadRequestException('Token inválido o expirado', error);
     }
