@@ -320,7 +320,7 @@ export class UserService {
         return {
           rut: user['Rut'].toUpperCase(),
           name: user['Nombre'].toUpperCase(),
-          mail: user['E-Dmail'] ? user['E-mail'].toLowerCase() : undefined,
+          mail: user['E-mail'] ? user['E-mail'].toLowerCase() : undefined,
           phoneNumber: user['Fono'],
           role: user['Rol'],
         };
